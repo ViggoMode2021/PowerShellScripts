@@ -1,0 +1,2 @@
+﻿$mycredentials = Get-Credential
+Send-MailMessage -SmtpServer smtp.gmail.com -Port 587 -UseSsl -From "ryansviglione@gmail.com" -To "ryansviglione@gmail.com" -Subject 'Test subject' -Body 'Test message' -Credential $mycredentials

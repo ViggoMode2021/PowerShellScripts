@@ -1,0 +1,68 @@
+$User = New-Object Security.Principal.WindowsPrincipal( [Security.Principal.WindowsIdentity]::GetCurrent() )
+if (-not $User.IsInRole( [Security.Principal.WindowsBuiltInRole]::Administrator )) {
+	Write-Host 'Please run again with Administrator privileges.' -ForegroundColor Red
+    if ($RunScriptSilent -NE $True){
+        Read-Host 'Press [Enter] to exit'
+    }
+    exit
+}
+
+function get_html{
+
+$Item_Path = "C:\Users\rviglione\Desktop\html_webpages"
+
+Remove-Item $Item_Path -Recurse -Force
+
+New-Item -Path $Item_Path -ItemType directory
+
+wget https://www.westbrookctschools.org/ -OutFile main_page.html
+
+Move-Item -Path main_page.html -Destination $Item_Path
+
+Write-Host 'Downloaded main_page.html!' -ForegroundColor Green
+
+wget https://www.westbrookctschools.org/directory/faculty -OutFile faculty.html
+
+Move-Item -Path faculty.html -Destination $Item_Path
+
+Write-Host 'Downloaded faculty.html!' -ForegroundColor Green
+
+wget https://www.westbrookctschools.org/groups/5743 -OutFile athletics.html
+
+Move-Item -Path athletics.html -Destination $Item_Path
+
+Write-Host 'Downloaded athletics.html!' -ForegroundColor Green
+
+wget https://www.westbrookctschools.org/groups/5661 -OutFile business_office.html
+
+Move-Item -Path business_office.html -Destination $Item_Path
+
+Write-Host 'Downloaded business_office.html!' -ForegroundColor Green
+
+wget https://www.westbrookctschools.org/groups/5663 -OutFile curriculum_and_instruction.html
+
+Move-Item -Path curriculum_and_instruction.html -Destination $Item_Path
+
+Write-Host 'Downloaded curriculum_and_instruction.html!' -ForegroundColor Green
+
+wget https://www.westbrookctschools.org/groups/5756 -OutFile food_services.html
+
+Move-Item -Path food_services.html -Destination $Item_Path
+
+Write-Host 'Downloaded food_services.html!' -ForegroundColor Green
+
+wget https://www.westbrookctschools.org/groups/73867 -OutFile health.html
+
+Move-Item -Path health.html -Destination $Item_Path
+
+Write-Host 'Downloaded health.html!' -ForegroundColor Green
+
+wget https://www.westbrookctschools.org/groups/5754 -OutFile human_resources.html
+
+Write-Host ''Downloaded human_resources.html!' -ForegroundColor Green
+
+Move-Item -Path human_resources.html -Destination $Item_Path
+
+}
+
+get_html 

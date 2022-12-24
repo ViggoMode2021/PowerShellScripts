@@ -4,19 +4,19 @@ $channelId = 'UCWNxa-_nWe_w9SFfgFF1LoQ'
 
 $GoogleApiKey = 'AIzaSyAuVuGWqJY6506FG7_Gb203nG36d9zrP14' #Rotate biweekly maybe?
 
-$video_analytics = 'C:\Users\rviglione\Desktop\Daily-Knight-Analytics\Announcements.csv' #Edit with updated PATH for whatever computer is housing this script
+$video_analytics = 'C:\Users\ryans\Desktop\Daily-Knight-Analytics\Announcements.csv' #Edit with updated PATH for whatever computer is housing this script
 
-if (Test-Path -Path $video_analytics) {
+$Date = Date
+
+if (Test-Path $video_analytics) {
     Write-Host "Analytics CSV file already exists titled 'Announcements.csv'"
 }
 else {
-    Add-Content -Path C:\Users\rviglione\Desktop\Daily-Knight-Analytics\Announcements.csv -Value '"Date","Views","Likes","Comments"'
+    Add-Content -Path C:\Users\ryans\Desktop\Daily-Knight-Analytics\Announcements.csv -Value '"Date","Views","Likes","Comments"'
 
     Write-Host "Analytics CSV file created titled 'Announcements.csv'"
 
 }
-
-$Date = Date
 
 function start_and_stop_announcements{
 Stop-Process -Name msedge

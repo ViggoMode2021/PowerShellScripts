@@ -7,3 +7,5 @@ Start-Process -FilePath  msedge -ArgumentList '--start-fullscreen https://docs.g
 }
 
 start_and_stop_announcements
+
+#-noprofile -executionpolicy unrestricted -noninteractive -file "C:\Users\rviglione\Desktop\Scripts\Daily-Knight-Announcements.ps1"

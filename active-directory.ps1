@@ -1,13 +1,25 @@
 Import-Module ActiveDirectory
 
 $First_Name = Read-Host "Enter First Name"
+
+if($First_Name -match "\d+")
+{
+   $First_Name = Read-Host "First name should not contain a number. If you are adament, disregard this."
+}
+
 $First_Initial = $First_Name.Substring(0,1).ToLower()
 $Last_Name = Read-Host "Enter Last Name"
+
+if($Last_Name -match "\d+")
+{
+   $Last_Name = Read-Host "Last name should not contain a number. If you are adament, disregard this."
+}
+
 $Last_Name_Lower = $Last_Name.ToLower()
 $Username = "$First_Initial$Last_Name_Lower"
 $Description = Read-Host "Enter a user description."
-$Password = Read-Host -AsSecureString "Enter a secure password"
-$Domain = "@domain"
+$Password = Read-Host -AsSecureString "Enter a secure password" # 
+$Domain = "@.org"
 $Comma = ","
 
  New-ADUser `
@@ -18,15 +30,11 @@ $Comma = ","
  -UserPrincipalName "$Username $Domain" `
  -Displayname "$First_Name $Last_Name" `
  -Description $Description `
- -Path "OU=kimport,DC=westbrookctschools,DC=org" `
+ -Path "OU=,DC=,DC=" `
  -AccountPassword $Password `
- -ScriptPath "logon.bat" `
- -HomeDrive "Y:" `
- -HomeDirectory "\\wps-server01\users\$Username" `
+ -ScriptPath ".bat" `
+ -HomeDrive ":" `
+ -HomeDirectory "" `
  -EmailAddress "$Username$Domain"
 
-#Set-ADUser $Username -Enabled $True
-#Set-ADUser $Username -ChangePasswordAtLogon $False 
-#Set-ADUser $Username -EmailAddress "$Username + '\' + $Domain"
-
-Write-Host "Active Directory user account setup complete for $First_Name $Last_Name!" #-Color Green
+Write-Host "Active Directory user account setup complete for $First_Name $Last_Name!"

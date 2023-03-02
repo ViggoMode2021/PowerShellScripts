@@ -2,9 +2,9 @@ Import-Module ActiveDirectory
 
 $Enrollment_Date =  Get-Date -Format "MMddyy"
 
-$place = "place"
+$ = ""
 
-$Password = "$place$Enrollment_Date"
+$Password = "$Westbrook$Enrollment_Date"
 
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
@@ -28,7 +28,7 @@ $Last_Name_Lower = $Last_Name.ToLower()
 $Username = "$First_Initial$Last_Name_Lower"
 $Description = Read-Host "Enter a user description."
 
-$Domain = "@placectschools.org"
+$Domain = "@.org"
 $Comma = ","
 $Period = "."
 
@@ -40,16 +40,18 @@ $Period = "."
  -UserPrincipalName "$Username $Domain" `
  -Displayname "$First_Name $Last_Name" `
  -Description $Description `
- -Path "OU=kimport,DC=place,DC=org" `
+ -Path "OU=,DC=,DC=org" `
  -AccountPassword $Default_Password `
  -ScriptPath "logon.bat" `
  -HomeDrive "Y:" `
- -HomeDirectory "" `
+ -HomeDirectory "\\\users\$Username" `
  -EmailAddress "$Username$Domain"
 
 Unlock-ADAccount -Identity $Username
+
+Enable-ADAccount -Identity $Username
  
-$Student_Or_Staff_Account = Read-Host "Type 1 if this is a student account and 2 if this is a staff count." 
+$Student_Or_Staff_Account = Read-Host "Type 1 if this is a student account or any other key if this is a staff account." 
 
 if($Student_Or_Staff_Account -match "1")
 {
@@ -59,6 +61,14 @@ if($Student_Or_Staff_Account -match "1")
    
    Set-AdUser -Identity $Username -UserPrincipalName "$First_Name_Lower$Period$Last_Name_Lower$Domain"
    
-   Write-Host "student account setup complete for $First_Name $Last_Name!" -ForegroundColor DarkGreen -BackgroundColor White
+   Write-Host " student account setup complete for $First_Name $Last_Name on $Enrollment_Date!" -ForegroundColor DarkGreen -BackgroundColor White
    Write-Host "Account name: $Username, Email: $First_Name_Lower$Period$Last_Name_Lower$Domain" -ForegroundColor DarkGreen -BackgroundColor White
+}
+
+else
+{
+   Set-ADUser -Identity $Username -ChangePasswordAtLogon $true
+   
+   Write-Host " faculty account setup complete for $First_Name $Last_Name on $Enrollment_Date!" -ForegroundColor DarkGreen -BackgroundColor White
+   Write-Host "Account name: $Username, Email: $Username$Domain" -ForegroundColor DarkGreen -BackgroundColor White   
 }

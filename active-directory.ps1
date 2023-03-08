@@ -2,9 +2,9 @@ Import-Module ActiveDirectory
 
 $Enrollment_Date =  Get-Date -Format "MMddyy"
 
-$ = ""
+$Westbrook = "westbrook"
 
-$Password = "$Westbrook$Enrollment_Date"
+$Password = "$$Enrollment_Date"
 
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
@@ -44,7 +44,7 @@ $Period = "."
  -AccountPassword $Default_Password `
  -ScriptPath "logon.bat" `
  -HomeDrive "Y:" `
- -HomeDirectory "\\\users\$Username" `
+ -HomeDirectory "\\w\users\$Username" `
  -EmailAddress "$Username$Domain"
 
 Unlock-ADAccount -Identity $Username
@@ -52,6 +52,12 @@ Unlock-ADAccount -Identity $Username
 Enable-ADAccount -Identity $Username
  
 $Student_Or_Staff_Account = Read-Host "Type 1 if this is a student account or any other key if this is a staff account." 
+
+$_Graduation_Years = "2031","2032","2033","2034","2035"
+
+$_Graduation_Years = "2027","2028","2029","2030"
+
+$_Graduation_Years = "2023","2024","2025","2026"
 
 if($Student_Or_Staff_Account -match "1")
 {
@@ -61,10 +67,34 @@ if($Student_Or_Staff_Account -match "1")
    
    Set-AdUser -Identity $Username -UserPrincipalName "$First_Name_Lower$Period$Last_Name_Lower$Domain"
    
-   Write-Host " student account setup complete for $First_Name $Last_Name on $Enrollment_Date!" -ForegroundColor DarkGreen -BackgroundColor White
-   Write-Host "Account name: $Username, Email: $First_Name_Lower$Period$Last_Name_Lower$Domain" -ForegroundColor DarkGreen -BackgroundColor White
+   $Student_Graduation_Year = Read-Host "Type the student's expected graduation year." 
+   
+   $Class = "Class"
+   
+   $Student_Graduation_Year_OU = "$Student_Graduation_Year$Class"
+   
+   if ($Graduation_Years -contains $Student_Graduation_Year) {
+            Get-ADUser -Identity $Username | Move-ADObject -TargetPath "OU=$Student_Graduation_Year_OU,OU=,OU=Students,OU=UserAccounts,DC=,DC=org" 
+            Write-Host " student account setup complete for $First_Name $Last_Name on $Enrollment_Date!" -ForegroundColor DarkGreen -BackgroundColor White
+            Write-Host "Account name: $Username, Email: $First_Name_Lower$Period$Last_Name_Lower$Domain" -ForegroundColor DarkGreen -BackgroundColor White
+        }
+   if ($Middle_School_Graduation_Years -contains $Student_Graduation_Year) {
+            Get-ADUser -Identity $Username | Move-ADObject -TargetPath "OU=$Student_Graduation_Year_OU,OU=WMS,OU=Students,OU=UserAccounts,DC=,DC=org"
+            Write-Host " student account setup complete for $First_Name $Last_Name on $Enrollment_Date!" -ForegroundColor DarkGreen -BackgroundColor White
+            Write-Host "Account name: $Username, Email: $First_Name_Lower$Period$Last_Name_Lower$Domain" -ForegroundColor DarkGreen -BackgroundColor White 
+        }
+   if ($High_School_Graduation_Years -contains $Student_Graduation_Year) {
+            Get-ADUser -Identity $Username | Move-ADObject -TargetPath "OU=$Student_Graduation_Year_OU,OU=WHS,OU=Students,OU=UserAccounts,DC=,DC=org"
+            Write-Host " student account setup complete for $First_Name $Last_Name on $Enrollment_Date!" -ForegroundColor DarkGreen -BackgroundColor White
+            Write-Host "Account name: $Username, Email: $First_Name_Lower$Period$Last_Name_Lower$Domain" -ForegroundColor DarkGreen -BackgroundColor White 
+        }
+       
+   else
+   {
+   }
 }
 
+#, OU=Students, OU=, OU=
 else
 {
    Set-ADUser -Identity $Username -ChangePasswordAtLogon $true

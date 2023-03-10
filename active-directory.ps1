@@ -1,12 +1,14 @@
 Import-Module ActiveDirectory
 
+## Variables listed below. Some logic to check to make sure names contain proper characters.
+
 $Enrollment_Date =  Get-Date -Format "MMddyy"
 
 $Enrollment_Date_Slashes =  Get-Date -Format "MM/dd/yyyy"
 
 $ = ""
 
-$Password = "$Westbrook$Enrollment_Date"
+$Password = "$$Enrollment_Date"
 
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
@@ -34,13 +36,17 @@ $Domain = "@.org"
 $Comma = ","
 $Period = "."
 
-$Daisy_Graduation_Years = "2031","2032","2033","2034","2035"
+# I plan to add logic to swap out the graduation years depending on what school year the script is run in.
 
-$Middle_School_Graduation_Years = "2027","2028","2029","2030"
+$Da_Graduation_Years = "2031","2032","2033","2034","2035"
+
+$Mid_School_Graduation_Years = "2027","2028","2029","2030"
 
 $High_School_Graduation_Years = "2023","2024","2025","2026"  
 
 $Student_Or_Staff_Account = Read-Host "Type 1 if this is a student account or any other key if this is a staff account." 
+
+## Code to create a student account below ##
 
 if($Student_Or_Staff_Account -match "1")
 {
@@ -52,12 +58,12 @@ if($Student_Or_Staff_Account -match "1")
  -UserPrincipalName "$Username $Domain" `
  -Displayname "$First_Name $Last_Name" `
  -Description $Description `
- -Path "OU=,DC=,DC=org" `
+ -Path "OU=kimport,DC=,DC=org" `
  -AccountPassword $Default_Password `
  -ScriptPath ".bat" `
  -HomeDrive "Y:" `
- -HomeDirectory "\\w\\$" `
- -EmailAddress "$$"
+ -HomeDirectory "\\-\\$" `
+ -EmailAddress "$Username$Domain"
 
  Unlock-ADAccount -Identity $Username
 
@@ -73,29 +79,32 @@ if($Student_Or_Staff_Account -match "1")
    
  $Student_Graduation_Year_OU = "$Student_Graduation_Year$Class"
    
- if ($ -contains $Student_Graduation_Year) {
-       Get-ADUser -Identity $Username | Move-ADObject -TargetPath "OU=$,OU=,OU=Students,OU=UserAccounts,DC=westbrookctschools,DC=org" 
+ if ($D_Graduation_Years -contains $Student_Graduation_Year) {
+       Get-ADUser -Identity $Username | Move-ADObject -TargetPath "OU=$Student_Graduation_Year_OU,OU=Day,OU=Stus,OU=UserAccounts,DC=wols,DC=org" 
        Write-Host "DIS student account setup complete for $First_Name $Last_Name on $Enrollment_Date_Slashes!" -ForegroundColor DarkGreen -BackgroundColor White | out-host
-       Write-Host "Account name: $Username, Email: $First_Name_Lower$Period$Last_Name_Lower$Domain" -ForegroundColor DarkGreen -BackgroundColor White | out-host
+       Write-Host "Account name: $Username, Email: $First_Name_Lower$Period$Last_Name_Lower$Domain YOG: $Student_Graduation_Year" -ForegroundColor DarkGreen -BackgroundColor White | out-host
       }
- if ($ -contains $Student_Graduation_Year) {
-       Get-ADUser -Identity $Username | Move-ADObject -TargetPath "OU=$Student_Graduation_Year_OU,OU=,OU=,OU=UserAccounts,DC=westbrookctschools,DC=org"
+ if ($Middle_School_Graduation_Years -contains $Student_Graduation_Year) {
+       Get-ADUser -Identity $Username | Move-ADObject -TargetPath "OU=$Student_Graduation_Year_OU,OU=WS,OU=Stuts,OU=UserAccounts,DC=wokctls,DC=org"
        Write-Host "WMS student account setup complete for $First_Name $Last_Name on $Enrollment_Date_Slashes!" -ForegroundColor DarkGreen -BackgroundColor White | out-host
-       Write-Host "Account name: $Username, Email: $First_Name_Lower$Period$Last_Name_Lower$Domain" -ForegroundColor DarkGreen -BackgroundColor White | out-host
+       Write-Host "Account name: $Username, Email: $First_Name_Lower$Period$Last_Name_Lower$Domain YOG: $Student_Graduation_Year" -ForegroundColor DarkGreen -BackgroundColor White | out-host
       }
- if ($ -contains $Student_Graduation_Year) {
-       Get-ADUser -Identity $Username | Move-ADObject -TargetPath "OU=$Student_Graduation_Year_OU,OU=WHS,OU=Students,OU=UserAccounts,DC=westbrookctschools,DC=org"
+ if ($High_School_Graduation_Years -contains $Student_Graduation_Year) {
+       Get-ADUser -Identity $Username | Move-ADObject -TargetPath "OU=$Student_Graduation_Year_OU,OU=WS,OU=Students,OU=UserAccounts,DC=wols,DC=org"
        Write-Host "WHS student account setup complete for $First_Name $Last_Name on $Enrollment_Date_Slashes!" -ForegroundColor DarkGreen -BackgroundColor White | out-host
-       Write-Host "Account name: $Username, Email: $First_Name_Lower$Period$Last_Name_Lower$Domain" -ForegroundColor DarkGreen -BackgroundColor White | out-host
+       Write-Host "Account name: $Username, Email: $First_Name_Lower$Period$Last_Name_Lower$Domain YOG: $Student_Graduation_Year" -ForegroundColor DarkGreen -BackgroundColor White | out-host
       }
+
        
  else
    
   {
-  Write-Host "Graduation year $Student_Graduation_Year not found." -ForegroundColor DarkGreen -BackgroundColor White
+  Write-Host "Graduation year '$Student_Graduation_Year' not found. Student placed in the kimport ou." -ForegroundColor DarkGreen -BackgroundColor White
   }
    
 }
+
+## Code to create a staff account below ##
 
 else
 {
@@ -108,12 +117,12 @@ else
  -UserPrincipalName "$Username $Domain" `
  -Displayname "$First_Name $Last_Name" `
  -Description $Description `
- -Path "OU=,DC=,DC=org" `
+ -Path "OU=kimport,DC=wools,DC=org" `
  -AccountPassword $Default_Password `
- -ScriptPath ".bat" `
- -HomeDrive "Y:" `
- -HomeDirectory "\\wps-\\$" `
- -EmailAddress "$$"
+ -ScriptPath "lon.bat" `
+ -HomeDrive "" `
+ -HomeDirectory "\\s\$Username" `
+ -EmailAddress "$Username$Domain"
 
  Unlock-ADAccount -Identity $Username
 
@@ -121,34 +130,34 @@ else
  
  Set-ADUser -Identity $Username -ChangePasswordAtLogon $true
  
- $_School_Names = "","","  School",""
+ $Daol_Names = "S","dis","Daisy","Dam School","Ingraham" # Any of these school names will satisfy the school placement logic.
 
- $_School_Names = "","MS"," Middle School","Middle School","Middle"
+ $_School_Names = "S","wms","MS"," Middle School","Middle School","Middle" # Any of these school names will satisfy the school placement logic.
 
- $_School_Names = "WHS","HS","Westbrook High School","High School"
+ $WS_School_Names = "WHS","whs","HS","Westbrook High School","High School" # Any of these school names will satisfy the school placement logic.
  
  $Staff_School_Placement = Read-Host "Type the staff's school placement."
  
  if ($Daisy_School_Names -contains $Staff_School_Placement) {
-       Get-ADUser -Identity $Username | Move-ADObject -TargetPath "OU,OU,DC=,DC=org" 
-       Write-Host " staff account setup complete for $First_Name $Last_Name on $Enrollment_Date_Slashes!" -ForegroundColor DarkGreen -BackgroundColor White | out-host
+       Get-ADUser -Identity $Username | Move-ADObject -TargetPath "OU=S,OU=,DC=wols,DC=org" 
+       Write-Host "DIS staff account setup complete for $First_Name $Last_Name on $Enrollment_Date_Slashes!" -ForegroundColor DarkGreen -BackgroundColor White | out-host
        Write-Host "Account name: $Username, Email: $First_Name_Lower$Period$Last_Name_Lower$Domain" -ForegroundColor DarkGreen -BackgroundColor White | out-host
       }
- if ($Staff_School_Placement -contains $WMS_School_Names) {
-       Get-ADUser -Identity $Username | Move-ADObject -TargetPath "OU=WMS,OU=,DC=,DC=org"
-       Write-Host " staff account setup complete for $First_Name $Last_Name on $Enrollment_Date_Slashes!" -ForegroundColor DarkGreen -BackgroundColor White | out-host
+ if ($WMS_School_Names -contains $Staff_School_Placement) {
+       Get-ADUser -Identity $Username | Move-ADObject -TargetPath "OU=,OU=Gonts,DC=westbrookctschools,DC=org"
+       Write-Host "WMS staff account setup complete for $First_Name $Last_Name on $Enrollment_Date_Slashes!" -ForegroundColor DarkGreen -BackgroundColor White | out-host
        Write-Host "Account name: $Username, Email: $First_Name_Lower$Period$Last_Name_Lower$Domain" -ForegroundColor DarkGreen -BackgroundColor White | out-host
       }
- if ($Staff_School_Placement -contains $WHS_School_Names) {
-       Get-ADUser -Identity $Username | Move-ADObject -TargetPath "OU=WHS,OU=,DC=,DC=org"
-       Write-Host " student account setup complete for $First_Name $Last_Name on $Enrollment_Date_Slashes!" -ForegroundColor DarkGreen -BackgroundColor White | out-host
-       Write-Host "Account name: $Username, Email: $First_Name_Lower$Period$Last_Name_Lower$Domain" -ForegroundColor DarkGreen -BackgroundColor White | out-host
+ if ($WHS_School_Names -contains $Staff_School_Placement) {
+       Get-ADUser -Identity $Username | Move-ADObject -TargetPath "OU=WHS,OU=GoogleStaffAccounts,DC=westbrookctschools,DC=org"
+       Write-Host "WHS staff account setup complete for $First_Name $Last_Name on $Enrollment_Date_Slashes!" -ForegroundColor DarkGreen -BackgroundColor White | out-host
+       Write-Host "Account name: $Username, Email: $First_Name_Lower$Period$Last_Name_Lower$Domain"  -ForegroundColor DarkGreen -BackgroundColor White | out-host
       }
        
- else
+else
    
-  {
-  Write-Host "School not found." -ForegroundColor DarkGreen -BackgroundColor White
-  }
+ {
+ Write-Host "School '$Staff_School_Placement' not found. Staff member placed in the kimport ou." -ForegroundColor DarkRed -BackgroundColor White
+ }
    
 }

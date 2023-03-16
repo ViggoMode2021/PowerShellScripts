@@ -2,11 +2,17 @@ Import-Module ActiveDirectory
 
 # Add student account functionality
 
-$Domain="@.org"
+$Domain="@domain"
 
-$OU="OU=,DC=,DC=org"
+$OU="OU=parent_OU,DC=state_schools,DC=org"
 
-$NewUsersList=Import-CSV "C:\Users\\\-import-facultee.csv"
+$Logged_In_User = whoami /upn
+
+$Logged_In_Username = $Logged_In_User.Replace('@domain', '')
+
+$NewUsersList=Import-CSV "C:\Users\$Logged_In_Username\Desktop\faculty-import-facultee.csv"
+
+$User_Count = $NewUsersList | Measure-Object | Select-Object -expand count
 
 $Enrollment_Date =  Get-Date -Format "MMddyy"
 
@@ -16,24 +22,24 @@ $Password = "$$Enrollment_Date"
 
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
-$Domain = "@.org"
+$Domain = "@domain"
 
 $Period = "."
 
-$y_School_Names = "",""," School","" # Any of these school names will satisfy the school placement logic.
+$elementary_School_Names = "DIS","elementary","elementary name_of_school School","name_of_school" # Any of these school names will satisfy the school placement logic.
 
-$_School_Names = "","","  School","Middle School","Middle" # Any of these school names will satisfy the school placement logic.
+$Middle-School_School_Names = "Middle-School","MS"," Middle School","Middle School","Middle" # Any of these school names will satisfy the school placement logic.
 
-$_School_Names = "",""," High School","High School" # Any of these school names will satisfy the school placement logic.
+$High-School_School_Names = "High-School","HS"," High School","High School" # Any of these school names will satisfy the school placement logic.
 
 
-$_Graduation_Years = "2031","2032","2033","2034","2035"
+$elementary_Graduation_Years = "2031","2032","2033","2034","2035"
 
-$_School_Graduation_Years = "2027","2028","2029","2030"
+$Middle_School_Graduation_Years = "2027","2028","2029","2030"
 
-$_School_Graduation_Years = "2023","2024","2025","2026"  
+$High_School_Graduation_Years = "2023","2024","2025","2026"  
 
-$Student_Or_Staff_Account = Read-Host "Type 1 if this csv contains STAFF names or any other key if these are STUDENT accounts." 
+$Student_Or_Staff_Account = Read-Host "Type 1 if the csv contains STAFF or any other key if they're STUDENTS." 
 
 # Loop through csv below
 
@@ -42,16 +48,16 @@ if($Student_Or_Staff_Account -match "1")
 
 $Staff_School_Placement = Read-Host "Type the staff's school placement."
 
-if ($Daisy_School_Names -contains $Staff_School_Placement) {
-       $OU="OU=,OU=,OU=,OU=,DC=,DC=org"
+if ($elementary_School_Names -contains $Staff_School_Placement) {
+       $OU="OU=Dname_of_school,OU=Beginners,OU=Facultad,OU=parent_OU,DC=state_schools,DC=org"
       }
       
- if ($WMS_School_Names -contains $Staff_School_Placement) {
-       $OU="OU=,OU=,OU=,OU=kimport,DC=,DC=org"
+ if ($Middle-School_School_Names -contains $Staff_School_Placement) {
+       $OU="OU=Middleham,OU=Beginners,OU=Facultad,OU=parent_OU,DC=state_schools,DC=org"
       }
       
- if ($WHS_School_Names -contains $Staff_School_Placement) {
-       $OU="OU=,OU=,OU=,OU=,DC=westbrookctschools,DC=org"
+ if ($High-School_School_Names -contains $Staff_School_Placement) {
+       $OU="OU=Highham,OU=Beginners,OU=Facultad,OU=parent_OU,DC=state_schools,DC=org"
       }
 
 ForEach ($User in $NewUsersList) {
@@ -77,16 +83,18 @@ New-ADUser `
 -SamAccountName $Username `
 -UserPrincipalName "$Username $Domain" `
 -Displayname "$First_Name $Last_Name" `
--ScriptPath "logon.bat" `
+-ScriptPath "logon" `
 -HomeDrive "Y:" `
--HomeDirectory "\\\\$Username" `
--EmailAddress "$$Domain"
+-HomeDirectory "\\wps-server01\users\$Username" `
+-EmailAddress "$Username$Domain"
 
-Unlock-ADAccount -Identity $
+Unlock-ADAccount -Identity $Username
 
-Enable-ADAccount -Identity $
+Enable-ADAccount -Identity $Username
  
 Set-ADUser -Identity $Username -ChangePasswordAtLogon $true
+
+Write-Host "Adding $Username, please wait..."
 
 }
 }
@@ -96,16 +104,16 @@ else
 
 $Student_Graduation_Year = Read-Host "Type the student's expected graduation year." 
 
-if ($Daisy_Graduation_Years -contains $Student_Graduation_Year) {
-       $OU="OU=$Student_Graduation_Year,OU=,OU=,OU=,DC=,DC=org"
+if ($elementary_Graduation_Years -contains $Student_Graduation_Year) {
+       $OU="OU=$Student_Graduation_Year,OU=Elementary,OU=Estudiantes,OU=parent_OU,DC=state_schools,DC=org"
       }
       
  if ($Middle_School_Graduation_Years -contains $Student_Graduation_Year) {
-       $OU="OU=$Student_Graduation_Year,OU=Middle,OU=,OU=,DC=,DC=org"
+       $OU="OU=$Student_Graduation_Year,OU=Middle,OU=Estudiantes,OU=parent_OU,DC=state_schools,DC=org"
       }
       
  if ($High_School_Graduation_Years -contains $Student_Graduation_Year) {
-       $OU="OU=$Student_Graduation_Year,OU=,OU=,OU=,DC=,DC=org"
+       $OU="OU=$Student_Graduation_Year,OU=High,OU=Estudiantes,OU=parent_OU,DC=state_schools,DC=org"
       }
       
 ForEach ($User in $NewUsersList) {
@@ -131,9 +139,9 @@ New-ADUser `
 -SamAccountName $Username `
 -UserPrincipalName "$Username $Domain" `
 -Displayname "$First_Name $Last_Name" `
--ScriptPath "logon.bat" `
+-ScriptPath "logon" `
 -HomeDrive "Y:" `
--HomeDirectory "\\w\\$Username" `
+-HomeDirectory "\\wps-server01\users\$Username" `
 -EmailAddress "$Username$Domain"
 
  Unlock-ADAccount -Identity $Username
@@ -144,5 +152,19 @@ New-ADUser `
  
  Set-AdUser -Identity $Username -EmailAddress "$First_Name_Lower$Period$Last_Name_Lower$Domain"
  
+ Write-Host "Adding $Username, please wait..."
+ 
+} 
 }
+ 
+if ($Staff_School_Placement) {
+
+Write-Host "Successfully added $User_Count staff members to the OU for $Staff_School_Placement!" 
+
+}
+
+if ($Student_Graduation_Year) {
+
+Write-Host "Successfully added $User_Count students to the OU for the Class of $Student_Graduation_Year!"
+
 }

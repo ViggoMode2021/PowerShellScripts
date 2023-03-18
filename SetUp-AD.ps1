@@ -4,7 +4,7 @@ Import-Module ActiveDirectory
 
 #Install-ADDSForest -DomainName vdom.local -InstallDNS
 
-$DC = "mikefrobbins"
+$DC = "vigschools"
 
 $StudentAccounts = "StudentAccounts"
 

@@ -1,4 +1,4 @@
-Import-Module ActiveDirectory 3>$null -WarningAction SilentlyContinue
+Import-Module ActiveDirectory
 
 #Add-WindowsFeature AD-Domain-Services
 
@@ -43,33 +43,33 @@ New-ADOrganizationalUnit -Name "StudentAccounts" -Path "DC=$DC,DC=COM"
 
 New-ADOrganizationalUnit -Name "HighSchool" -Path "OU=$StudentAccounts,DC=$DC,DC=COM"
 
-New-ADOrganizationalUnit -Name "Class of 2023" -Path "OU=$HighSchool,OU=$StudentAccounts,DC=$DC,DC=COM"
+New-ADOrganizationalUnit -Name "ClassOf2023" -Path "OU=$HighSchool,OU=$StudentAccounts,DC=$DC,DC=COM"
 
-New-ADOrganizationalUnit -Name "Class of 2024" -Path "OU=$HighSchool,OU=$StudentAccounts,DC=$DC,DC=COM"
+New-ADOrganizationalUnit -Name "ClassOf2024" -Path "OU=$HighSchool,OU=$StudentAccounts,DC=$DC,DC=COM"
 
-New-ADOrganizationalUnit -Name "Class of 2025" -Path "OU=$HighSchool,OU=$StudentAccounts,DC=$DC,DC=COM"
+New-ADOrganizationalUnit -Name "ClassOf2025" -Path "OU=$HighSchool,OU=$StudentAccounts,DC=$DC,DC=COM"
 
-New-ADOrganizationalUnit -Name "Class of 2026" -Path "OU=$HighSchool,OU=$StudentAccounts,DC=$DC,DC=COM"
+New-ADOrganizationalUnit -Name "ClassOf2026" -Path "OU=$HighSchool,OU=$StudentAccounts,DC=$DC,DC=COM"
 
 New-ADOrganizationalUnit -Name "MiddleSchool" -Path "OU=$StudentAccounts,DC=$DC,DC=COM"
 
-New-ADOrganizationalUnit -Name "Class of 2027" -Path "OU=$MiddleSchool,OU=$StudentAccounts,DC=$DC,DC=COM"
+New-ADOrganizationalUnit -Name "ClassOf2027" -Path "OU=$MiddleSchool,OU=$StudentAccounts,DC=$DC,DC=COM"
 
-New-ADOrganizationalUnit -Name "Class of 2028" -Path "OU=$MiddleSchool,OU=$StudentAccounts,DC=$DC,DC=COM"
+New-ADOrganizationalUnit -Name "ClassOf2028" -Path "OU=$MiddleSchool,OU=$StudentAccounts,DC=$DC,DC=COM"
 
-New-ADOrganizationalUnit -Name "Class of 2029" -Path "OU=$MiddleSchool,OU=$StudentAccounts,DC=$DC,DC=COM"
+New-ADOrganizationalUnit -Name "ClassOf2029" -Path "OU=$MiddleSchool,OU=$StudentAccounts,DC=$DC,DC=COM"
 
-New-ADOrganizationalUnit -Name "Class of 2030" -Path "OU=$MiddleSchool,OU=$StudentAccounts,DC=$DC,DC=COM"
+New-ADOrganizationalUnit -Name "ClassOf2030" -Path "OU=$MiddleSchool,OU=$StudentAccounts,DC=$DC,DC=COM"
 
 New-ADOrganizationalUnit -Name "ElementarySchool" -Path "OU=$StudentAccounts,DC=$DC,DC=COM"
 
-New-ADOrganizationalUnit -Name "Class of 2031" -Path "OU=$ElementarySchool,OU=$StudentAccounts,DC=$DC,DC=COM"
+New-ADOrganizationalUnit -Name "ClassOf2031" -Path "OU=$ElementarySchool,OU=$StudentAccounts,DC=$DC,DC=COM"
 
-New-ADOrganizationalUnit -Name "Class of 2032" -Path "OU=$ElementarySchool,OU=$StudentAccounts,DC=$DC,DC=COM"
+New-ADOrganizationalUnit -Name "ClassOf2032" -Path "OU=$ElementarySchool,OU=$StudentAccounts,DC=$DC,DC=COM"
 
-New-ADOrganizationalUnit -Name "Class of 2033" -Path "OU=$ElementarySchool,OU=$StudentAccounts,DC=$DC,DC=COM"
+New-ADOrganizationalUnit -Name "ClassOf2033" -Path "OU=$ElementarySchool,OU=$StudentAccounts,DC=$DC,DC=COM"
 
-New-ADOrganizationalUnit -Name "Class of 2034" -Path "OU=$ElementarySchool,OU=$StudentAccounts,DC=$DC,DC=COM"
+New-ADOrganizationalUnit -Name "ClassOf2034" -Path "OU=$ElementarySchool,OU=$StudentAccounts,DC=$DC,DC=COM"
 
 #Add faculty OUs below:
 
@@ -83,9 +83,44 @@ New-ADOrganizationalUnit -Name "ElementarySchoolFaculty" -Path "OU=$FacultyAccou
 
 # Logic to add CSV-Users to CSV
 
+# CSV URLs
+
+$HighSchoolFacultyNames = "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/teacher-names.csv"
+
+$MiddleSchoolFacultyNames = "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/middle-school-teacher-names.csv"
+
+$ElementarySchoolFacultyNames = "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/elementary-school-teacher-names.csv"
+
+$ClassOf2023StudentNames = "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/class-of-2023-student-names.csv" # HS
+
+$ClassOf2024StudentNames = "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/class-of-2024-student-names.csv" # HS
+
+$ClassOf2025StudentNames = "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/class-of-2025-student-names.csv" # HS
+
+$ClassOf2026StudentNames = "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/class-of-2026-student-names.csv" # HS
+
+$ClassOf2027StudentNames = "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/class-of-2027-student-names.csv" # MS
+
+$ClassOf2028StudentNames = "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/class-of-2028-student-names.csv" # MS
+
+$ClassOf2029StudentNames = "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/class-of-2029-student-names.csv" # MS
+
+$ClassOf2030StudentNames = "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/class-of-2030-student-names.csv" # MS
+
+$ClassOf2031StudentNames = "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/class-of-2031-student-names.csv" # ES
+
+$ClassOf2032StudentNames = "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/class-of-2032-student-names.csv" # ES
+
+$ClassOf2033StudentNames = "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/class-of-2033-student-names.csv" # ES
+
+$ClassOf2034StudentNames = "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/class-of-2034-student-names.csv" # ES
+
+$ClassOf2035StudentNames = "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/class-of-2035-student-names.csv" # ES
+
+
 New-Item -Path 'C:\Users\Administrator\Desktop\CSV-Data' -ItemType Directory
 
-Invoke-WebRequest "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/teacher-names.csv" -OutFile C:\Users\Administrator\Desktop\CSV-Data\HighSchoolTeachers.csv
+Invoke-WebRequest $HighSchoolFacultyNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\HighSchoolTeachers.csv
 
 $HighSchoolFacultyCSV=Import-CSV "C:\Users\Administrator\Desktop\CSV-Data\HighSchoolTeachers.csv"
 
@@ -138,3 +173,793 @@ Write-Host "Adding $Username, please wait..."
 Write-Host "Added $High_School_Faculty_Count to HighSchoolFaculty OU!"
 
 }
+
+# Middle school teachers
+
+Invoke-WebRequest $MiddleSchoolFacultyNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\MiddleSchoolTeachers.csv
+
+$MiddleSchoolFacultyCSV=Import-CSV "C:\Users\Administrator\Desktop\CSV-Data\MiddleSchoolTeachers.csv"
+
+$Middle_School_Faculty_Count = $MiddleSchoolFacultyCSV | Measure-Object | Select-Object -expand count
+
+ForEach ($User in $MiddleSchoolFacultyCSV) {
+
+$First_Name=$User.first_name
+
+$Last_Name=$User.last_name
+
+$First_Initial = $First_Name.Substring(0,1).ToLower()
+
+$First_Name_Lower = $First_Name.ToLower()
+$Last_Name_Lower = $Last_Name.ToLower()
+$Username = "$First_Initial$Last_Name_Lower"
+
+$Enrollment_Date =  Get-Date -Format "MMddyy"
+
+$mikefrobbins = "Mikefrobbins"
+
+$Password = "$mikefrobbins$Enrollment_Date"
+
+$Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
+
+New-ADUser `
+-Path "OU=MiddleSchoolFaculty,OU=$FacultyAccounts,DC=$DC,DC=COM" `
+-Enabled $True `
+-ChangePasswordAtLogon $True `
+-Name "$Last_Name$Comma $First_Name" `
+-GivenName $First_Name `
+-Surname $Last_Name `
+-AccountPassword $Default_Password `
+-SamAccountName $Username `
+-UserPrincipalName "$Username $Domain" `
+-Displayname "$First_Name $Last_Name" `
+-ScriptPath "logon.bat" `
+-HomeDrive "Y:" `
+-HomeDirectory "\\mfr-server01\users\$Username" `
+-EmailAddress "$Username$Domain"
+
+Unlock-ADAccount -Identity $Username
+
+Enable-ADAccount -Identity $Username
+ 
+Set-ADUser -Identity $Username -ChangePasswordAtLogon $true
+
+Write-Host "Adding $Username, please wait..."
+
+Write-Host "Added $Middle_School_Faculty_Count to MiddleSchoolFaculty OU!"
+
+}
+
+# Elementary school teachers
+
+Invoke-WebRequest $ElementarySchoolFacultyNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ElementarySchoolTeachers.csv
+
+$ElementarySchoolFacultyCSV=Import-CSV "C:\Users\Administrator\Desktop\CSV-Data\ElementarySchoolTeachers.csv"
+
+$Elementary_School_Faculty_Count = $ElementarySchoolFacultyCSV | Measure-Object | Select-Object -expand count
+
+ForEach ($User in $ElementarySchoolFacultyCSV) {
+
+$First_Name=$User.first_name
+
+$Last_Name=$User.last_name
+
+$First_Initial = $First_Name.Substring(0,1).ToLower()
+
+$First_Name_Lower = $First_Name.ToLower()
+$Last_Name_Lower = $Last_Name.ToLower()
+$Username = "$First_Initial$Last_Name_Lower"
+
+$Enrollment_Date =  Get-Date -Format "MMddyy"
+
+$mikefrobbins = "Mikefrobbins"
+
+$Password = "$mikefrobbins$Enrollment_Date"
+
+$Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
+
+New-ADUser `
+-Path "OU=ElementarySchoolFaculty,OU=$FacultyAccounts,DC=$DC,DC=COM" `
+-Enabled $True `
+-ChangePasswordAtLogon $True `
+-Name "$Last_Name$Comma $First_Name" `
+-GivenName $First_Name `
+-Surname $Last_Name `
+-AccountPassword $Default_Password `
+-SamAccountName $Username `
+-UserPrincipalName "$Username $Domain" `
+-Displayname "$First_Name $Last_Name" `
+-ScriptPath "logon.bat" `
+-HomeDrive "Y:" `
+-HomeDirectory "\\mfr-server01\users\$Username" `
+-EmailAddress "$Username$Domain"
+
+Unlock-ADAccount -Identity $Username
+
+Enable-ADAccount -Identity $Username
+ 
+Set-ADUser -Identity $Username -ChangePasswordAtLogon $true
+
+Write-Host "Adding $Username, please wait..."
+
+Write-Host "Added $Elementary_School_Faculty_Count to ElementarySchoolFaculty OU!"
+
+}
+
+# ClassOf2023
+
+Invoke-WebRequest $ClassOf2023StudentsNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ClassOf2023Students.csv
+
+$ClassOf2023StudentsCSV=Import-CSV "C:\Users\Administrator\Desktop\CSV-Data\ClassOf2023Students.csv"
+
+$Class_Of_2023_Students_Count = $ClassOf2023StudentsCSV | Measure-Object | Select-Object -expand count
+
+ForEach ($User in $ClassOf2023StudentsCSV) {
+
+$First_Name=$User.first_name
+
+$Last_Name=$User.last_name
+
+$First_Initial = $First_Name.Substring(0,1).ToLower()
+
+$First_Name_Lower = $First_Name.ToLower()
+$Last_Name_Lower = $Last_Name.ToLower()
+$Username = "$First_Initial$Last_Name_Lower"
+
+$Enrollment_Date =  Get-Date -Format "MMddyy"
+
+$mikefrobbins = "Mikefrobbins"
+
+$Password = "$mikefrobbins$Enrollment_Date"
+
+$Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
+
+New-ADUser `
+-Path "OU=ClassOf2023Students,OU=HighSchool,OU=$StudentAccounts,DC=$DC,DC=COM" `
+-Enabled $True `
+-ChangePasswordAtLogon $False `
+-Name "$First_Name $Last_Name" `
+-GivenName $First_Name `
+-Surname $Last_Name `
+-AccountPassword $Default_Password `
+-SamAccountName $Username `
+-UserPrincipalName "$Username $Domain" `
+-Displayname "$First_Name $Last_Name" `
+-ScriptPath "logon.bat" `
+-HomeDrive "Y:" `
+-HomeDirectory "\\mfr-server01\users\$Username" `
+-EmailAddress "$Username$Domain"
+
+Unlock-ADAccount -Identity $Username
+
+Enable-ADAccount -Identity $Username
+ 
+Set-ADUser -Identity $Username -ChangePasswordAtLogon $false
+
+Write-Host "Adding $Username, please wait..."
+
+Write-Host "Added $Class_Of_2023_Students_Count to ClassOf2023Students OU!"
+
+}
+
+# ClassOf2024
+
+Invoke-WebRequest $ClassOf2024StudentsNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ClassOf2024Students.csv
+
+$ClassOf2024StudentsCSV=Import-CSV "C:\Users\Administrator\Desktop\CSV-Data\ClassOf2024Students.csv"
+
+$Class_Of_2024_Students_Count = $ClassOf2024StudentsCSV | Measure-Object | Select-Object -expand count
+
+ForEach ($User in $ClassOf2024StudentsCSV) {
+
+$First_Name=$User.first_name
+
+$Last_Name=$User.last_name
+
+$First_Initial = $First_Name.Substring(0,1).ToLower()
+
+$First_Name_Lower = $First_Name.ToLower()
+$Last_Name_Lower = $Last_Name.ToLower()
+$Username = "$First_Initial$Last_Name_Lower"
+
+$Enrollment_Date =  Get-Date -Format "MMddyy"
+
+$mikefrobbins = "Mikefrobbins"
+
+$Password = "$mikefrobbins$Enrollment_Date"
+
+$Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
+
+New-ADUser `
+-Path "OU=ClassOf2024Students,OU=HighSchool,OU=$StudentAccounts,DC=$DC,DC=COM" `
+-Enabled $True `
+-ChangePasswordAtLogon $False `
+-Name "$First_Name $Last_Name" `
+-GivenName $First_Name `
+-Surname $Last_Name `
+-AccountPassword $Default_Password `
+-SamAccountName $Username `
+-UserPrincipalName "$Username $Domain" `
+-Displayname "$First_Name $Last_Name" `
+-ScriptPath "logon.bat" `
+-HomeDrive "Y:" `
+-HomeDirectory "\\mfr-server01\users\$Username" `
+-EmailAddress "$Username$Domain"
+
+Unlock-ADAccount -Identity $Username
+
+Enable-ADAccount -Identity $Username
+ 
+Set-ADUser -Identity $Username -ChangePasswordAtLogon $false
+
+Write-Host "Adding $Username, please wait..."
+
+Write-Host "Added $Class_Of_2024_Students_Count to ClassOf2024Students OU!"
+
+}
+
+# ClassOf2025
+
+Invoke-WebRequest $ClassOf2025StudentsNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ClassOf2025Students.csv
+
+$ClassOf2025StudentsCSV=Import-CSV "C:\Users\Administrator\Desktop\CSV-Data\ClassOf2025Students.csv"
+
+$Class_Of_2025_Students_Count = $ClassOf2025StudentsCSV | Measure-Object | Select-Object -expand count
+
+ForEach ($User in $ClassOf2025StudentsCSV) {
+
+$First_Name=$User.first_name
+
+$Last_Name=$User.last_name
+
+$First_Initial = $First_Name.Substring(0,1).ToLower()
+
+$First_Name_Lower = $First_Name.ToLower()
+$Last_Name_Lower = $Last_Name.ToLower()
+$Username = "$First_Initial$Last_Name_Lower"
+
+$Enrollment_Date =  Get-Date -Format "MMddyy"
+
+$mikefrobbins = "Mikefrobbins"
+
+$Password = "$mikefrobbins$Enrollment_Date"
+
+$Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
+
+New-ADUser `
+-Path "OU=ClassOf2025Students,OU=HighSchool,OU=$StudentAccounts,DC=$DC,DC=COM" `
+-Enabled $True `
+-ChangePasswordAtLogon $False `
+-Name "$First_Name $Last_Name" `
+-GivenName $First_Name `
+-Surname $Last_Name `
+-AccountPassword $Default_Password `
+-SamAccountName $Username `
+-UserPrincipalName "$Username $Domain" `
+-Displayname "$First_Name $Last_Name" `
+-ScriptPath "logon.bat" `
+-HomeDrive "Y:" `
+-HomeDirectory "\\mfr-server01\users\$Username" `
+-EmailAddress "$Username$Domain"
+
+Unlock-ADAccount -Identity $Username
+
+Enable-ADAccount -Identity $Username
+ 
+Set-ADUser -Identity $Username -ChangePasswordAtLogon $false
+
+Write-Host "Adding $Username, please wait..."
+
+Write-Host "Added $Class_Of_2025_Students_Count to ClassOf2025Students OU!"
+
+}
+
+# ClassOf2026
+
+Invoke-WebRequest $ClassOf2026StudentsNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ClassOf2026Students.csv
+
+$ClassOf2026StudentsCSV=Import-CSV "C:\Users\Administrator\Desktop\CSV-Data\ClassOf2026Students.csv"
+
+$Class_Of_2026_Students_Count = $ClassOf2026StudentsCSV | Measure-Object | Select-Object -expand count
+
+ForEach ($User in $ClassOf2026StudentsCSV) {
+
+$First_Name=$User.first_name
+
+$Last_Name=$User.last_name
+
+$First_Initial = $First_Name.Substring(0,1).ToLower()
+
+$First_Name_Lower = $First_Name.ToLower()
+$Last_Name_Lower = $Last_Name.ToLower()
+$Username = "$First_Initial$Last_Name_Lower"
+
+$Enrollment_Date =  Get-Date -Format "MMddyy"
+
+$mikefrobbins = "Mikefrobbins"
+
+$Password = "$mikefrobbins$Enrollment_Date"
+
+$Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
+
+New-ADUser `
+-Path "OU=ClassOf2026Students,OU=HighSchool,OU=$StudentAccounts,DC=$DC,DC=COM" `
+-Enabled $True `
+-ChangePasswordAtLogon $False `
+-Name "$First_Name $Last_Name" `
+-GivenName $First_Name `
+-Surname $Last_Name `
+-AccountPassword $Default_Password `
+-SamAccountName $Username `
+-UserPrincipalName "$Username $Domain" `
+-Displayname "$First_Name $Last_Name" `
+-ScriptPath "logon.bat" `
+-HomeDrive "Y:" `
+-HomeDirectory "\\mfr-server01\users\$Username" `
+-EmailAddress "$Username$Domain"
+
+Unlock-ADAccount -Identity $Username
+
+Enable-ADAccount -Identity $Username
+ 
+Set-ADUser -Identity $Username -ChangePasswordAtLogon $false
+
+Write-Host "Adding $Username, please wait..."
+
+Write-Host "Added $Class_Of_2026_Students_Count to ClassOf2026Students OU!"
+
+}
+
+# ClassOf2027
+
+Invoke-WebRequest $ClassOf2027StudentsNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ClassOf2027Students.csv
+
+$ClassOf2027StudentsCSV=Import-CSV "C:\Users\Administrator\Desktop\CSV-Data\ClassOf2027Students.csv"
+
+$Class_Of_2027_Students_Count = $ClassOf2027StudentsCSV | Measure-Object | Select-Object -expand count
+
+ForEach ($User in $ClassOf2027StudentsCSV) {
+
+$First_Name=$User.first_name
+
+$Last_Name=$User.last_name
+
+$First_Initial = $First_Name.Substring(0,1).ToLower()
+
+$First_Name_Lower = $First_Name.ToLower()
+$Last_Name_Lower = $Last_Name.ToLower()
+$Username = "$First_Initial$Last_Name_Lower"
+
+$Enrollment_Date =  Get-Date -Format "MMddyy"
+
+$mikefrobbins = "Mikefrobbins"
+
+$Password = "$mikefrobbins$Enrollment_Date"
+
+$Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
+
+New-ADUser `
+-Path "OU=ClassOf2027Students,OU=MiddleSchool,OU=$StudentAccounts,DC=$DC,DC=COM" `
+-Enabled $True `
+-ChangePasswordAtLogon $False `
+-Name "$First_Name $Last_Name" `
+-GivenName $First_Name `
+-Surname $Last_Name `
+-AccountPassword $Default_Password `
+-SamAccountName $Username `
+-UserPrincipalName "$Username $Domain" `
+-Displayname "$First_Name $Last_Name" `
+-ScriptPath "logon.bat" `
+-HomeDrive "Y:" `
+-HomeDirectory "\\mfr-server01\users\$Username" `
+-EmailAddress "$Username$Domain"
+
+Unlock-ADAccount -Identity $Username
+
+Enable-ADAccount -Identity $Username
+ 
+Set-ADUser -Identity $Username -ChangePasswordAtLogon $false
+
+Write-Host "Adding $Username, please wait..."
+
+Write-Host "Added $Class_Of_2027_Students_Count to ClassOf2027Students OU!"
+
+}
+
+# ClassOf2028
+
+Invoke-WebRequest $ClassOf2028StudentsNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ClassOf2028Students.csv
+
+$ClassOf2028StudentsCSV=Import-CSV "C:\Users\Administrator\Desktop\CSV-Data\ClassOf2028Students.csv"
+
+$Class_Of_2028_Students_Count = $ClassOf2028StudentsCSV | Measure-Object | Select-Object -expand count
+
+ForEach ($User in $ClassOf2028StudentsCSV) {
+
+$First_Name=$User.first_name
+
+$Last_Name=$User.last_name
+
+$First_Initial = $First_Name.Substring(0,1).ToLower()
+
+$First_Name_Lower = $First_Name.ToLower()
+$Last_Name_Lower = $Last_Name.ToLower()
+$Username = "$First_Initial$Last_Name_Lower"
+
+$Enrollment_Date =  Get-Date -Format "MMddyy"
+
+$mikefrobbins = "Mikefrobbins"
+
+$Password = "$mikefrobbins$Enrollment_Date"
+
+$Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
+
+New-ADUser `
+-Path "OU=ClassOf2028Students,OU=MiddleSchool,OU=$StudentAccounts,DC=$DC,DC=COM" `
+-Enabled $True `
+-ChangePasswordAtLogon $False `
+-Name "$First_Name $Last_Name" `
+-GivenName $First_Name `
+-Surname $Last_Name `
+-AccountPassword $Default_Password `
+-SamAccountName $Username `
+-UserPrincipalName "$Username $Domain" `
+-Displayname "$First_Name $Last_Name" `
+-ScriptPath "logon.bat" `
+-HomeDrive "Y:" `
+-HomeDirectory "\\mfr-server01\users\$Username" `
+-EmailAddress "$Username$Domain"
+
+Unlock-ADAccount -Identity $Username
+
+Enable-ADAccount -Identity $Username
+ 
+Set-ADUser -Identity $Username -ChangePasswordAtLogon $false
+
+Write-Host "Adding $Username, please wait..."
+
+Write-Host "Added $Class_Of_2028_Students_Count to ClassOf2028Students OU!"
+
+}
+
+# ClassOf2029
+
+Invoke-WebRequest $ClassOf2029StudentsNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ClassOf2029Students.csv
+
+$ClassOf2029StudentsCSV=Import-CSV "C:\Users\Administrator\Desktop\CSV-Data\ClassOf2029Students.csv"
+
+$Class_Of_2029_Students_Count = $ClassOf2029StudentsCSV | Measure-Object | Select-Object -expand count
+
+ForEach ($User in $ClassOf2029StudentsCSV) {
+
+$First_Name=$User.first_name
+
+$Last_Name=$User.last_name
+
+$First_Initial = $First_Name.Substring(0,1).ToLower()
+
+$First_Name_Lower = $First_Name.ToLower()
+$Last_Name_Lower = $Last_Name.ToLower()
+$Username = "$First_Initial$Last_Name_Lower"
+
+$Enrollment_Date =  Get-Date -Format "MMddyy"
+
+$mikefrobbins = "Mikefrobbins"
+
+$Password = "$mikefrobbins$Enrollment_Date"
+
+$Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
+
+New-ADUser `
+-Path "OU=ClassOf2029Students,OU=MiddleSchool,OU=$StudentAccounts,DC=$DC,DC=COM" `
+-Enabled $True `
+-ChangePasswordAtLogon $False `
+-Name "$First_Name $Last_Name" `
+-GivenName $First_Name `
+-Surname $Last_Name `
+-AccountPassword $Default_Password `
+-SamAccountName $Username `
+-UserPrincipalName "$Username $Domain" `
+-Displayname "$First_Name $Last_Name" `
+-ScriptPath "logon.bat" `
+-HomeDrive "Y:" `
+-HomeDirectory "\\mfr-server01\users\$Username" `
+-EmailAddress "$Username$Domain"
+
+Unlock-ADAccount -Identity $Username
+
+Enable-ADAccount -Identity $Username
+ 
+Set-ADUser -Identity $Username -ChangePasswordAtLogon $false
+
+Write-Host "Adding $Username, please wait..."
+
+Write-Host "Added $Class_Of_2029_Students_Count to ClassOf2029Students OU!"
+
+}
+
+# ClassOf2030
+
+Invoke-WebRequest $ClassOf2030StudentsNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ClassOf2030Students.csv
+
+$ClassOf2030StudentsCSV=Import-CSV "C:\Users\Administrator\Desktop\CSV-Data\ClassOf2030Students.csv"
+
+$Class_Of_2030_Students_Count = $ClassOf2030StudentsCSV | Measure-Object | Select-Object -expand count
+
+ForEach ($User in $ClassOf2030StudentsCSV) {
+
+$First_Name=$User.first_name
+
+$Last_Name=$User.last_name
+
+$First_Initial = $First_Name.Substring(0,1).ToLower()
+
+$First_Name_Lower = $First_Name.ToLower()
+$Last_Name_Lower = $Last_Name.ToLower()
+$Username = "$First_Initial$Last_Name_Lower"
+
+$Enrollment_Date =  Get-Date -Format "MMddyy"
+
+$mikefrobbins = "Mikefrobbins"
+
+$Password = "$mikefrobbins$Enrollment_Date"
+
+$Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
+
+New-ADUser `
+-Path "OU=ClassOf2030Students,OU=MiddleSchool,OU=$StudentAccounts,DC=$DC,DC=COM" `
+-Enabled $True `
+-ChangePasswordAtLogon $False `
+-Name "$First_Name $Last_Name" `
+-GivenName $First_Name `
+-Surname $Last_Name `
+-AccountPassword $Default_Password `
+-SamAccountName $Username `
+-UserPrincipalName "$Username $Domain" `
+-Displayname "$First_Name $Last_Name" `
+-ScriptPath "logon.bat" `
+-HomeDrive "Y:" `
+-HomeDirectory "\\mfr-server01\users\$Username" `
+-EmailAddress "$Username$Domain"
+
+Unlock-ADAccount -Identity $Username
+
+Enable-ADAccount -Identity $Username
+ 
+Set-ADUser -Identity $Username -ChangePasswordAtLogon $false
+
+Write-Host "Adding $Username, please wait..."
+
+Write-Host "Added $Class_Of_2030_Students_Count to ClassOf2030Students OU!"
+
+}
+
+# ClassOf2031
+
+Invoke-WebRequest $ClassOf2031StudentsNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ClassOf2031Students.csv
+
+$ClassOf2031StudentsCSV=Import-CSV "C:\Users\Administrator\Desktop\CSV-Data\ClassOf2031Students.csv"
+
+$Class_Of_2031_Students_Count = $ClassOf2031StudentsCSV | Measure-Object | Select-Object -expand count
+
+ForEach ($User in $ClassOf2031StudentsCSV) {
+
+$First_Name=$User.first_name
+
+$Last_Name=$User.last_name
+
+$First_Initial = $First_Name.Substring(0,1).ToLower()
+
+$First_Name_Lower = $First_Name.ToLower()
+$Last_Name_Lower = $Last_Name.ToLower()
+$Username = "$First_Initial$Last_Name_Lower"
+
+$Enrollment_Date =  Get-Date -Format "MMddyy"
+
+$mikefrobbins = "Mikefrobbins"
+
+$Password = "$mikefrobbins$Enrollment_Date"
+
+$Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
+
+New-ADUser `
+-Path "OU=ClassOf2031Students,OU=ElementarySchool,OU=$StudentAccounts,DC=$DC,DC=COM"`
+-Enabled $True `
+-ChangePasswordAtLogon $False `
+-Name "$First_Name $Last_Name" `
+-GivenName $First_Name `
+-Surname $Last_Name `
+-AccountPassword $Default_Password `
+-SamAccountName $Username `
+-UserPrincipalName "$Username $Domain" `
+-Displayname "$First_Name $Last_Name" `
+-ScriptPath "logon.bat" `
+-HomeDrive "Y:" `
+-HomeDirectory "\\mfr-server01\users\$Username" `
+-EmailAddress "$Username$Domain"
+
+Unlock-ADAccount -Identity $Username
+
+Enable-ADAccount -Identity $Username
+ 
+Set-ADUser -Identity $Username -ChangePasswordAtLogon $false
+
+Write-Host "Adding $Username, please wait..."
+
+Write-Host "Added $Class_Of_2031_Students_Count to ClassOf2031Students OU!"
+
+}
+
+# ClassOf2032
+
+Invoke-WebRequest $ClassOf2032StudentsNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ClassOf2032Students.csv
+
+$ClassOf2032StudentsCSV=Import-CSV "C:\Users\Administrator\Desktop\CSV-Data\ClassOf2032Students.csv"
+
+$Class_Of_2032_Students_Count = $ClassOf2032StudentsCSV | Measure-Object | Select-Object -expand count
+
+ForEach ($User in $ClassOf2032StudentsCSV) {
+
+$First_Name=$User.first_name
+
+$Last_Name=$User.last_name
+
+$First_Initial = $First_Name.Substring(0,1).ToLower()
+
+$First_Name_Lower = $First_Name.ToLower()
+$Last_Name_Lower = $Last_Name.ToLower()
+$Username = "$First_Initial$Last_Name_Lower"
+
+$Enrollment_Date =  Get-Date -Format "MMddyy"
+
+$mikefrobbins = "Mikefrobbins"
+
+$Password = "$mikefrobbins$Enrollment_Date"
+
+$Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
+
+New-ADUser `
+-Path "OU=ClassOf2032Students,OU=ElementarySchool,OU=$StudentAccounts,DC=$DC,DC=COM"`
+-Enabled $True `
+-ChangePasswordAtLogon $False `
+-Name "$First_Name $Last_Name" `
+-GivenName $First_Name `
+-Surname $Last_Name `
+-AccountPassword $Default_Password `
+-SamAccountName $Username `
+-UserPrincipalName "$Username $Domain" `
+-Displayname "$First_Name $Last_Name" `
+-ScriptPath "logon.bat" `
+-HomeDrive "Y:" `
+-HomeDirectory "\\mfr-server01\users\$Username" `
+-EmailAddress "$Username$Domain"
+
+Unlock-ADAccount -Identity $Username
+
+Enable-ADAccount -Identity $Username
+ 
+Set-ADUser -Identity $Username -ChangePasswordAtLogon $false
+
+Write-Host "Adding $Username, please wait..."
+
+Write-Host "Added $Class_Of_2032_Students_Count to ClassOf2032Students OU!"
+
+}
+
+# ClassOf2033
+
+Invoke-WebRequest $ClassOf2033StudentsNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ClassOf2033Students.csv
+
+$ClassOf2033StudentsCSV=Import-CSV "C:\Users\Administrator\Desktop\CSV-Data\ClassOf2033Students.csv"
+
+$Class_Of_2033_Students_Count = $ClassOf2033StudentsCSV | Measure-Object | Select-Object -expand count
+
+ForEach ($User in $ClassOf2033StudentsCSV) {
+
+$First_Name=$User.first_name
+
+$Last_Name=$User.last_name
+
+$First_Initial = $First_Name.Substring(0,1).ToLower()
+
+$First_Name_Lower = $First_Name.ToLower()
+$Last_Name_Lower = $Last_Name.ToLower()
+$Username = "$First_Initial$Last_Name_Lower"
+
+$Enrollment_Date =  Get-Date -Format "MMddyy"
+
+$mikefrobbins = "Mikefrobbins"
+
+$Password = "$mikefrobbins$Enrollment_Date"
+
+$Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
+
+New-ADUser `
+-Path "OU=ClassOf2033Students,OU=ElementarySchool,OU=$StudentAccounts,DC=$DC,DC=COM"`
+-Enabled $True `
+-ChangePasswordAtLogon $False `
+-Name "$First_Name $Last_Name" `
+-GivenName $First_Name `
+-Surname $Last_Name `
+-AccountPassword $Default_Password `
+-SamAccountName $Username `
+-UserPrincipalName "$Username $Domain" `
+-Displayname "$First_Name $Last_Name" `
+-ScriptPath "logon.bat" `
+-HomeDrive "Y:" `
+-HomeDirectory "\\mfr-server01\users\$Username" `
+-EmailAddress "$Username$Domain"
+
+Unlock-ADAccount -Identity $Username
+
+Enable-ADAccount -Identity $Username
+ 
+Set-ADUser -Identity $Username -ChangePasswordAtLogon $false
+
+Write-Host "Adding $Username, please wait..."
+
+Write-Host "Added $Class_Of_2033_Students_Count to ClassOf2033Students OU!"
+
+}
+
+# ClassOf2034
+
+Invoke-WebRequest $ClassOf2034StudentsNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ClassOf2034Students.csv
+
+$ClassOf2034StudentsCSV=Import-CSV "C:\Users\Administrator\Desktop\CSV-Data\ClassOf2034Students.csv"
+
+$Class_Of_2034_Students_Count = $ClassOf2034StudentsCSV | Measure-Object | Select-Object -expand count
+
+ForEach ($User in $ClassOf2034StudentsCSV) {
+
+$First_Name=$User.first_name
+
+$Last_Name=$User.last_name
+
+$First_Initial = $First_Name.Substring(0,1).ToLower()
+
+$First_Name_Lower = $First_Name.ToLower()
+$Last_Name_Lower = $Last_Name.ToLower()
+$Username = "$First_Initial$Last_Name_Lower"
+
+$Enrollment_Date =  Get-Date -Format "MMddyy"
+
+$mikefrobbins = "Mikefrobbins"
+
+$Password = "$mikefrobbins$Enrollment_Date"
+
+$Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
+
+New-ADUser `
+-Path "OU=ClassOf2034Students,OU=ElementarySchool,OU=$StudentAccounts,DC=$DC,DC=COM"`
+-Enabled $True `
+-ChangePasswordAtLogon $False `
+-Name "$First_Name $Last_Name" `
+-GivenName $First_Name `
+-Surname $Last_Name `
+-AccountPassword $Default_Password `
+-SamAccountName $Username `
+-UserPrincipalName "$Username $Domain" `
+-Displayname "$First_Name $Last_Name" `
+-ScriptPath "logon.bat" `
+-HomeDrive "Y:" `
+-HomeDirectory "\\mfr-server01\users\$Username" `
+-EmailAddress "$Username$Domain"
+
+Unlock-ADAccount -Identity $Username
+
+Enable-ADAccount -Identity $Username
+ 
+Set-ADUser -Identity $Username -ChangePasswordAtLogon $false
+
+Write-Host "Adding $Username, please wait..."
+
+Write-Host "Added $Class_Of_2034_Students_Count to ClassOf2034Students OU!"
+
+}
+
+$TotalFacultyCount = ""
+
+$TotalStudentsCount = ""
+
+Write-Host 

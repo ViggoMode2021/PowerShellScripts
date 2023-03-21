@@ -117,6 +117,7 @@ $ClassOf2034StudentNames = "https://raw.githubusercontent.com/ViggoMode2021/Powe
 
 $ClassOf2035StudentNames = "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/class-of-2035-student-names.csv" # ES
 
+# High School Faculty:
 
 New-Item -Path 'C:\Users\Administrator\Desktop\CSV-Data' -ItemType Directory
 
@@ -174,7 +175,7 @@ Write-Host "Added $High_School_Faculty_Count to HighSchoolFaculty OU!"
 
 }
 
-# Middle school teachers
+# Middle School Faculty:
 
 Invoke-WebRequest $MiddleSchoolFacultyNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\MiddleSchoolTeachers.csv
 
@@ -958,8 +959,13 @@ Write-Host "Added $Class_Of_2034_Students_Count to ClassOf2034Students OU!"
 
 }
 
-$TotalFacultyCount = ""
+$TotalFacultyCount = $High_School_Faculty_Count + $Middle_School_Faculty_Count + $Elementary_School_Faculty_Count
 
-$TotalStudentsCount = ""
+$TotalStudentsCount = $Class_Of_2023_Students_Count + $Class_Of_2024_Students_Count + $Class_Of_2025_Students_Count `
+ + $Class_Of_2026_Students_Count + $Class_Of_2027_Students_Count + $Class_Of_2028_Students_Count + $Class_Of_2029_Students_Count `
+ + $Class_Of_2030_Students_Count + $Class_Of_2031_Students_Count + $Class_Of_2032_Students_Count + $Class_Of_2033_Students_Count + `
+ $Class_Of_2034_Students_Count
 
-Write-Host 
+Write-Host "$TotalFacultyCount faculty added." -BackgroundColor DarkGreen -ForegroundColor White
+
+Write-Host "TotalStudentCount students added." -BackgroundColor DarkGreen -ForegroundColor White

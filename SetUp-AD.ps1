@@ -4,6 +4,8 @@ Import-Module ActiveDirectory
 
 #Install-ADDSForest -DomainName vdom.local -InstallDNS
 
+$mikefrobbins = "Mikefrobbins"
+
 $DC = "mikefrobbins"
 
 $Domain = "@mikefrobbins.com"
@@ -18,7 +20,7 @@ $ElementarySchool = "ElementarySchool"
 
 $FacultyAccounts = "FacultyAccounts"
 
-$OrganizationalUnits = @("StudentAccounts", "HighSchoolStudents", "Class of 2023", "Class of 2024", "Class of 2025", "Class of 2026", "Class of 2027", 
+$OrganizationalUnits = @("StudentAccounts", "HighSchoolStudents", "Class of 2023", "Class of 2024", "Class of 2025", "Class of 2026", "Class of 2027",
 "MiddleSchoolStudents", "Class of 2027", "Class of 2028", "Class of 2029", "Class of 2030", "ElementarySchoolStudents", "Class of 2031", "Class of 2032", "Class of 2033", "Class of 2034",
 "FacultyAccounts", "HighSchoolFaculty", "MiddleSchoolFaculty", "ElementarySchoolFaculty")
 
@@ -31,7 +33,7 @@ else {
 
 Write-Host "Creating OU named $OU"
 }
-    
+
 }
 }
 
@@ -141,8 +143,6 @@ $Username = "$First_Initial$Last_Name_Lower"
 
 $Enrollment_Date =  Get-Date -Format "MMddyy"
 
-$mikefrobbins = "Mikefrobbins"
-
 $Password = "$mikefrobbins$Enrollment_Date"
 
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
@@ -166,7 +166,7 @@ New-ADUser `
 Unlock-ADAccount -Identity $Username
 
 Enable-ADAccount -Identity $Username
- 
+
 Set-ADUser -Identity $Username -ChangePasswordAtLogon $true
 
 Write-Host "Adding $Username, please wait..."
@@ -197,8 +197,6 @@ $Username = "$First_Initial$Last_Name_Lower"
 
 $Enrollment_Date =  Get-Date -Format "MMddyy"
 
-$mikefrobbins = "Mikefrobbins"
-
 $Password = "$mikefrobbins$Enrollment_Date"
 
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
@@ -222,7 +220,7 @@ New-ADUser `
 Unlock-ADAccount -Identity $Username
 
 Enable-ADAccount -Identity $Username
- 
+
 Set-ADUser -Identity $Username -ChangePasswordAtLogon $true
 
 Write-Host "Adding $Username, please wait..."
@@ -253,8 +251,6 @@ $Username = "$First_Initial$Last_Name_Lower"
 
 $Enrollment_Date =  Get-Date -Format "MMddyy"
 
-$mikefrobbins = "Mikefrobbins"
-
 $Password = "$mikefrobbins$Enrollment_Date"
 
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
@@ -278,7 +274,7 @@ New-ADUser `
 Unlock-ADAccount -Identity $Username
 
 Enable-ADAccount -Identity $Username
- 
+
 Set-ADUser -Identity $Username -ChangePasswordAtLogon $true
 
 Write-Host "Adding $Username, please wait..."
@@ -289,7 +285,7 @@ Write-Host "Added $Elementary_School_Faculty_Count to ElementarySchoolFaculty OU
 
 # ClassOf2023
 
-Invoke-WebRequest $ClassOf2023StudentsNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ClassOf2023Students.csv
+Invoke-WebRequest $ClassOf2023StudentNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ClassOf2023Students.csv
 
 $ClassOf2023StudentsCSV=Import-CSV "C:\Users\Administrator\Desktop\CSV-Data\ClassOf2023Students.csv"
 
@@ -308,8 +304,6 @@ $Last_Name_Lower = $Last_Name.ToLower()
 $Username = "$First_Initial$Last_Name_Lower"
 
 $Enrollment_Date =  Get-Date -Format "MMddyy"
-
-$mikefrobbins = "Mikefrobbins"
 
 $Password = "$mikefrobbins$Enrollment_Date"
 
@@ -334,7 +328,7 @@ New-ADUser `
 Unlock-ADAccount -Identity $Username
 
 Enable-ADAccount -Identity $Username
- 
+
 Set-ADUser -Identity $Username -ChangePasswordAtLogon $false
 
 Write-Host "Adding $Username, please wait..."
@@ -345,7 +339,7 @@ Write-Host "Added $Class_Of_2023_Students_Count to ClassOf2023Students OU!"
 
 # ClassOf2024
 
-Invoke-WebRequest $ClassOf2024StudentsNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ClassOf2024Students.csv
+Invoke-WebRequest $ClassOf2024StudentNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ClassOf2024Students.csv
 
 $ClassOf2024StudentsCSV=Import-CSV "C:\Users\Administrator\Desktop\CSV-Data\ClassOf2024Students.csv"
 
@@ -364,8 +358,6 @@ $Last_Name_Lower = $Last_Name.ToLower()
 $Username = "$First_Initial$Last_Name_Lower"
 
 $Enrollment_Date =  Get-Date -Format "MMddyy"
-
-$mikefrobbins = "Mikefrobbins"
 
 $Password = "$mikefrobbins$Enrollment_Date"
 
@@ -390,18 +382,18 @@ New-ADUser `
 Unlock-ADAccount -Identity $Username
 
 Enable-ADAccount -Identity $Username
- 
+
 Set-ADUser -Identity $Username -ChangePasswordAtLogon $false
 
 Write-Host "Adding $Username, please wait..."
 
-Write-Host "Added $Class_Of_2024_Students_Count to ClassOf2024Students OU!"
-
 }
+
+Write-Host "Added $Class_Of_2024_Students_Count to ClassOf2024Students OU!"
 
 # ClassOf2025
 
-Invoke-WebRequest $ClassOf2025StudentsNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ClassOf2025Students.csv
+Invoke-WebRequest $ClassOf2025StudentNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ClassOf2025Students.csv
 
 $ClassOf2025StudentsCSV=Import-CSV "C:\Users\Administrator\Desktop\CSV-Data\ClassOf2025Students.csv"
 
@@ -420,8 +412,6 @@ $Last_Name_Lower = $Last_Name.ToLower()
 $Username = "$First_Initial$Last_Name_Lower"
 
 $Enrollment_Date =  Get-Date -Format "MMddyy"
-
-$mikefrobbins = "Mikefrobbins"
 
 $Password = "$mikefrobbins$Enrollment_Date"
 
@@ -446,18 +436,18 @@ New-ADUser `
 Unlock-ADAccount -Identity $Username
 
 Enable-ADAccount -Identity $Username
- 
+
 Set-ADUser -Identity $Username -ChangePasswordAtLogon $false
 
 Write-Host "Adding $Username, please wait..."
 
-Write-Host "Added $Class_Of_2025_Students_Count to ClassOf2025Students OU!"
-
 }
+
+Write-Host "Added $Class_Of_2025_Students_Count to ClassOf2025Students OU!"
 
 # ClassOf2026
 
-Invoke-WebRequest $ClassOf2026StudentsNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ClassOf2026Students.csv
+Invoke-WebRequest $ClassOf2026StudentNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ClassOf2026Students.csv
 
 $ClassOf2026StudentsCSV=Import-CSV "C:\Users\Administrator\Desktop\CSV-Data\ClassOf2026Students.csv"
 
@@ -476,8 +466,6 @@ $Last_Name_Lower = $Last_Name.ToLower()
 $Username = "$First_Initial$Last_Name_Lower"
 
 $Enrollment_Date =  Get-Date -Format "MMddyy"
-
-$mikefrobbins = "Mikefrobbins"
 
 $Password = "$mikefrobbins$Enrollment_Date"
 
@@ -502,18 +490,18 @@ New-ADUser `
 Unlock-ADAccount -Identity $Username
 
 Enable-ADAccount -Identity $Username
- 
+
 Set-ADUser -Identity $Username -ChangePasswordAtLogon $false
 
 Write-Host "Adding $Username, please wait..."
 
-Write-Host "Added $Class_Of_2026_Students_Count to ClassOf2026Students OU!"
-
 }
+
+Write-Host "Added $Class_Of_2026_Students_Count to ClassOf2026Students OU!"
 
 # ClassOf2027
 
-Invoke-WebRequest $ClassOf2027StudentsNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ClassOf2027Students.csv
+Invoke-WebRequest $ClassOf2027StudentNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ClassOf2027Students.csv
 
 $ClassOf2027StudentsCSV=Import-CSV "C:\Users\Administrator\Desktop\CSV-Data\ClassOf2027Students.csv"
 
@@ -532,8 +520,6 @@ $Last_Name_Lower = $Last_Name.ToLower()
 $Username = "$First_Initial$Last_Name_Lower"
 
 $Enrollment_Date =  Get-Date -Format "MMddyy"
-
-$mikefrobbins = "Mikefrobbins"
 
 $Password = "$mikefrobbins$Enrollment_Date"
 
@@ -558,18 +544,18 @@ New-ADUser `
 Unlock-ADAccount -Identity $Username
 
 Enable-ADAccount -Identity $Username
- 
+
 Set-ADUser -Identity $Username -ChangePasswordAtLogon $false
 
 Write-Host "Adding $Username, please wait..."
 
-Write-Host "Added $Class_Of_2027_Students_Count to ClassOf2027Students OU!"
-
 }
+
+Write-Host "Added $Class_Of_2027_Students_Count to ClassOf2027Students OU!"
 
 # ClassOf2028
 
-Invoke-WebRequest $ClassOf2028StudentsNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ClassOf2028Students.csv
+Invoke-WebRequest $ClassOf2028StudentNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ClassOf2028Students.csv
 
 $ClassOf2028StudentsCSV=Import-CSV "C:\Users\Administrator\Desktop\CSV-Data\ClassOf2028Students.csv"
 
@@ -588,8 +574,6 @@ $Last_Name_Lower = $Last_Name.ToLower()
 $Username = "$First_Initial$Last_Name_Lower"
 
 $Enrollment_Date =  Get-Date -Format "MMddyy"
-
-$mikefrobbins = "Mikefrobbins"
 
 $Password = "$mikefrobbins$Enrollment_Date"
 
@@ -614,18 +598,18 @@ New-ADUser `
 Unlock-ADAccount -Identity $Username
 
 Enable-ADAccount -Identity $Username
- 
+
 Set-ADUser -Identity $Username -ChangePasswordAtLogon $false
 
 Write-Host "Adding $Username, please wait..."
 
-Write-Host "Added $Class_Of_2028_Students_Count to ClassOf2028Students OU!"
-
 }
+
+Write-Host "Added $Class_Of_2028_Students_Count to ClassOf2028Students OU!"
 
 # ClassOf2029
 
-Invoke-WebRequest $ClassOf2029StudentsNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ClassOf2029Students.csv
+Invoke-WebRequest $ClassOf2029StudentNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ClassOf2029Students.csv
 
 $ClassOf2029StudentsCSV=Import-CSV "C:\Users\Administrator\Desktop\CSV-Data\ClassOf2029Students.csv"
 
@@ -644,8 +628,6 @@ $Last_Name_Lower = $Last_Name.ToLower()
 $Username = "$First_Initial$Last_Name_Lower"
 
 $Enrollment_Date =  Get-Date -Format "MMddyy"
-
-$mikefrobbins = "Mikefrobbins"
 
 $Password = "$mikefrobbins$Enrollment_Date"
 
@@ -670,18 +652,18 @@ New-ADUser `
 Unlock-ADAccount -Identity $Username
 
 Enable-ADAccount -Identity $Username
- 
+
 Set-ADUser -Identity $Username -ChangePasswordAtLogon $false
 
 Write-Host "Adding $Username, please wait..."
 
-Write-Host "Added $Class_Of_2029_Students_Count to ClassOf2029Students OU!"
-
 }
+
+Write-Host "Added $Class_Of_2029_Students_Count to ClassOf2029Students OU!"
 
 # ClassOf2030
 
-Invoke-WebRequest $ClassOf2030StudentsNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ClassOf2030Students.csv
+Invoke-WebRequest $ClassOf2030StudentNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ClassOf2030Students.csv
 
 $ClassOf2030StudentsCSV=Import-CSV "C:\Users\Administrator\Desktop\CSV-Data\ClassOf2030Students.csv"
 
@@ -700,8 +682,6 @@ $Last_Name_Lower = $Last_Name.ToLower()
 $Username = "$First_Initial$Last_Name_Lower"
 
 $Enrollment_Date =  Get-Date -Format "MMddyy"
-
-$mikefrobbins = "Mikefrobbins"
 
 $Password = "$mikefrobbins$Enrollment_Date"
 
@@ -726,18 +706,18 @@ New-ADUser `
 Unlock-ADAccount -Identity $Username
 
 Enable-ADAccount -Identity $Username
- 
+
 Set-ADUser -Identity $Username -ChangePasswordAtLogon $false
 
 Write-Host "Adding $Username, please wait..."
 
-Write-Host "Added $Class_Of_2030_Students_Count to ClassOf2030Students OU!"
-
 }
+
+Write-Host "Added $Class_Of_2030_Students_Count to ClassOf2030Students OU!"
 
 # ClassOf2031
 
-Invoke-WebRequest $ClassOf2031StudentsNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ClassOf2031Students.csv
+Invoke-WebRequest $ClassOf2031StudentNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ClassOf2031Students.csv
 
 $ClassOf2031StudentsCSV=Import-CSV "C:\Users\Administrator\Desktop\CSV-Data\ClassOf2031Students.csv"
 
@@ -756,8 +736,6 @@ $Last_Name_Lower = $Last_Name.ToLower()
 $Username = "$First_Initial$Last_Name_Lower"
 
 $Enrollment_Date =  Get-Date -Format "MMddyy"
-
-$mikefrobbins = "Mikefrobbins"
 
 $Password = "$mikefrobbins$Enrollment_Date"
 
@@ -782,18 +760,18 @@ New-ADUser `
 Unlock-ADAccount -Identity $Username
 
 Enable-ADAccount -Identity $Username
- 
+
 Set-ADUser -Identity $Username -ChangePasswordAtLogon $false
 
 Write-Host "Adding $Username, please wait..."
 
-Write-Host "Added $Class_Of_2031_Students_Count to ClassOf2031Students OU!"
-
 }
+
+Write-Host "Added $Class_Of_2031_Students_Count to ClassOf2031Students OU!"
 
 # ClassOf2032
 
-Invoke-WebRequest $ClassOf2032StudentsNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ClassOf2032Students.csv
+Invoke-WebRequest $ClassOf2032StudentNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ClassOf2032Students.csv
 
 $ClassOf2032StudentsCSV=Import-CSV "C:\Users\Administrator\Desktop\CSV-Data\ClassOf2032Students.csv"
 
@@ -812,8 +790,6 @@ $Last_Name_Lower = $Last_Name.ToLower()
 $Username = "$First_Initial$Last_Name_Lower"
 
 $Enrollment_Date =  Get-Date -Format "MMddyy"
-
-$mikefrobbins = "Mikefrobbins"
 
 $Password = "$mikefrobbins$Enrollment_Date"
 
@@ -838,18 +814,18 @@ New-ADUser `
 Unlock-ADAccount -Identity $Username
 
 Enable-ADAccount -Identity $Username
- 
+
 Set-ADUser -Identity $Username -ChangePasswordAtLogon $false
 
 Write-Host "Adding $Username, please wait..."
 
-Write-Host "Added $Class_Of_2032_Students_Count to ClassOf2032Students OU!"
-
 }
+
+Write-Host "Added $Class_Of_2032_Students_Count to ClassOf2032Students OU!"
 
 # ClassOf2033
 
-Invoke-WebRequest $ClassOf2033StudentsNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ClassOf2033Students.csv
+Invoke-WebRequest $ClassOf2033StudentNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ClassOf2033Students.csv
 
 $ClassOf2033StudentsCSV=Import-CSV "C:\Users\Administrator\Desktop\CSV-Data\ClassOf2033Students.csv"
 
@@ -868,8 +844,6 @@ $Last_Name_Lower = $Last_Name.ToLower()
 $Username = "$First_Initial$Last_Name_Lower"
 
 $Enrollment_Date =  Get-Date -Format "MMddyy"
-
-$mikefrobbins = "Mikefrobbins"
 
 $Password = "$mikefrobbins$Enrollment_Date"
 
@@ -894,18 +868,18 @@ New-ADUser `
 Unlock-ADAccount -Identity $Username
 
 Enable-ADAccount -Identity $Username
- 
+
 Set-ADUser -Identity $Username -ChangePasswordAtLogon $false
 
 Write-Host "Adding $Username, please wait..."
 
-Write-Host "Added $Class_Of_2033_Students_Count to ClassOf2033Students OU!"
-
 }
+
+Write-Host "Added $Class_Of_2033_Students_Count to ClassOf2033Students OU!"
 
 # ClassOf2034
 
-Invoke-WebRequest $ClassOf2034StudentsNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ClassOf2034Students.csv
+Invoke-WebRequest $ClassOf2034StudentNames -OutFile C:\Users\Administrator\Desktop\CSV-Data\ClassOf2034Students.csv
 
 $ClassOf2034StudentsCSV=Import-CSV "C:\Users\Administrator\Desktop\CSV-Data\ClassOf2034Students.csv"
 
@@ -924,8 +898,6 @@ $Last_Name_Lower = $Last_Name.ToLower()
 $Username = "$First_Initial$Last_Name_Lower"
 
 $Enrollment_Date =  Get-Date -Format "MMddyy"
-
-$mikefrobbins = "Mikefrobbins"
 
 $Password = "$mikefrobbins$Enrollment_Date"
 
@@ -950,14 +922,14 @@ New-ADUser `
 Unlock-ADAccount -Identity $Username
 
 Enable-ADAccount -Identity $Username
- 
+
 Set-ADUser -Identity $Username -ChangePasswordAtLogon $false
 
 Write-Host "Adding $Username, please wait..."
 
-Write-Host "Added $Class_Of_2034_Students_Count to ClassOf2034Students OU!"
-
 }
+
+Write-Host "Added $Class_Of_2034_Students_Count to ClassOf2034Students OU!"
 
 $TotalFacultyCount = $High_School_Faculty_Count + $Middle_School_Faculty_Count + $Elementary_School_Faculty_Count
 
@@ -968,4 +940,4 @@ $TotalStudentsCount = $Class_Of_2023_Students_Count + $Class_Of_2024_Students_Co
 
 Write-Host "$TotalFacultyCount faculty added." -BackgroundColor DarkGreen -ForegroundColor White
 
-Write-Host "TotalStudentCount students added." -BackgroundColor DarkGreen -ForegroundColor White
+Write-Host "$TotalStudentCount students added." -BackgroundColor DarkGreen -ForegroundColor White

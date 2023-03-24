@@ -4,11 +4,11 @@ Import-Module ActiveDirectory
 
 #Install-ADDSForest -DomainName vdom.local -InstallDNS
 
-$mikefrobbins = "Mikefrobbins"
+$vigschools = "Mikefrobbins"
 
-$DC = "mikefrobbins"
+$DC = "vigschools"
 
-$Domain = "@mikefrobbins.com"
+$Domain = "@vigschools.org"
 
 $StudentAccounts = "StudentAccounts"
 
@@ -143,7 +143,7 @@ $Username = "$First_Initial$Last_Name_Lower"
 
 $Enrollment_Date =  Get-Date -Format "MMddyy"
 
-$Password = "$mikefrobbins$Enrollment_Date"
+$Password = "$vigschools$Enrollment_Date"
 
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
@@ -197,7 +197,7 @@ $Username = "$First_Initial$Last_Name_Lower"
 
 $Enrollment_Date =  Get-Date -Format "MMddyy"
 
-$Password = "$mikefrobbins$Enrollment_Date"
+$Password = "$vigschools$Enrollment_Date"
 
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
@@ -251,7 +251,7 @@ $Username = "$First_Initial$Last_Name_Lower"
 
 $Enrollment_Date =  Get-Date -Format "MMddyy"
 
-$Password = "$mikefrobbins$Enrollment_Date"
+$Password = "$vigschools$Enrollment_Date"
 
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
@@ -305,7 +305,7 @@ $Username = "$First_Initial$Last_Name_Lower"
 
 $Enrollment_Date =  Get-Date -Format "MMddyy"
 
-$Password = "$mikefrobbins$Enrollment_Date"
+$Password = "$vigschools$Enrollment_Date"
 
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
@@ -333,9 +333,9 @@ Set-ADUser -Identity $Username -ChangePasswordAtLogon $false
 
 Write-Host "Adding $Username, please wait..."
 
-Write-Host "Added $Class_Of_2023_Students_Count to ClassOf2023Students OU!"
-
 }
+
+Write-Host "Added $Class_Of_2023_Students_Count to ClassOf2023Students OU!"
 
 # ClassOf2024
 
@@ -359,7 +359,7 @@ $Username = "$First_Initial$Last_Name_Lower"
 
 $Enrollment_Date =  Get-Date -Format "MMddyy"
 
-$Password = "$mikefrobbins$Enrollment_Date"
+$Password = "$vigschools$Enrollment_Date"
 
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
@@ -413,7 +413,7 @@ $Username = "$First_Initial$Last_Name_Lower"
 
 $Enrollment_Date =  Get-Date -Format "MMddyy"
 
-$Password = "$mikefrobbins$Enrollment_Date"
+$Password = "$vigschools$Enrollment_Date"
 
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
@@ -467,7 +467,7 @@ $Username = "$First_Initial$Last_Name_Lower"
 
 $Enrollment_Date =  Get-Date -Format "MMddyy"
 
-$Password = "$mikefrobbins$Enrollment_Date"
+$Password = "$vigschools$Enrollment_Date"
 
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
@@ -521,7 +521,7 @@ $Username = "$First_Initial$Last_Name_Lower"
 
 $Enrollment_Date =  Get-Date -Format "MMddyy"
 
-$Password = "$mikefrobbins$Enrollment_Date"
+$Password = "$vigschools$Enrollment_Date"
 
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
@@ -575,7 +575,7 @@ $Username = "$First_Initial$Last_Name_Lower"
 
 $Enrollment_Date =  Get-Date -Format "MMddyy"
 
-$Password = "$mikefrobbins$Enrollment_Date"
+$Password = "$vigschools$Enrollment_Date"
 
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
@@ -629,7 +629,7 @@ $Username = "$First_Initial$Last_Name_Lower"
 
 $Enrollment_Date =  Get-Date -Format "MMddyy"
 
-$Password = "$mikefrobbins$Enrollment_Date"
+$Password = "$vigschools$Enrollment_Date"
 
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
@@ -683,7 +683,7 @@ $Username = "$First_Initial$Last_Name_Lower"
 
 $Enrollment_Date =  Get-Date -Format "MMddyy"
 
-$Password = "$mikefrobbins$Enrollment_Date"
+$Password = "$vigschools$Enrollment_Date"
 
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
@@ -737,7 +737,7 @@ $Username = "$First_Initial$Last_Name_Lower"
 
 $Enrollment_Date =  Get-Date -Format "MMddyy"
 
-$Password = "$mikefrobbins$Enrollment_Date"
+$Password = "$vigschools$Enrollment_Date"
 
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
@@ -791,7 +791,7 @@ $Username = "$First_Initial$Last_Name_Lower"
 
 $Enrollment_Date =  Get-Date -Format "MMddyy"
 
-$Password = "$mikefrobbins$Enrollment_Date"
+$Password = "$vigschools$Enrollment_Date"
 
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
@@ -845,7 +845,7 @@ $Username = "$First_Initial$Last_Name_Lower"
 
 $Enrollment_Date =  Get-Date -Format "MMddyy"
 
-$Password = "$mikefrobbins$Enrollment_Date"
+$Password = "$vigschools$Enrollment_Date"
 
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
@@ -899,7 +899,7 @@ $Username = "$First_Initial$Last_Name_Lower"
 
 $Enrollment_Date =  Get-Date -Format "MMddyy"
 
-$Password = "$mikefrobbins$Enrollment_Date"
+$Password = "$vigschools$Enrollment_Date"
 
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 

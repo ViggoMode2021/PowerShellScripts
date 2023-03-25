@@ -41,47 +41,47 @@ CheckOU
 
 # Add student OUs below:
 
-New-ADOrganizationalUnit -Name "StudentAccounts" -Path "DC=$DC,DC=COM"
+New-ADOrganizationalUnit -Name "StudentAccounts" -Path "DC=$DC,DC=ORG"
 
-New-ADOrganizationalUnit -Name "HighSchool" -Path "OU=$StudentAccounts,DC=$DC,DC=COM"
+New-ADOrganizationalUnit -Name "HighSchool" -Path "OU=$StudentAccounts,DC=$DC,DC=ORG"
 
-New-ADOrganizationalUnit -Name "ClassOf2023" -Path "OU=$HighSchool,OU=$StudentAccounts,DC=$DC,DC=COM"
+New-ADOrganizationalUnit -Name "ClassOf2023" -Path "OU=$HighSchool,OU=$StudentAccounts,DC=$DC,DC=ORG"
 
-New-ADOrganizationalUnit -Name "ClassOf2024" -Path "OU=$HighSchool,OU=$StudentAccounts,DC=$DC,DC=COM"
+New-ADOrganizationalUnit -Name "ClassOf2024" -Path "OU=$HighSchool,OU=$StudentAccounts,DC=$DC,DC=ORG"
 
-New-ADOrganizationalUnit -Name "ClassOf2025" -Path "OU=$HighSchool,OU=$StudentAccounts,DC=$DC,DC=COM"
+New-ADOrganizationalUnit -Name "ClassOf2025" -Path "OU=$HighSchool,OU=$StudentAccounts,DC=$DC,DC=ORG"
 
-New-ADOrganizationalUnit -Name "ClassOf2026" -Path "OU=$HighSchool,OU=$StudentAccounts,DC=$DC,DC=COM"
+New-ADOrganizationalUnit -Name "ClassOf2026" -Path "OU=$HighSchool,OU=$StudentAccounts,DC=$DC,DC=ORG"
 
-New-ADOrganizationalUnit -Name "MiddleSchool" -Path "OU=$StudentAccounts,DC=$DC,DC=COM"
+New-ADOrganizationalUnit -Name "MiddleSchool" -Path "OU=$StudentAccounts,DC=$DC,DC=ORG"
 
-New-ADOrganizationalUnit -Name "ClassOf2027" -Path "OU=$MiddleSchool,OU=$StudentAccounts,DC=$DC,DC=COM"
+New-ADOrganizationalUnit -Name "ClassOf2027" -Path "OU=$MiddleSchool,OU=$StudentAccounts,DC=$DC,DC=ORG"
 
-New-ADOrganizationalUnit -Name "ClassOf2028" -Path "OU=$MiddleSchool,OU=$StudentAccounts,DC=$DC,DC=COM"
+New-ADOrganizationalUnit -Name "ClassOf2028" -Path "OU=$MiddleSchool,OU=$StudentAccounts,DC=$DC,DC=ORG"
 
-New-ADOrganizationalUnit -Name "ClassOf2029" -Path "OU=$MiddleSchool,OU=$StudentAccounts,DC=$DC,DC=COM"
+New-ADOrganizationalUnit -Name "ClassOf2029" -Path "OU=$MiddleSchool,OU=$StudentAccounts,DC=$DC,DC=ORG"
 
-New-ADOrganizationalUnit -Name "ClassOf2030" -Path "OU=$MiddleSchool,OU=$StudentAccounts,DC=$DC,DC=COM"
+New-ADOrganizationalUnit -Name "ClassOf2030" -Path "OU=$MiddleSchool,OU=$StudentAccounts,DC=$DC,DC=ORG"
 
-New-ADOrganizationalUnit -Name "ElementarySchool" -Path "OU=$StudentAccounts,DC=$DC,DC=COM"
+New-ADOrganizationalUnit -Name "ElementarySchool" -Path "OU=$StudentAccounts,DC=$DC,DC=ORG"
 
-New-ADOrganizationalUnit -Name "ClassOf2031" -Path "OU=$ElementarySchool,OU=$StudentAccounts,DC=$DC,DC=COM"
+New-ADOrganizationalUnit -Name "ClassOf2031" -Path "OU=$ElementarySchool,OU=$StudentAccounts,DC=$DC,DC=ORG"
 
-New-ADOrganizationalUnit -Name "ClassOf2032" -Path "OU=$ElementarySchool,OU=$StudentAccounts,DC=$DC,DC=COM"
+New-ADOrganizationalUnit -Name "ClassOf2032" -Path "OU=$ElementarySchool,OU=$StudentAccounts,DC=$DC,DC=ORG"
 
-New-ADOrganizationalUnit -Name "ClassOf2033" -Path "OU=$ElementarySchool,OU=$StudentAccounts,DC=$DC,DC=COM"
+New-ADOrganizationalUnit -Name "ClassOf2033" -Path "OU=$ElementarySchool,OU=$StudentAccounts,DC=$DC,DC=ORG"
 
-New-ADOrganizationalUnit -Name "ClassOf2034" -Path "OU=$ElementarySchool,OU=$StudentAccounts,DC=$DC,DC=COM"
+New-ADOrganizationalUnit -Name "ClassOf2034" -Path "OU=$ElementarySchool,OU=$StudentAccounts,DC=$DC,DC=ORG"
 
 #Add faculty OUs below:
 
-New-ADOrganizationalUnit -Name "FacultyAccounts" -Path "DC=$DC,DC=COM"
+New-ADOrganizationalUnit -Name "FacultyAccounts" -Path "DC=$DC,DC=ORG"
 
-New-ADOrganizationalUnit -Name "HighSchoolFaculty" -Path "OU=$FacultyAccounts,DC=$DC,DC=COM"
+New-ADOrganizationalUnit -Name "HighSchoolFaculty" -Path "OU=$FacultyAccounts,DC=$DC,DC=ORG"
 
-New-ADOrganizationalUnit -Name "MiddleSchoolFaculty" -Path "OU=$FacultyAccounts,DC=$DC,DC=COM"
+New-ADOrganizationalUnit -Name "MiddleSchoolFaculty" -Path "OU=$FacultyAccounts,DC=$DC,DC=ORG"
 
-New-ADOrganizationalUnit -Name "ElementarySchoolFaculty" -Path "OU=$FacultyAccounts,DC=$DC,DC=COM"
+New-ADOrganizationalUnit -Name "ElementarySchoolFaculty" -Path "OU=$FacultyAccounts,DC=$DC,DC=ORG"
 
 # Logic to add CSV-Users to CSV
 
@@ -148,7 +148,7 @@ $Password = "$vigschools$Enrollment_Date"
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
 New-ADUser `
--Path "OU=HighSchoolFaculty,OU=$FacultyAccounts,DC=$DC,DC=COM" `
+-Path "OU=HighSchoolFaculty,OU=$FacultyAccounts,DC=$DC,DC=ORG" `
 -Enabled $True `
 -ChangePasswordAtLogon $True `
 -Name "$Last_Name$Comma $First_Name" `
@@ -202,7 +202,7 @@ $Password = "$vigschools$Enrollment_Date"
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
 New-ADUser `
--Path "OU=MiddleSchoolFaculty,OU=$FacultyAccounts,DC=$DC,DC=COM" `
+-Path "OU=MiddleSchoolFaculty,OU=$FacultyAccounts,DC=$DC,DC=ORG" `
 -Enabled $True `
 -ChangePasswordAtLogon $True `
 -Name "$Last_Name$Comma $First_Name" `
@@ -256,7 +256,7 @@ $Password = "$vigschools$Enrollment_Date"
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
 New-ADUser `
--Path "OU=ElementarySchoolFaculty,OU=$FacultyAccounts,DC=$DC,DC=COM" `
+-Path "OU=ElementarySchoolFaculty,OU=$FacultyAccounts,DC=$DC,DC=ORG" `
 -Enabled $True `
 -ChangePasswordAtLogon $True `
 -Name "$Last_Name$Comma $First_Name" `
@@ -310,7 +310,7 @@ $Password = "$vigschools$Enrollment_Date"
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
 New-ADUser `
--Path "OU=ClassOf2023Students,OU=HighSchool,OU=$StudentAccounts,DC=$DC,DC=COM" `
+-Path "OU=ClassOf2023Students,OU=HighSchool,OU=$StudentAccounts,DC=$DC,DC=ORG" `
 -Enabled $True `
 -ChangePasswordAtLogon $False `
 -Name "$First_Name $Last_Name" `
@@ -364,7 +364,7 @@ $Password = "$vigschools$Enrollment_Date"
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
 New-ADUser `
--Path "OU=ClassOf2024Students,OU=HighSchool,OU=$StudentAccounts,DC=$DC,DC=COM" `
+-Path "OU=ClassOf2024Students,OU=HighSchool,OU=$StudentAccounts,DC=$DC,DC=ORG" `
 -Enabled $True `
 -ChangePasswordAtLogon $False `
 -Name "$First_Name $Last_Name" `
@@ -418,7 +418,7 @@ $Password = "$vigschools$Enrollment_Date"
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
 New-ADUser `
--Path "OU=ClassOf2025Students,OU=HighSchool,OU=$StudentAccounts,DC=$DC,DC=COM" `
+-Path "OU=ClassOf2025Students,OU=HighSchool,OU=$StudentAccounts,DC=$DC,DC=ORG" `
 -Enabled $True `
 -ChangePasswordAtLogon $False `
 -Name "$First_Name $Last_Name" `
@@ -472,7 +472,7 @@ $Password = "$vigschools$Enrollment_Date"
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
 New-ADUser `
--Path "OU=ClassOf2026Students,OU=HighSchool,OU=$StudentAccounts,DC=$DC,DC=COM" `
+-Path "OU=ClassOf2026Students,OU=HighSchool,OU=$StudentAccounts,DC=$DC,DC=ORG" `
 -Enabled $True `
 -ChangePasswordAtLogon $False `
 -Name "$First_Name $Last_Name" `
@@ -526,7 +526,7 @@ $Password = "$vigschools$Enrollment_Date"
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
 New-ADUser `
--Path "OU=ClassOf2027Students,OU=MiddleSchool,OU=$StudentAccounts,DC=$DC,DC=COM" `
+-Path "OU=ClassOf2027Students,OU=MiddleSchool,OU=$StudentAccounts,DC=$DC,DC=ORG" `
 -Enabled $True `
 -ChangePasswordAtLogon $False `
 -Name "$First_Name $Last_Name" `
@@ -580,7 +580,7 @@ $Password = "$vigschools$Enrollment_Date"
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
 New-ADUser `
--Path "OU=ClassOf2028Students,OU=MiddleSchool,OU=$StudentAccounts,DC=$DC,DC=COM" `
+-Path "OU=ClassOf2028Students,OU=MiddleSchool,OU=$StudentAccounts,DC=$DC,DC=ORG" `
 -Enabled $True `
 -ChangePasswordAtLogon $False `
 -Name "$First_Name $Last_Name" `
@@ -634,7 +634,7 @@ $Password = "$vigschools$Enrollment_Date"
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
 New-ADUser `
--Path "OU=ClassOf2029Students,OU=MiddleSchool,OU=$StudentAccounts,DC=$DC,DC=COM" `
+-Path "OU=ClassOf2029Students,OU=MiddleSchool,OU=$StudentAccounts,DC=$DC,DC=ORG" `
 -Enabled $True `
 -ChangePasswordAtLogon $False `
 -Name "$First_Name $Last_Name" `
@@ -688,7 +688,7 @@ $Password = "$vigschools$Enrollment_Date"
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
 New-ADUser `
--Path "OU=ClassOf2030Students,OU=MiddleSchool,OU=$StudentAccounts,DC=$DC,DC=COM" `
+-Path "OU=ClassOf2030Students,OU=MiddleSchool,OU=$StudentAccounts,DC=$DC,DC=ORG" `
 -Enabled $True `
 -ChangePasswordAtLogon $False `
 -Name "$First_Name $Last_Name" `
@@ -742,7 +742,7 @@ $Password = "$vigschools$Enrollment_Date"
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
 New-ADUser `
--Path "OU=ClassOf2031Students,OU=ElementarySchool,OU=$StudentAccounts,DC=$DC,DC=COM"`
+-Path "OU=ClassOf2031Students,OU=ElementarySchool,OU=$StudentAccounts,DC=$DC,DC=ORG"`
 -Enabled $True `
 -ChangePasswordAtLogon $False `
 -Name "$First_Name $Last_Name" `
@@ -796,7 +796,7 @@ $Password = "$vigschools$Enrollment_Date"
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
 New-ADUser `
--Path "OU=ClassOf2032Students,OU=ElementarySchool,OU=$StudentAccounts,DC=$DC,DC=COM"`
+-Path "OU=ClassOf2032Students,OU=ElementarySchool,OU=$StudentAccounts,DC=$DC,DC=ORG"`
 -Enabled $True `
 -ChangePasswordAtLogon $False `
 -Name "$First_Name $Last_Name" `
@@ -850,7 +850,7 @@ $Password = "$vigschools$Enrollment_Date"
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
 New-ADUser `
--Path "OU=ClassOf2033Students,OU=ElementarySchool,OU=$StudentAccounts,DC=$DC,DC=COM"`
+-Path "OU=ClassOf2033Students,OU=ElementarySchool,OU=$StudentAccounts,DC=$DC,DC=ORG"`
 -Enabled $True `
 -ChangePasswordAtLogon $False `
 -Name "$First_Name $Last_Name" `
@@ -904,7 +904,7 @@ $Password = "$vigschools$Enrollment_Date"
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
 New-ADUser `
--Path "OU=ClassOf2034Students,OU=ElementarySchool,OU=$StudentAccounts,DC=$DC,DC=COM"`
+-Path "OU=ClassOf2034Students,OU=ElementarySchool,OU=$StudentAccounts,DC=$DC,DC=ORG"`
 -Enabled $True `
 -ChangePasswordAtLogon $False `
 -Name "$First_Name $Last_Name" `

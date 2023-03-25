@@ -310,7 +310,7 @@ $Password = "$vigschools$Enrollment_Date"
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
 New-ADUser `
--Path "OU=ClassOf2023Students,OU=HighSchool,OU=$StudentAccounts,DC=$DC,DC=ORG" `
+-Path "OU=ClassOf2023,OU=HighSchool,OU=$StudentAccounts,DC=$DC,DC=ORG" `
 -Enabled $True `
 -ChangePasswordAtLogon $False `
 -Name "$First_Name $Last_Name" `
@@ -364,7 +364,7 @@ $Password = "$vigschools$Enrollment_Date"
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
 New-ADUser `
--Path "OU=ClassOf2024Students,OU=HighSchool,OU=$StudentAccounts,DC=$DC,DC=ORG" `
+-Path "OU=ClassOf2024,OU=HighSchool,OU=$StudentAccounts,DC=$DC,DC=ORG" `
 -Enabled $True `
 -ChangePasswordAtLogon $False `
 -Name "$First_Name $Last_Name" `
@@ -418,7 +418,7 @@ $Password = "$vigschools$Enrollment_Date"
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
 New-ADUser `
--Path "OU=ClassOf2025Students,OU=HighSchool,OU=$StudentAccounts,DC=$DC,DC=ORG" `
+-Path "OU=ClassOf2025,OU=HighSchool,OU=$StudentAccounts,DC=$DC,DC=ORG" `
 -Enabled $True `
 -ChangePasswordAtLogon $False `
 -Name "$First_Name $Last_Name" `
@@ -472,7 +472,7 @@ $Password = "$vigschools$Enrollment_Date"
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
 New-ADUser `
--Path "OU=ClassOf2026Students,OU=HighSchool,OU=$StudentAccounts,DC=$DC,DC=ORG" `
+-Path "OU=ClassOf2026,OU=HighSchool,OU=$StudentAccounts,DC=$DC,DC=ORG" `
 -Enabled $True `
 -ChangePasswordAtLogon $False `
 -Name "$First_Name $Last_Name" `
@@ -526,7 +526,7 @@ $Password = "$vigschools$Enrollment_Date"
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
 New-ADUser `
--Path "OU=ClassOf2027Students,OU=MiddleSchool,OU=$StudentAccounts,DC=$DC,DC=ORG" `
+-Path "OU=ClassOf2027,OU=MiddleSchool,OU=$StudentAccounts,DC=$DC,DC=ORG" `
 -Enabled $True `
 -ChangePasswordAtLogon $False `
 -Name "$First_Name $Last_Name" `
@@ -580,7 +580,7 @@ $Password = "$vigschools$Enrollment_Date"
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
 New-ADUser `
--Path "OU=ClassOf2028Students,OU=MiddleSchool,OU=$StudentAccounts,DC=$DC,DC=ORG" `
+-Path "OU=ClassOf2028,OU=MiddleSchool,OU=$StudentAccounts,DC=$DC,DC=ORG" `
 -Enabled $True `
 -ChangePasswordAtLogon $False `
 -Name "$First_Name $Last_Name" `
@@ -634,7 +634,7 @@ $Password = "$vigschools$Enrollment_Date"
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
 New-ADUser `
--Path "OU=ClassOf2029Students,OU=MiddleSchool,OU=$StudentAccounts,DC=$DC,DC=ORG" `
+-Path "OU=ClassOf2029,OU=MiddleSchool,OU=$StudentAccounts,DC=$DC,DC=ORG" `
 -Enabled $True `
 -ChangePasswordAtLogon $False `
 -Name "$First_Name $Last_Name" `
@@ -688,7 +688,7 @@ $Password = "$vigschools$Enrollment_Date"
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
 New-ADUser `
--Path "OU=ClassOf2030Students,OU=MiddleSchool,OU=$StudentAccounts,DC=$DC,DC=ORG" `
+-Path "OU=ClassOf2030,OU=MiddleSchool,OU=$StudentAccounts,DC=$DC,DC=ORG" `
 -Enabled $True `
 -ChangePasswordAtLogon $False `
 -Name "$First_Name $Last_Name" `
@@ -742,7 +742,7 @@ $Password = "$vigschools$Enrollment_Date"
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
 New-ADUser `
--Path "OU=ClassOf2031Students,OU=ElementarySchool,OU=$StudentAccounts,DC=$DC,DC=ORG"`
+-Path "OU=ClassOf2031,OU=ElementarySchool,OU=$StudentAccounts,DC=$DC,DC=ORG"`
 -Enabled $True `
 -ChangePasswordAtLogon $False `
 -Name "$First_Name $Last_Name" `
@@ -796,7 +796,7 @@ $Password = "$vigschools$Enrollment_Date"
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
 New-ADUser `
--Path "OU=ClassOf2032Students,OU=ElementarySchool,OU=$StudentAccounts,DC=$DC,DC=ORG"`
+-Path "OU=ClassOf2032,OU=ElementarySchool,OU=$StudentAccounts,DC=$DC,DC=ORG"`
 -Enabled $True `
 -ChangePasswordAtLogon $False `
 -Name "$First_Name $Last_Name" `
@@ -850,7 +850,7 @@ $Password = "$vigschools$Enrollment_Date"
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
 New-ADUser `
--Path "OU=ClassOf2033Students,OU=ElementarySchool,OU=$StudentAccounts,DC=$DC,DC=ORG"`
+-Path "OU=ClassOf2033,OU=ElementarySchool,OU=$StudentAccounts,DC=$DC,DC=ORG"`
 -Enabled $True `
 -ChangePasswordAtLogon $False `
 -Name "$First_Name $Last_Name" `
@@ -904,7 +904,7 @@ $Password = "$vigschools$Enrollment_Date"
 $Default_Password = $Password | ConvertTo-SecureString -AsPlainText -Force
 
 New-ADUser `
--Path "OU=ClassOf2034Students,OU=ElementarySchool,OU=$StudentAccounts,DC=$DC,DC=ORG"`
+-Path "OU=ClassOf2034,OU=ElementarySchool,OU=$StudentAccounts,DC=$DC,DC=ORG"`
 -Enabled $True `
 -ChangePasswordAtLogon $False `
 -Name "$First_Name $Last_Name" `

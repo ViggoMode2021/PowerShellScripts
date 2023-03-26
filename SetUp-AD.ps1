@@ -940,4 +940,4 @@ $TotalStudentsCount = $Class_Of_2023_Students_Count + $Class_Of_2024_Students_Co
 
 Write-Host "$TotalFacultyCount faculty added." -BackgroundColor DarkGreen -ForegroundColor White
 
-Write-Host "$TotalStudentCount students added." -BackgroundColor DarkGreen -ForegroundColor White
+Write-Host "$TotalStudentsCount students added." -BackgroundColor DarkGreen -ForegroundColor White

@@ -20,8 +20,8 @@ $ElementarySchool = "ElementarySchool"
 
 $FacultyAccounts = "FacultyAccounts"
 
-$OrganizationalUnits = @("StudentAccounts", "HighSchoolStudents", "Class of 2023", "Class of 2024", "Class of 2025", "Class of 2026", "Class of 2027",
-"MiddleSchoolStudents", "Class of 2027", "Class of 2028", "Class of 2029", "Class of 2030", "ElementarySchoolStudents", "Class of 2031", "Class of 2032", "Class of 2033", "Class of 2034",
+$OrganizationalUnits = @("StudentAccounts", "HighSchoolStudents", "ClassOf2023", "ClassOf2024", "ClassOf2025", "ClassOf2026", "ClassOf2027",
+"MiddleSchoolStudents", "ClassOf2027", "ClassOf2028", "ClassOf2029", "ClassOf2030", "ElementarySchoolStudents", "ClassOf2031", "ClassOf2032", "ClassOf2033", "ClassOf2034",
 "FacultyAccounts", "HighSchoolFaculty", "MiddleSchoolFaculty", "ElementarySchoolFaculty")
 
 function CheckOU{

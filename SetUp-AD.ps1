@@ -4,7 +4,7 @@ Import-Module ActiveDirectory
 
 #Install-ADDSForest -DomainName vdom.local -InstallDNS
 
-$vigschools = "Mikefrobbins"
+$vigschools = "vigschools"
 
 $DC = "vigschools"
 
@@ -171,9 +171,9 @@ Set-ADUser -Identity $Username -ChangePasswordAtLogon $true
 
 Write-Host "Adding $Username, please wait..."
 
-Write-Host "Added $High_School_Faculty_Count to HighSchoolFaculty OU!"
-
 }
+
+Write-Host "Added $High_School_Faculty_Count to HighSchoolFaculty OU!" -BackgroundColor DarkGreen -ForegroundColor White
 
 # Middle School Faculty:
 
@@ -225,9 +225,9 @@ Set-ADUser -Identity $Username -ChangePasswordAtLogon $true
 
 Write-Host "Adding $Username, please wait..."
 
-Write-Host "Added $Middle_School_Faculty_Count to MiddleSchoolFaculty OU!"
-
 }
+
+Write-Host "Added $Middle_School_Faculty_Count to MiddleSchoolFaculty OU!" -BackgroundColor DarkGreen -ForegroundColor White
 
 # Elementary school teachers
 
@@ -279,9 +279,9 @@ Set-ADUser -Identity $Username -ChangePasswordAtLogon $true
 
 Write-Host "Adding $Username, please wait..."
 
-Write-Host "Added $Elementary_School_Faculty_Count to ElementarySchoolFaculty OU!"
-
 }
+
+Write-Host "Added $Elementary_School_Faculty_Count to ElementarySchoolFaculty OU!" -BackgroundColor DarkGreen -ForegroundColor White
 
 # ClassOf2023
 
@@ -335,7 +335,7 @@ Write-Host "Adding $Username, please wait..."
 
 }
 
-Write-Host "Added $Class_Of_2023_Students_Count to ClassOf2023Students OU!"
+Write-Host "Added $Class_Of_2023_Students_Count to ClassOf2023Students OU!" -BackgroundColor DarkGreen -ForegroundColor White
 
 # ClassOf2024
 
@@ -389,7 +389,7 @@ Write-Host "Adding $Username, please wait..."
 
 }
 
-Write-Host "Added $Class_Of_2024_Students_Count to ClassOf2024Students OU!"
+Write-Host "Added $Class_Of_2024_Students_Count to ClassOf2024Students OU!" -BackgroundColor DarkGreen -ForegroundColor White
 
 # ClassOf2025
 
@@ -443,7 +443,7 @@ Write-Host "Adding $Username, please wait..."
 
 }
 
-Write-Host "Added $Class_Of_2025_Students_Count to ClassOf2025Students OU!"
+Write-Host "Added $Class_Of_2025_Students_Count to ClassOf2025Students OU!" -BackgroundColor DarkGreen -ForegroundColor White
 
 # ClassOf2026
 
@@ -497,7 +497,7 @@ Write-Host "Adding $Username, please wait..."
 
 }
 
-Write-Host "Added $Class_Of_2026_Students_Count to ClassOf2026Students OU!"
+Write-Host "Added $Class_Of_2026_Students_Count to ClassOf2026Students OU!" -BackgroundColor DarkGreen -ForegroundColor White
 
 # ClassOf2027
 
@@ -551,7 +551,7 @@ Write-Host "Adding $Username, please wait..."
 
 }
 
-Write-Host "Added $Class_Of_2027_Students_Count to ClassOf2027Students OU!"
+Write-Host "Added $Class_Of_2027_Students_Count to ClassOf2027Students OU!" -BackgroundColor DarkGreen -ForegroundColor White
 
 # ClassOf2028
 
@@ -605,7 +605,7 @@ Write-Host "Adding $Username, please wait..."
 
 }
 
-Write-Host "Added $Class_Of_2028_Students_Count to ClassOf2028Students OU!"
+Write-Host "Added $Class_Of_2028_Students_Count to ClassOf2028Students OU!" -BackgroundColor DarkGreen -ForegroundColor White
 
 # ClassOf2029
 
@@ -659,7 +659,7 @@ Write-Host "Adding $Username, please wait..."
 
 }
 
-Write-Host "Added $Class_Of_2029_Students_Count to ClassOf2029Students OU!"
+Write-Host "Added $Class_Of_2029_Students_Count to ClassOf2029Students OU!" -BackgroundColor DarkGreen -ForegroundColor White
 
 # ClassOf2030
 
@@ -713,7 +713,7 @@ Write-Host "Adding $Username, please wait..."
 
 }
 
-Write-Host "Added $Class_Of_2030_Students_Count to ClassOf2030Students OU!"
+Write-Host "Added $Class_Of_2030_Students_Count to ClassOf2030Students OU!" -BackgroundColor DarkGreen -ForegroundColor White
 
 # ClassOf2031
 
@@ -767,7 +767,7 @@ Write-Host "Adding $Username, please wait..."
 
 }
 
-Write-Host "Added $Class_Of_2031_Students_Count to ClassOf2031Students OU!"
+Write-Host "Added $Class_Of_2031_Students_Count to ClassOf2031Students OU!" -BackgroundColor DarkGreen -ForegroundColor White
 
 # ClassOf2032
 
@@ -821,7 +821,7 @@ Write-Host "Adding $Username, please wait..."
 
 }
 
-Write-Host "Added $Class_Of_2032_Students_Count to ClassOf2032Students OU!"
+Write-Host "Added $Class_Of_2032_Students_Count to ClassOf2032Students OU!" -BackgroundColor DarkGreen -ForegroundColor White
 
 # ClassOf2033
 
@@ -875,7 +875,7 @@ Write-Host "Adding $Username, please wait..."
 
 }
 
-Write-Host "Added $Class_Of_2033_Students_Count to ClassOf2033Students OU!"
+Write-Host "Added $Class_Of_2033_Students_Count to ClassOf2033Students OU!" -BackgroundColor DarkGreen -ForegroundColor White
 
 # ClassOf2034
 

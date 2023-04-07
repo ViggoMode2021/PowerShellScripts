@@ -31,11 +31,9 @@ else{
 
 $Graduating_Elementary_OU = $Elementary_School_OUs | select -first 1
 
-$Graduating_Elementary_OU
-
 Write-Host "Moving $Graduating_Elementary_OU to MiddleSchool OU."
 
-$Graduating_Elementary_OU_Name = Get-ADOrganizationalUnit -Identity "OU=$Graduating_Elementary_OU,OU=ElementarySchool,OU=StudentAccounts,OU=MiddleSchool,DC=vigschools,DC=org"
+$Graduating_Elementary_OU_Name = Get-ADOrganizationalUnit -Identity "OU=$Graduating_Elementary_OU,OU=ElementarySchool,OU=StudentAccounts,DC=vigschools,DC=org"
 
 Move-ADObject $Graduating_Elementary_OU_Name -TargetPath "OU=MiddleSchool,OU=StudentAccounts,DC=vigschools,DC=org"
 
@@ -43,7 +41,7 @@ $Graduating_Middle_OU = $Middle_School_OUs | select -first 1
 
 Write-Host "Moving $Graduating_Middle_OU to HighSchool OU."
 
-$Graduating_Middle_OU = Get-ADOrganizationalUnit -Identity "OU=$Graduating_Middle_OU,OU=MiddleSchool,OU=StudentAccounts,OU=MiddleSchool,DC=vigschools,DC=org"
+$Graduating_Middle_OU = Get-ADOrganizationalUnit -Identity "OU=$Graduating_Middle_OU,OU=MiddleSchool,OU=StudentAccounts,DC=vigschools,DC=org"
 
 Move-ADObject $Graduating_Middle_OU -TargetPath "OU=HighSchool,OU=StudentAccounts,DC=vigschools,DC=org"
 
@@ -60,7 +58,7 @@ Try {
 }
 Catch {
   Write-Host "A Graduated_Classes OU already exists."
-  Write-Host "Moving $Graduating_High_OU to HighSchool OU."
+  Write-Host "Moving $Graduating_High_OU to Graduated_Classes OU."
   $Graduating_High_OU = Get-ADOrganizationalUnit -Filter 'Name -like "*$Graduating_High_OU*"'
   Move-ADObject $Graduating_High_OU -TargetPath "OU=Graduated_Classes,OU=StudentAccounts,DC=vigschools,DC=org"
 }

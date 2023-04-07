@@ -53,23 +53,25 @@ $Graduating_High_OU = $High_School_OUs | select -first 1
 
 Get-ADOrganizationalUnit -Identity "OU=$Graduating_High_OU,OU=HighSchool,OU=StudentAccounts,DC=vigschools,DC=org" | Set-ADObject -ProtectedFromAccidentalDeletion $false
 
-# Remove -ProtectedFromAccidentalDeletion $Flase in New OU below when running script in prod. 
+$Graduating_High_OU_Name = Get-ADOrganizationalUnit -Identity "OU=$Graduating_High_OU,OU=HighSchool,OU=StudentAccounts,DC=vigschools,DC=org"
+
+# Remove -ProtectedFromAccidentalDeletion $False in New OU below when running script in prod. 
 
 Try {
   New-ADOrganizationalUnit -Name "Graduated_Classes" -Path "OU=StudentAccounts,DC=vigschools,DC=org" -ProtectedFromAccidentalDeletion $False 
   Write-Host "Creating a new OU titled Graduated_Classes."
   Write-Host "Moving $Graduating_High_OU to HighSchool OU."
   $Graduating_High_OU = Get-ADOrganizationalUnit -Identity "OU=$Graduating_High_OU,OU=HighSchool,OU=StudentAccounts,DC=vigschools,DC=org"
-  Move-ADObject $Graduating_High_OU -TargetPath "OU=Graduated_Classes,OU=StudentAccounts,DC=vigschools,DC=org"
+  Move-ADObject $Graduating_High_OU_Name -TargetPath "OU=Graduated_Classes,OU=StudentAccounts,DC=vigschools,DC=org"
 }
 Catch {
   Write-Host "A Graduated_Classes OU already exists."
   Write-Host "Moving $Graduating_High_OU to Graduated_Classes OU."
   $Graduating_High_OU = Get-ADOrganizationalUnit -Filter 'Name -like "*$Graduating_High_OU*"'
-  Move-ADObject $Graduating_High_OU -TargetPath "OU=Graduated_Classes,OU=StudentAccounts,DC=vigschools,DC=org"
+  Move-ADObject $Graduating_High_OU_Name -TargetPath "OU=Graduated_Classes,OU=StudentAccounts,DC=vigschools,DC=org"
 }
 
-# Remove -ProtectedFromAccidentalDeletion $Flase in New OU below when running script in prod. 
+# Remove -ProtectedFromAccidentalDeletion $False in New OU below when running script in prod. 
 
 Try {
   New-ADOrganizationalUnit -Name "ClassOf$New_Elementary_School_Graduation_Year" -Path "OU=ElementarySchool,OU=StudentAccounts,DC=vigschools,DC=org" -ProtectedFromAccidentalDeletion $False 

@@ -31,6 +31,8 @@ else{
 
 $Graduating_Elementary_OU = $Elementary_School_OUs | select -first 1
 
+Get-ADOrganizationalUnit -Identity "OU=$Graduating_Elementary_OU,OU=ElementarySchool,OU=StudentAccounts,DC=vigschools,DC=org" | Set-ADObject -ProtectedFromAccidentalDeletion $false
+
 Write-Host "Moving $Graduating_Elementary_OU to MiddleSchool OU."
 
 $Graduating_Elementary_OU_Name = Get-ADOrganizationalUnit -Identity "OU=$Graduating_Elementary_OU,OU=ElementarySchool,OU=StudentAccounts,DC=vigschools,DC=org"
@@ -39,6 +41,8 @@ Move-ADObject $Graduating_Elementary_OU_Name -TargetPath "OU=MiddleSchool,OU=Stu
 
 $Graduating_Middle_OU = $Middle_School_OUs | select -first 1
 
+Get-ADOrganizationalUnit -Identity "OU=$Graduating_Middle_OU,OU=MiddleSchool,OU=StudentAccounts,DC=vigschools,DC=org" | Set-ADObject -ProtectedFromAccidentalDeletion $false
+
 Write-Host "Moving $Graduating_Middle_OU to HighSchool OU."
 
 $Graduating_Middle_OU = Get-ADOrganizationalUnit -Identity "OU=$Graduating_Middle_OU,OU=MiddleSchool,OU=StudentAccounts,DC=vigschools,DC=org"
@@ -46,6 +50,8 @@ $Graduating_Middle_OU = Get-ADOrganizationalUnit -Identity "OU=$Graduating_Middl
 Move-ADObject $Graduating_Middle_OU -TargetPath "OU=HighSchool,OU=StudentAccounts,DC=vigschools,DC=org"
 
 $Graduating_High_OU = $High_School_OUs | select -first 1
+
+Get-ADOrganizationalUnit -Identity "OU=$Graduating_High_OU,OU=HighSchool,OU=StudentAccounts,DC=vigschools,DC=org" | Set-ADObject -ProtectedFromAccidentalDeletion $false
 
 # Remove -ProtectedFromAccidentalDeletion $Flase in New OU below when running script in prod. 
 

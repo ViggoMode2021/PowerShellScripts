@@ -6,16 +6,16 @@ $Today_Full_Date = Get-Date -Format "MM/dd/yyyy"
 
 $OU = 'OU=ElementarySchool,OU=StudentAccounts,DC=vigschools,DC=org'
 
-$Elementary_School_OUs = Get-ADOrganizationalUnit -SearchBase $OU -SearchScope Subtree -Filter * | 
+$Elementary_School_OUs = Get-ADOrganizationalUnit -SearchBase $OU -SearchScope Subtree -Filter "name -like '*Class*'" | 
      Select-Object Name 
 
 if($Today_Full_Date -lt $OU_Move_Date){
 
-Write-Host "It is too early to move the Organizational Units for the new school year."
+#Write-Host "It is too early to move the Organizational Units for the new school year."
 
 foreach ($Unit in $Elementary_School_OUs){
 
-$Unit.Name.Substring($Unit.Name.Length - 8)
+$Unit.Name.Substring($Unit.Name.Length - 4)
 
 }
 

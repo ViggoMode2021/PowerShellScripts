@@ -86,3 +86,22 @@ Catch {
 }
 
 }
+
+<#
+
+#ReadME
+
+This script checks the date that it is run to see if today’s date is before or after 7/1 (July 1st) of a given year. 
+
+If the date is after July 1st of any given year, it will shift the Organizational Unit (Ou) that contains Elementary 4th graders to the Middle School, 
+Middle 8th graders to the High School, and moves the Senior class to an OU called Graduated_Classes. It also adds the current year + 11 and creates a new OU 
+for the incoming elementary students. If the incoming elementary OU and the Graduated_Classes OU aren’t made, then it will create them.
+
+It’s not 100% done but it works. I want to re-enable the PreventAgainstAccidentalDeletion for the OUs, attach a pre-existing GPO to the new Elementary OU, 
+and add some bells and whistles (text colors and who knows what else). Plus I want to write a read me and add more logic to make it more optimized.
+
+Plus you can run it in Task Scheduler. I will say though that cron jobs in Linux are more satisfying and efficient.
+
+Yes you can click and drag in the GUI but where is the satisfaction in that?
+
+#>

@@ -47,9 +47,9 @@ Get-ADOrganizationalUnit -Identity "OU=$Graduating_Middle_OU,OU=MiddleSchool,OU=
 
 Write-Host "Moving $Graduating_Middle_OU to HighSchool OU."
 
-$Graduating_Middle_OU = Get-ADOrganizationalUnit -Identity "OU=$Graduating_Middle_OU,OU=MiddleSchool,OU=StudentAccounts,DC=vigschools,DC=org"
+$Graduating_Middle_OU_Name = Get-ADOrganizationalUnit -Identity "OU=$Graduating_Middle_OU,OU=MiddleSchool,OU=StudentAccounts,DC=vigschools,DC=org"
 
-Move-ADObject $Graduating_Middle_OU -TargetPath "OU=HighSchool,OU=StudentAccounts,DC=vigschools,DC=org"
+Move-ADObject $Graduating_Middle_OU_Name -TargetPath "OU=HighSchool,OU=StudentAccounts,DC=vigschools,DC=org"
 
 Get-ADOrganizationalUnit -Identity "OU=$Graduating_Middle_OU,OU=HighSchool,OU=StudentAccounts,DC=vigschools,DC=org" | Set-ADObject -ProtectedFromAccidentalDeletion $true
 

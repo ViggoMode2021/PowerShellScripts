@@ -65,12 +65,14 @@ Try {
   Write-Host "Moving $Graduating_High_OU to HighSchool OU."
   $Graduating_High_OU = Get-ADOrganizationalUnit -Identity "OU=$Graduating_High_OU,OU=HighSchool,OU=StudentAccounts,DC=vigschools,DC=org"
   Move-ADObject $Graduating_High_OU_Name -TargetPath "OU=Graduated_Classes,OU=StudentAccounts,DC=vigschools,DC=org"
+  Get-ADOrganizationalUnit -filter * -Properties ProtectedFromAccidentalDeletion | where {$_.ProtectedFromAccidentalDeletion -eq $false} | Set-ADOrganizationalUnit -ProtectedFromAccidentalDeletion $true
 }
 Catch {
   Write-Host "A Graduated_Classes top-level OU already exists in the StudentAccounts top-level OU."
   Write-Host "Moving $Graduating_High_OU to Graduated_Classes OU."
   $Graduating_High_OU = Get-ADOrganizationalUnit -Filter 'Name -like "*$Graduating_High_OU*"'
   Move-ADObject $Graduating_High_OU_Name -TargetPath "OU=Graduated_Classes,OU=StudentAccounts,DC=vigschools,DC=org"
+  Get-ADOrganizationalUnit -filter * -Properties ProtectedFromAccidentalDeletion | where {$_.ProtectedFromAccidentalDeletion -eq $false} | Set-ADOrganizationalUnit -ProtectedFromAccidentalDeletion $true
 }
 
 # Remove -ProtectedFromAccidentalDeletion $False in New OU below when running script in prod. 
@@ -84,7 +86,3 @@ Catch {
 }
 
 }
-
-# Add ProtectedFromAccidentalDeletion $true back to all OUs in Active Directory. 
-
-Get-ADOrganizationalUnit -filter * -Properties ProtectedFromAccidentalDeletion | where {$_.ProtectedFromAccidentalDeletion -eq $false} | Set-ADOrganizationalUnit -ProtectedFromAccidentalDeletion $true

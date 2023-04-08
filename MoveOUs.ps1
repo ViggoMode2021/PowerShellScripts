@@ -1,3 +1,5 @@
+# README at bottom of script
+
 $Current_Year = Get-Date -Format "yyyy"
 
 $New_Elementary_School_Graduation_Year = [int]$Current_Year + 12
@@ -33,7 +35,7 @@ $Graduating_Elementary_OU = $Elementary_School_OUs | select -first 1
 
 Get-ADOrganizationalUnit -Identity "OU=$Graduating_Elementary_OU,OU=ElementarySchool,OU=StudentAccounts,DC=vigschools,DC=org" | Set-ADObject -ProtectedFromAccidentalDeletion $false
 
-Write-Host "Moving $Graduating_Elementary_OU to MiddleSchool OU."
+Write-Host "Moving $Graduating_Elementary_OU from ElementarySchool to MiddleSchool OU."
 
 $Graduating_Elementary_OU_Name = Get-ADOrganizationalUnit -Identity "OU=$Graduating_Elementary_OU,OU=ElementarySchool,OU=StudentAccounts,DC=vigschools,DC=org"
 
@@ -43,7 +45,7 @@ $Graduating_Middle_OU = $Middle_School_OUs | select -first 1
 
 Get-ADOrganizationalUnit -Identity "OU=$Graduating_Middle_OU,OU=MiddleSchool,OU=StudentAccounts,DC=vigschools,DC=org" | Set-ADObject -ProtectedFromAccidentalDeletion $false
 
-Write-Host "Moving $Graduating_Middle_OU to HighSchool OU."
+Write-Host "Moving $Graduating_Middle_OU from MiddleSchool to HighSchool OU."
 
 $Graduating_Middle_OU = Get-ADOrganizationalUnit -Identity "OU=$Graduating_Middle_OU,OU=MiddleSchool,OU=StudentAccounts,DC=vigschools,DC=org"
 
@@ -59,13 +61,13 @@ $Graduating_High_OU_Name = Get-ADOrganizationalUnit -Identity "OU=$Graduating_Hi
 
 Try {
   New-ADOrganizationalUnit -Name "Graduated_Classes" -Path "OU=StudentAccounts,DC=vigschools,DC=org" -ProtectedFromAccidentalDeletion $False 
-  Write-Host "Creating a new OU titled Graduated_Classes."
+  Write-Host "Creating a new top-level OU titled Graduated_Classes in the StudentAccounts top-level OU."
   Write-Host "Moving $Graduating_High_OU to HighSchool OU."
   $Graduating_High_OU = Get-ADOrganizationalUnit -Identity "OU=$Graduating_High_OU,OU=HighSchool,OU=StudentAccounts,DC=vigschools,DC=org"
   Move-ADObject $Graduating_High_OU_Name -TargetPath "OU=Graduated_Classes,OU=StudentAccounts,DC=vigschools,DC=org"
 }
 Catch {
-  Write-Host "A Graduated_Classes OU already exists."
+  Write-Host "A Graduated_Classes top-level OU already exists in the StudentAccounts top-level OU."
   Write-Host "Moving $Graduating_High_OU to Graduated_Classes OU."
   $Graduating_High_OU = Get-ADOrganizationalUnit -Filter 'Name -like "*$Graduating_High_OU*"'
   Move-ADObject $Graduating_High_OU_Name -TargetPath "OU=Graduated_Classes,OU=StudentAccounts,DC=vigschools,DC=org"
@@ -75,10 +77,14 @@ Catch {
 
 Try {
   New-ADOrganizationalUnit -Name "ClassOf$New_Elementary_School_Graduation_Year" -Path "OU=ElementarySchool,OU=StudentAccounts,DC=vigschools,DC=org" -ProtectedFromAccidentalDeletion $False 
-  Write-Host "Creating a new OU titled ClassOf$New_Elementary_School_Graduation_Year."
+  Write-Host "Creating a new OU titled ClassOf$New_Elementary_School_Graduation_Year in the ElementarySchool OU."
 }
 Catch {
-  Write-Host "A ClassOf$New_Elementary_School_Graduation_Year OU already exists."
+  Write-Host "A ClassOf$New_Elementary_School_Graduation_Year OU already exists in the ElementarySchool OU."
 }
 
 }
+
+# Add ProtectedFromAccidentalDeletion $true back to all OUs in Active Directory. 
+
+Get-ADOrganizationalUnit -filter * -Properties ProtectedFromAccidentalDeletion | where {$_.ProtectedFromAccidentalDeletion -eq $false} | Set-ADOrganizationalUnit -ProtectedFromAccidentalDeletion $true

@@ -1,5 +1,17 @@
 # README at bottom of script
 
+# To do (4/8/2023) 
+
+# 1. Add documentation to ReadMe line by line
+
+# 2. Add logging to OU moving
+
+# 3. Add script logic to set script up in task scheduler with a try/catch block
+
+# 4. MAKE PROD VERSION WITH SWAPPED VARIABLES
+
+Write-Host "The current date is $Today_Full_Date" 
+
 $Current_Year = Get-Date -Format "yyyy"
 
 $New_Elementary_School_Graduation_Year = [int]$Current_Year + 12
@@ -25,7 +37,7 @@ $High_School_OUs = Get-ADOrganizationalUnit -SearchBase $High_School_Top_OU -Sea
 
 if($OU_Move_Date -lt $Today_Full_Date){ # << Swap position of these two variables in when executing script in prod 
 
-Write-Host "It is too early to move the Organizational Units for the new school year."
+Write-Host "It is too early to move the Organizational Units for the new school year." -BackgroundColor White -ForegroundColor DarkRed
 
 }
 
@@ -35,21 +47,25 @@ $Graduating_Elementary_OU = $Elementary_School_OUs | select -first 1
 
 Get-ADOrganizationalUnit -Identity "OU=$Graduating_Elementary_OU,OU=ElementarySchool,OU=StudentAccounts,DC=vigschools,DC=org" | Set-ADObject -ProtectedFromAccidentalDeletion $false
 
-Write-Host "Moving $Graduating_Elementary_OU from ElementarySchool to MiddleSchool OU."
+Write-Host "Moving $Graduating_Elementary_OU from ElementarySchool to MiddleSchool OU." -BackgroundColor White -ForegroundColor DarkGreen
 
 $Graduating_Elementary_OU_Name = Get-ADOrganizationalUnit -Identity "OU=$Graduating_Elementary_OU,OU=ElementarySchool,OU=StudentAccounts,DC=vigschools,DC=org"
 
 Move-ADObject $Graduating_Elementary_OU_Name -TargetPath "OU=MiddleSchool,OU=StudentAccounts,DC=vigschools,DC=org"
 
+Set-ADOrganizationalUnit -Identity "OU=$Graduating_Elementary_OU,OU=MiddleSchool,OU=StudentAccounts,DC=vigschools,DC=org" -Description "5th grade. Added to MiddleSchool OU on $Today_Full_Date."              
+
 $Graduating_Middle_OU = $Middle_School_OUs | select -first 1
 
 Get-ADOrganizationalUnit -Identity "OU=$Graduating_Middle_OU,OU=MiddleSchool,OU=StudentAccounts,DC=vigschools,DC=org" | Set-ADObject -ProtectedFromAccidentalDeletion $false
 
-Write-Host "Moving $Graduating_Middle_OU from MiddleSchool to HighSchool OU."
+Write-Host "Moving $Graduating_Middle_OU from MiddleSchool to HighSchool OU." -BackgroundColor White -ForegroundColor DarkGreen
 
 $Graduating_Middle_OU = Get-ADOrganizationalUnit -Identity "OU=$Graduating_Middle_OU,OU=MiddleSchool,OU=StudentAccounts,DC=vigschools,DC=org"
 
 Move-ADObject $Graduating_Middle_OU -TargetPath "OU=HighSchool,OU=StudentAccounts,DC=vigschools,DC=org"
+
+Set-ADOrganizationalUnit -Identity "OU=$Graduating_Middle_OU,OU=HighSchool,OU=StudentAccounts,DC=vigschools,DC=org" -Description "9th grade. Added to HighSchool OU on $Today_Full_Date." 
 
 $Graduating_High_OU = $High_School_OUs | select -first 1
 
@@ -61,15 +77,15 @@ $Graduating_High_OU_Name = Get-ADOrganizationalUnit -Identity "OU=$Graduating_Hi
 
 Try {
   New-ADOrganizationalUnit -Name "Graduated_Classes" -Path "OU=StudentAccounts,DC=vigschools,DC=org" -ProtectedFromAccidentalDeletion $False 
-  Write-Host "Creating a new top-level OU titled Graduated_Classes in the StudentAccounts top-level OU."
-  Write-Host "Moving $Graduating_High_OU to HighSchool OU."
+  Write-Host "Creating a new top-level OU titled Graduated_Classes in the StudentAccounts top-level OU." -BackgroundColor White -ForegroundColor DarkGreen
+  Write-Host "Moving $Graduating_High_OU to HighSchool OU." -BackgroundColor White -ForegroundColor DarkGreen
   $Graduating_High_OU = Get-ADOrganizationalUnit -Identity "OU=$Graduating_High_OU,OU=HighSchool,OU=StudentAccounts,DC=vigschools,DC=org"
   Move-ADObject $Graduating_High_OU_Name -TargetPath "OU=Graduated_Classes,OU=StudentAccounts,DC=vigschools,DC=org"
   Get-ADOrganizationalUnit -filter * -Properties ProtectedFromAccidentalDeletion | where {$_.ProtectedFromAccidentalDeletion -eq $false} | Set-ADOrganizationalUnit -ProtectedFromAccidentalDeletion $true
 }
 Catch {
-  Write-Host "A Graduated_Classes top-level OU already exists in the StudentAccounts top-level OU."
-  Write-Host "Moving $Graduating_High_OU to Graduated_Classes OU."
+  Write-Host "A Graduated_Classes top-level OU already exists in the StudentAccounts top-level OU." -BackgroundColor White -ForegroundColor DarkRed
+  Write-Host "Moving $Graduating_High_OU to Graduated_Classes OU." -BackgroundColor White -ForegroundColor DarkRed
   $Graduating_High_OU = Get-ADOrganizationalUnit -Filter 'Name -like "*$Graduating_High_OU*"'
   Move-ADObject $Graduating_High_OU_Name -TargetPath "OU=Graduated_Classes,OU=StudentAccounts,DC=vigschools,DC=org"
   Get-ADOrganizationalUnit -filter * -Properties ProtectedFromAccidentalDeletion | where {$_.ProtectedFromAccidentalDeletion -eq $false} | Set-ADOrganizationalUnit -ProtectedFromAccidentalDeletion $true
@@ -79,17 +95,18 @@ Catch {
 
 Try {
   New-ADOrganizationalUnit -Name "ClassOf$New_Elementary_School_Graduation_Year" -Path "OU=ElementarySchool,OU=StudentAccounts,DC=vigschools,DC=org" -ProtectedFromAccidentalDeletion $False 
-  Write-Host "Creating a new OU titled ClassOf$New_Elementary_School_Graduation_Year in the ElementarySchool OU."
+  Write-Host "Creating a new OU titled ClassOf$New_Elementary_School_Graduation_Year in the ElementarySchool OU." -BackgroundColor White -ForegroundColor DarkGreen
+  Set-ADOrganizationalUnit -Identity "OU=$Graduating_Elementary_OU,OU=ElementarySchool,OU=StudentAccounts,DC=vigschools,DC=org" -Description "1st grade. Added to ElementarySchool OU on $Today_Full_Date." 
 }
 Catch {
-  Write-Host "A ClassOf$New_Elementary_School_Graduation_Year OU already exists in the ElementarySchool OU."
+  Write-Host "A ClassOf$New_Elementary_School_Graduation_Year OU already exists in the ElementarySchool OU." -BackgroundColor White -ForegroundColor DarkRed
 }
 
 }
 
 <#
 
-#ReadME
+-- ReadME --
 
 This script checks the date that it is run to see if today’s date is before or after 7/1 (July 1st) of a given year. 
 

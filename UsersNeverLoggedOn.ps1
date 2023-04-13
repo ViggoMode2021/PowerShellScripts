@@ -72,85 +72,14 @@ $Twelfth_Grade_Graduation_Year = [int]$Current_Year + 0
 
 }
 
-$All_Students_NotLoggedIn_Accounts = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Select Name
-
-$First_Grade_NotLoggedIn_Accounts = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$First_Grade_Graduation_Year*" | Select Name
-
-$First_Grade_NotLoggedIn_Accounts_Count = $First_Grade_NotLoggedIn_Accounts | Measure-Object
-
-$First_Grade_NotLoggedIn_Accounts_Count = $First_Grade_NotLoggedIn_Accounts_Count.Count
-
-$Second_Grade_NotLoggedIn_Accounts = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$Second_Grade_Graduation_Year*" | Select Name
-
-$Second_Grade_NotLoggedIn_Accounts_Count = $Second_Grade_NotLoggedIn_Accounts | Measure-Object
-
-$Second_Grade_NotLoggedIn_Accounts_Count = $Second_Grade_NotLoggedIn_Accounts_Count.Count
-
-$Third_Grade_NotLoggedIn_Accounts = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$Third_Grade_Graduation_Year*" | Select Name
-
-$Third_Grade_NotLoggedIn_Accounts_Count = $Third_Grade_NotLoggedIn_Accounts | Measure-Object
-
-$Third_Grade_NotLoggedIn_Accounts_Count = $Third_Grade_NotLoggedIn_Accounts_Count.Count
-
-$Fourth_Grade_NotLoggedIn_Accounts = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$Fourth_Grade_Graduation_Year*" | Select Name
-
-$Fourth_Grade_NotLoggedIn_Accounts_Count = $Fourth_Grade_NotLoggedIn_Accounts | Measure-Object
-
-$Fourth_Grade_NotLoggedIn_Accounts_Count = $Fourth_Grade_NotLoggedIn_Accounts_Count.Count
-
-$Fifth_Grade_NotLoggedIn_Accounts = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$Fifth_Grade_Graduation_Year*" | Select Name
-
-$Fifth_Grade_NotLoggedIn_Accounts_Count = $Fifth_Grade_NotLoggedIn_Accounts | Measure-Object
-
-$Fifth_Grade_NotLoggedIn_Accounts_Count = $Fifth_Grade_NotLoggedIn_Accounts_Count.Count
-
-$Sixth_Grade_NotLoggedIn_Accounts = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$Sixth_Grade_Graduation_Year*" | Select Name
-
-$Sixth_Grade_NotLoggedIn_Accounts_Count = $Sixth_Grade_NotLoggedIn_Accounts | Measure-Object
-
-$Sixth_Grade_NotLoggedIn_Accounts_Count = $Sixth_Grade_NotLoggedIn_Accounts_Count.Count
-
-$Seventh_Grade_NotLoggedIn_Accounts = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$Seventh_Grade_Graduation_Year*" | Select Name
-
-$Seventh_Grade_NotLoggedIn_Accounts_Count = $Seventh_Grade_NotLoggedIn_Accounts | Measure-Object
-
-$Seventh_Grade_NotLoggedIn_Accounts_Count = $Seventh_Grade_NotLoggedIn_Accounts_Count.Count
-
-$Eighth_Grade_NotLoggedIn_Accounts = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$Eighth_Grade_Graduation_Year*" | Select Name
-
-$Eighth_Grade_NotLoggedIn_Accounts_Count = $Eighth_Grade_NotLoggedIn_Accounts | Measure-Object
-
-$Eighth_Grade_NotLoggedIn_Accounts_Count = $Eighth_Grade_NotLoggedIn_Accounts_Count.Count
-
-$Ninth_Grade_NotLoggedIn_Accounts = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$Ninth_Grade_Graduation_Year*" | Select Name
-
-$Ninth_Grade_NotLoggedIn_Accounts_Count = $Ninth_Grade_NotLoggedIn_Accounts | Measure-Object
-
-$Ninth_Grade_NotLoggedIn_Accounts_Count = $Ninth_Grade_NotLoggedIn_Accounts_Count.Count
-
-$Tenth_Grade_NotLoggedIn_Accounts = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$Tenth_Grade_Graduation_Year*" | Select Name
-
-$Tenth_Grade_NotLoggedIn_Accounts_Count = $Tenth_Grade_NotLoggedIn_Accounts | Measure-Object
-
-$Tenth_Grade_NotLoggedIn_Accounts_Count = $Tenth_Grade_NotLoggedIn_Accounts_Count.Count
-
-$Eleventh_Grade_NotLoggedIn_Accounts = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$Eleventh_Grade_Graduation_Year*" | Select Name
-
-$Eleventh_Grade_NotLoggedIn_Accounts_Count = $Eleventh_Grade_NotLoggedIn_Accounts | Measure-Object
-
-$Eleventh_Grade_NotLoggedIn_Accounts_Count = $Eleventh_Grade_NotLoggedIn_Accounts_Count.Count
-
-$Twelfth_Grade_NotLoggedIn_Accounts = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$Twelfth_Grade_Graduation_Year*" | Select Name
-
-
-$Twelfth_Grade_NotLoggedIn_Accounts_Count = $Twelfth_Grade_NotLoggedIn_Accounts | Measure-Object
-
-$Twelfth_Grade_NotLoggedIn_Accounts_Count = $Twelfth_Grade_NotLoggedIn_Accounts_Count.Count
-
+# GUI form code below:
 
 $Form_Object = [System.Windows.Forms.Form]
 $Label_Object = [System.Windows.Forms.Label]
 $Button_Object = [System.Windows.Forms.Button]
+$Combo_Box_Object = [System.Windows.Forms.ComboBox]
+
+# Base form code:
 
 $Application_Form = New-Object $Form_Object
 
@@ -160,42 +89,99 @@ $Application_Form.Text = 'Disable Users'
 
 $Application_Form.BackColor= "#ffffff"
 
+# Building the form:
+
 $Label_Title = New-Object $Label_Object
 
-$Label_Title.Text= "Disable Users"
+$Label_Title.Text= "Select an OU from the dropdown to see inactive users who have never logged in."
 
 $Label_Title.AutoSize = $true
 
-$Label_Title.Font = 'Verdana,24,style=Bold'
+$Label_Title.Font = 'Verdana,12,style=Bold'
 
 $Label_Title.Location = New-Object System.Drawing.Point(120,20)
 
-$Button_All_Inactive_Users = New-Object $Button_Object
+$Label_Title_2 = New-Object $Label_Object
 
-$Button_All_Inactive_Users.Text = 'View all inactive users'
+$Label_Title_2.Text= ""
 
-$Button_All_Inactive_Users.AutoSize=$true
+$Label_Title_2.AutoSize = $true
 
-$Button_All_Inactive_Users.Location = New-Object System.Drawing.Point(185,180)
+$Label_Title_2.Font = 'Verdana,12,style=Bold'
 
-$Button_All_Inactive_Users.Font='Verdana, 12'
+$Label_Title_2.Location = New-Object System.Drawing.Point(340,30)
 
-$Application_Form.Controls.AddRange(@($Label_Title,$Button_All_Inactive_Users))
+$Disable_Users_Dropdown = New-Object $Combo_Box_Object
 
-$Application_Form.Controls.AddRange(@($Label_Title))
+$Disable_Users_Dropdown.Width='300'
 
+$Disable_Users_Dropdown.Text="Select an OU"
 
-function View_All_Inactive_Users{
+$Button_Object = [System.Windows.Forms.Button]
 
-    if($Label_Title.Text -eq $Eighth_Grade_NotLoggedIn_Accounts){
-       $Label_Title.Text='View all inactive users'}
+$Disable_Users_Button = New-Object $Button_Object
 
-    else{
-        $Label_Title.Text = $Eighth_Grade_NotLoggedIn_Accounts | Out-String}
+$Disable_Users_Button.Text= "Disable these users."
+
+$Disable_Users_Button.AutoSize = $true
+
+$Disable_Users_Button.Font = 'Verdana,12,style=Bold'
+
+$Disable_Users_Button.Location = New-Object System.Drawing.Point(320,190)
+
+$Enable_Users_Button = New-Object $Button_Object
+
+$Enable_Users_Button.Text= "Enable these users."
+
+$Enable_Users_Button.AutoSize = $true
+
+$Enable_Users_Button.Font = 'Verdana,12,style=Bold'
+
+$Enable_Users_Button.Location = New-Object System.Drawing.Point(320,120)
+
+$Application_Form.Controls.AddRange(@($Label_Title,$Disable_Users_Dropdown,$Label_Title_2, $Disable_Users_Button, $Enable_Users_Button))
+
+Get-ADOrganizationalUnit -Properties CanonicalName -Filter * | Where-Object DistinguishedName -notlike "*Domain Controllers*" |Sort-Object CanonicalName | ForEach-Object {$Disable_Users_Dropdown.Items.Add($_.Name)}
+
+function Show_Inactive_Users{
+
+    $OU_Name=$Disable_Users_Dropdown.SelectedItem
+    $Inactive_Users = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$OU_Name*" | Select Name
+
+    $Inactive_Users_Count = $Inactive_Users | Measure-Object
+    $Inactive_Users_Count = $Inactive_Users_Count.Count
+    $Inactive_Users_Count_Text = [string]$Inactive_Users_Count + " users that haven't logged in."
+    $Label_Title_2.Text = $Inactive_Users_Count_Text
+  
+    $Inactive_Users = $Inactive_Users | Out-String
+    $Label_Title.Text = $Inactive_Users
 }
 
-$Button_All_Inactive_Users.Add_Click({View_All_Inactive_Users})
+function Disable_Inactive_Users{
+
+    $OU_Name=$Disable_Users_Dropdown.SelectedItem
+    $Inactive_Users = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$OU_Name*" | Disable-ADAccount
+
+    $Inactive_Users_Count = $Inactive_Users | Measure-Object
+    $Inactive_Users_Count = $Inactive_Users_Count.Count
+    $Inactive_Users_Count_Text = [string]$Inactive_Users_Count + " users that haven't logged in."
+    $Label_Title_2.Text = $Inactive_Users_Count_Text
+
+}
+
+function Enable_Inactive_Users{
+
+    $OU_Name=$Disable_Users_Dropdown.SelectedItem
+    $Inactive_Users = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $false)} | Where-Object DistinguishedName -like "*$OU_Name*" | Enable-ADAccount
+
+}
+
+$Disable_Users_Button.Add_Click({Disable_Inactive_Users})
+
+$Enable_Users_Button.Add_Click({Enable_Inactive_Users})
+
+$Disable_Users_Dropdown.Add_SelectedIndexChanged({Show_Inactive_Users})
 
 $Application_Form.ShowDialog()
 
-#$Application_Form.Dispose()
+$Application_Form.Dispose()

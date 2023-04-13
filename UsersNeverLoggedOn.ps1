@@ -8,70 +8,6 @@ $Current_Year = Get-Date -Format "yyyy"
 
 $December_31st = [DateTime]"12/31/$Current_Year"
 
-
-if($Current_Date -lt $December_31st){
-
-$Kindergarten_Graduation_Year = [int]$Current_Year + 12
-
-$First_Grade_Graduation_Year = [int]$Current_Year + 11
-
-$Second_Grade_Graduation_Year = [int]$Current_Year + 10
-
-$Third_Grade_Graduation_Year = [int]$Current_Year + 9
-
-$Fourth_Grade_Graduation_Year = [int]$Current_Year + 8
-
-
-$Fifth_Grade_Graduation_Year = [int]$Current_Year + 7
-
-$Sixth_Grade_Graduation_Year = [int]$Current_Year + 6
-
-$Seventh_Grade_Graduation_Year = [int]$Current_Year + 5
-
-$Eighth_Grade_Graduation_Year = [int]$Current_Year + 4
-
-
-$Ninth_Grade_Graduation_Year = [int]$Current_Year + 3
-
-$Tenth_Grade_Graduation_Year = [int]$Current_Year + 2
-
-$Eleventh_Grade_Graduation_Year = [int]$Current_Year + 1
-
-$Twelfth_Grade_Graduation_Year = [int]$Current_Year + 0
-}
-
-else{
-
-$Kindergarten_Graduation_Year = [int]$Current_Year + 13
-
-$First_Grade_Graduation_Year = [int]$Current_Year + 1
-
-$Second_Grade_Graduation_Year = [int]$Current_Year + 10
-
-$Third_Grade_Graduation_Year = [int]$Current_Year + 9
-
-$Fourth_Grade_Graduation_Year = [int]$Current_Year + 8
-
-
-$Fifth_Grade_Graduation_Year = [int]$Current_Year + 7
-
-$Sixth_Grade_Graduation_Year = [int]$Current_Year + 6
-
-$Seventh_Grade_Graduation_Year = [int]$Current_Year + 5
-
-$Eighth_Grade_Graduation_Year = [int]$Current_Year + 4
-
-
-$Ninth_Grade_Graduation_Year = [int]$Current_Year + 3
-
-$Tenth_Grade_Graduation_Year = [int]$Current_Year + 2
-
-$Eleventh_Grade_Graduation_Year = [int]$Current_Year + 1
-
-$Twelfth_Grade_Graduation_Year = [int]$Current_Year + 0
-
-}
-
 # GUI form code below:
 
 $Form_Object = [System.Windows.Forms.Form]
@@ -166,6 +102,8 @@ function Disable_Inactive_Users{
     $Inactive_Users_Count = $Inactive_Users_Count.Count
     $Inactive_Users_Count_Text = [string]$Inactive_Users_Count + " users that haven't logged in."
     $Label_Title_2.Text = $Inactive_Users_Count_Text
+    $Inactive_Users = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$OU_Name*" | Select Name
+    $Label_Title.Text = $Inactive_Users
 
 }
 
@@ -173,6 +111,19 @@ function Enable_Inactive_Users{
 
     $OU_Name=$Disable_Users_Dropdown.SelectedItem
     $Inactive_Users = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $false)} | Where-Object DistinguishedName -like "*$OU_Name*" | Enable-ADAccount
+
+    $Inactive_Users = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$OU_Name*" | Select Name
+    $Label_Title.Text = $Inactive_Users
+
+    $Inactive_Users_Count = $Inactive_Users | Measure-Object
+    $Inactive_Users_Count = $Inactive_Users_Count.Count
+    $Inactive_Users_Count_Text = [string]$Inactive_Users_Count + " users that haven't logged in."
+    $Label_Title_2.Text = $Inactive_Users_Count_Text
+
+    $Inactive_Users = $Inactive_Users | Out-String
+    $Label_Title.Text = $Inactive_Users
+
+
 
 }
 

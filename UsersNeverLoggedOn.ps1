@@ -54,7 +54,7 @@ $Label_Title_2.Font = 'Verdana,12,style=Bold'
 
 $Label_Title_2.ForeColor = 'Green'
 
-$Label_Title_2.Location = New-Object System.Drawing.Point(340,30)
+$Label_Title_2.Location = New-Object System.Drawing.Point(305,35)
 
 # Label/Text box #3:
 
@@ -68,7 +68,7 @@ $Label_Title_3.Font = 'Verdana,12,style=Bold'
 
 $Label_Title_3.ForeColor = 'Red'
 
-$Label_Title_3.Location = New-Object System.Drawing.Point(345,60)
+$Label_Title_3.Location = New-Object System.Drawing.Point(300,60)
 
 # Label/Text box #4:
 
@@ -102,7 +102,7 @@ $Disable_Individual_Users_Dropdown.Text="Select a user"
 
 $Disable_Individual_Users_Dropdown.Font = New-Object System.Drawing.Font("Lucinda Console",12)
 
-$Disable_Individual_Users_Dropdown.Location = New-Object System.Drawing.Point(700,10)
+$Disable_Individual_Users_Dropdown.Location = New-Object System.Drawing.Point(700,4)
 
     # Input box: 
 
@@ -318,13 +318,54 @@ function Disable_Individual_User{
     $Label_Title_3.Text = $Total_Users_Not_Logged_In_Count_Text
 }
 
+function Enable_Individual_User{
+
+    $User_Name=$Disable_Individual_Users_Dropdown.SelectedItem
+
+    $OU_Name=$Disable_Users_Dropdown.SelectedItem
+
+    Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $false)} | Where-Object DistinguishedName -like "*$User_Name*" | Enable-ADAccount
+
+    $Label_Title_4.Text= "$User_Name has been enabled."
+
+    $Disable_Individual_Users_Dropdown.Text="Select a user"
+
+    #Get OU of user
+
+    $Disable_Individual_Users_Dropdown.Items.Clear()
+
+    $OU_Name=$Disable_Users_Dropdown.SelectedItem
+
+    Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$OU_Name*" | ForEach-Object {$Disable_Individual_Users_Dropdown.Items.Add($_.Name)}
+
+    $Inactive_Users = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$OU_Name*" | Select Name
+
+    $Inactive_Users = $Inactive_Users | Out-String
+    $Label_Title.Text = $Inactive_Users
+
+    $Label_Title.Text = $Inactive_Users
+
+    $Inactive_Users = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$OU_Name*" | Select Name
+
+    $Inactive_Users_Count = $Inactive_Users | Measure-Object
+    $Inactive_Users_Count = $Inactive_Users_Count.Count
+    $Inactive_Users_Count_Text = [string]$Inactive_Users_Count + " active/enabled users that haven't logged in."
+    $Label_Title_2.Text = $Inactive_Users_Count_Text
+
+    $Total_Users_Not_Logged_In = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $false)} | Where-Object DistinguishedName -like "*$OU_Name*" | Select Name
+    $Total_Users_Not_Logged_In_Count = $Total_Users_Not_Logged_In | Measure-Object
+    $Total_Users_Not_Logged_In_Count = $Total_Users_Not_Logged_In_Count.Count
+    $Total_Users_Not_Logged_In_Count_Text = [string]$Total_Users_Not_Logged_In_Count + " disabled users that haven't logged in."
+    $Label_Title_3.Text = $Total_Users_Not_Logged_In_Count_Text
+}
+
     # Add functions to GUI:
 
 $Disable_Users_Button.Add_Click({Disable_Inactive_Users})
 
 $Enable_Users_Button.Add_Click({Enable_Inactive_Users})
 
-$Enable_Individual_User_Button.Add_Click({Enable_Individual_User_Button})
+$Enable_Individual_User_Button.Add_Click({Enable_Individual_User})
 
 $Disable_Individual_User_Button.Add_Click({Disable_Individual_User})
 

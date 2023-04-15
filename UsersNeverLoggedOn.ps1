@@ -80,7 +80,7 @@ $Label_Title_4.AutoSize = $true
 
 $Label_Title_4.Font = 'Verdana,12,style=Bold'
 
-$Label_Title_4.Location = New-Object System.Drawing.Point(700,550)
+$Label_Title_4.Location = New-Object System.Drawing.Point(650,550)
 
     # Dropdown list:
 
@@ -203,6 +203,12 @@ function Disable_Inactive_Users{
 
     $Inactive_Users = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$OU_Name*" | Disable-ADAccount
 
+    $Disable_Individual_Users_Dropdown.Items.Clear()
+
+    $OU_Name=$Disable_Users_Dropdown.SelectedItem
+
+    Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $false)} | Where-Object DistinguishedName -like "*$OU_Name*" | ForEach-Object {$Disable_Individual_Users_Dropdown.Items.Add($_.Name)}
+
     $Inactive_Users_Count = $Inactive_Users | Measure-Object
     $Inactive_Users_Count = $Inactive_Users_Count.Count
     $Inactive_Users_Count_Text = [string]$Inactive_Users_Count + " active/enabled users that haven't logged in."
@@ -229,6 +235,13 @@ function Enable_Inactive_Users{
     $Inactive_Users = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $false)} | Where-Object DistinguishedName -like "*$OU_Name*" | Enable-ADAccount
 
     $Inactive_Users = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$OU_Name*" | Select Name
+
+    $Disable_Individual_Users_Dropdown.Items.Clear()
+
+    $OU_Name=$Disable_Users_Dropdown.SelectedItem
+
+    Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$OU_Name*" | ForEach-Object {$Disable_Individual_Users_Dropdown.Items.Add($_.Name)}
+
     $Label_Title.Text = $Inactive_Users
 
     $Inactive_Users_Count = $Inactive_Users | Measure-Object
@@ -255,6 +268,8 @@ function Disable_Individual_User{
     Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$User_Name*" | Disable-ADAccount
 
     $Label_Title_4.Text= "$User_Name has been disabled."
+
+    $Disable_Individual_Users_Dropdown.Text="Select a user"
 
     #Get OU of user
 

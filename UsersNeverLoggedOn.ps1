@@ -174,7 +174,11 @@ function Show_Inactive_Users{
 
     $OU_Name=$Disable_Users_Dropdown.SelectedItem
 
-    Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$OU_Name*" | ForEach-Object {$Disable_Individual_Users_Dropdown.Items.Remove($_.Name)}
+    $Disable_Individual_Users_Dropdown.Items.Clear()
+
+    $OU_Name=$Disable_Users_Dropdown.SelectedItem
+
+    Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $false)} | Where-Object DistinguishedName -like "*$OU_Name*" | ForEach-Object {$Disable_Individual_Users_Dropdown.Items.Add($_.Name)}
 
     $Inactive_Users = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$OU_Name*" | Select Name
 

@@ -78,9 +78,11 @@ $Label_Title_4.Text= ""
 
 $Label_Title_4.AutoSize = $true
 
+$Label_Title_4.ForeColor = 'Red'
+
 $Label_Title_4.Font = 'Verdana,12,style=Bold'
 
-$Label_Title_4.Location = New-Object System.Drawing.Point(650,550)
+$Label_Title_4.Location = New-Object System.Drawing.Point(400,550)
 
     # Dropdown list:
 
@@ -124,7 +126,7 @@ $Button_Object = [System.Windows.Forms.Button]
 
 $Disable_Users_Button = New-Object $Button_Object
 
-$Disable_Users_Button.Text= "Disable these users."
+$Disable_Users_Button.Text= "Disable all users"
 
 $Disable_Users_Button.AutoSize = $true
 
@@ -162,7 +164,7 @@ $Enable_Individual_User_Button.Location = New-Object System.Drawing.Point(700,55
 
 $Enable_Users_Button = New-Object $Button_Object
 
-$Enable_Users_Button.Text= "Enable these users."
+$Enable_Users_Button.Text= "Enable all users"
 
 $Enable_Users_Button.AutoSize = $true
 
@@ -185,6 +187,10 @@ function Show_Inactive_Users{
     $Label_Title.Font = 'Verdana,10,style=Bold'
 
     $OU_Name=$Disable_Users_Dropdown.SelectedItem
+
+    $Disable_Users_Button.Text= "Disable all users in $OU_Name"
+
+    $Enable_Users_Button.Text= "Enable all users in $OU_Name"
 
     $Disable_Individual_Users_Dropdown.Items.Clear()
 
@@ -241,7 +247,6 @@ function Disable_Inactive_Users{
     #Change
     Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$OU_Name*" | ForEach-Object {$Disable_Individual_Users_Dropdown.Items.Add($_.Name)}
 
-    $Individual_User_Button.Text= "Disable selected user"
 }
 
 function Enable_Inactive_Users{

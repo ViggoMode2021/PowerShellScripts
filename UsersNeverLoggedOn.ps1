@@ -80,7 +80,7 @@ $Label_Title_4.AutoSize = $true
 
 $Label_Title_4.Font = 'Verdana,12,style=Bold'
 
-$Label_Title_4.Location = New-Object System.Drawing.Point(400,80)
+$Label_Title_4.Location = New-Object System.Drawing.Point(700,550)
 
     # Dropdown list:
 
@@ -90,6 +90,8 @@ $Disable_Users_Dropdown.Width='300'
 
 $Disable_Users_Dropdown.Text="Select an OU"
 
+$Disable_Users_Dropdown.Font = New-Object System.Drawing.Font("Lucinda Console",12)
+
     # Dropdown list:
 
 $Disable_Individual_Users_Dropdown = New-Object $Combo_Box_Object
@@ -97,6 +99,8 @@ $Disable_Individual_Users_Dropdown = New-Object $Combo_Box_Object
 $Disable_Individual_Users_Dropdown.Width='300'
 
 $Disable_Individual_Users_Dropdown.Text="Select a user"
+
+$Disable_Individual_Users_Dropdown.Font = New-Object System.Drawing.Font("Lucinda Console",12)
 
 $Disable_Individual_Users_Dropdown.Location = New-Object System.Drawing.Point(700,200)
 
@@ -128,6 +132,20 @@ $Disable_Users_Button.Font = 'Verdana,12,style=Bold'
 
 $Disable_Users_Button.Location = New-Object System.Drawing.Point(350,190)
 
+#Disable individual user button:
+
+$Button_Object = [System.Windows.Forms.Button]
+
+$Disable_Individual_User_Button = New-Object $Button_Object
+
+$Disable_Individual_User_Button.Text= "Disable selected user."
+
+$Disable_Individual_User_Button.AutoSize = $true
+
+$Disable_Individual_User_Button.Font = 'Verdana,12,style=Bold'
+
+$Disable_Individual_User_Button.Location = New-Object System.Drawing.Point(700,600)
+
     # Enable users button:
 
 $Enable_Users_Button = New-Object $Button_Object
@@ -142,7 +160,7 @@ $Enable_Users_Button.Location = New-Object System.Drawing.Point(350,120)
 
     # Scrollbar:
 
-$Application_Form.Controls.AddRange(@($Label_Title,$Disable_Users_Dropdown,$Label_Title_2, $Disable_Users_Button, $Enable_Users_Button, $Label_Title_3, $Label_Title_4, $Disable_Individual_Users_Dropdown))
+$Application_Form.Controls.AddRange(@($Label_Title,$Disable_Users_Dropdown,$Label_Title_2, $Disable_Users_Button, $Enable_Users_Button, $Label_Title_3, $Label_Title_4, $Disable_Individual_Users_Dropdown, $Disable_Individual_User_Button))
 
     # Get all OUs for the GUI and add them to the dropdown list:
 
@@ -155,6 +173,9 @@ function Show_Inactive_Users{
     $Label_Title.Font = 'Verdana,10,style=Bold'
 
     $OU_Name=$Disable_Users_Dropdown.SelectedItem
+
+    Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$OU_Name*" | ForEach-Object {$Disable_Individual_Users_Dropdown.Items.Remove($_.Name)}
+
     $Inactive_Users = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$OU_Name*" | Select Name
 
     $Inactive_Users_Count = $Inactive_Users | Measure-Object
@@ -177,6 +198,9 @@ function Show_Inactive_Users{
 function Disable_Inactive_Users{
 
     $OU_Name=$Disable_Users_Dropdown.SelectedItem
+
+    Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$OU_Name*" | ForEach-Object {$Disable_Individual_Users_Dropdown.Items.Remove($_.Name)}
+
     $Inactive_Users = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$OU_Name*" | Disable-ADAccount
 
     $Inactive_Users_Count = $Inactive_Users | Measure-Object
@@ -199,6 +223,9 @@ function Disable_Inactive_Users{
 function Enable_Inactive_Users{
 
     $OU_Name=$Disable_Users_Dropdown.SelectedItem
+
+    Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$OU_Name*" | ForEach-Object {$Disable_Individual_Users_Dropdown.Items.Remove($_.Name)}
+
     $Inactive_Users = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $false)} | Where-Object DistinguishedName -like "*$OU_Name*" | Enable-ADAccount
 
     $Inactive_Users = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$OU_Name*" | Select Name
@@ -217,9 +244,37 @@ function Enable_Inactive_Users{
     $Total_Users_Not_Logged_In_Count = $Total_Users_Not_Logged_In_Count.Count
     $Total_Users_Not_Logged_In_Count_Text = [string]$Total_Users_Not_Logged_In_Count + " disabled users that haven't logged in."
     $Label_Title_3.Text = $Total_Users_Not_Logged_In_Count_Text
+}
 
+function Disable_Individual_User{
 
+    $User_Name=$Disable_Individual_Users_Dropdown.SelectedItem
 
+    $OU_Name=$Disable_Users_Dropdown.SelectedItem
+
+    Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$User_Name*" | Disable-ADAccount
+
+    $Label_Title_4.Text= "$User_Name has been disabled."
+
+    #Get OU of user
+
+    $Inactive_Users = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$OU_Name*" | Select Name
+
+    $Inactive_Users = $Inactive_Users | Out-String
+    $Label_Title.Text = $Inactive_Users
+
+    $Label_Title.Text = $Inactive_Users
+
+    $Inactive_Users_Count = $Inactive_Users | Measure-Object
+    $Inactive_Users_Count = $Inactive_Users_Count.Count
+    $Inactive_Users_Count_Text = [string]$Inactive_Users_Count + " active/enabled users that haven't logged in."
+    $Label_Title_2.Text = $Inactive_Users_Count_Text
+
+    $Total_Users_Not_Logged_In = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $false)} | Where-Object DistinguishedName -like "*$OU_Name*" | Select Name
+    $Total_Users_Not_Logged_In_Count = $Total_Users_Not_Logged_In | Measure-Object
+    $Total_Users_Not_Logged_In_Count = $Total_Users_Not_Logged_In_Count.Count
+    $Total_Users_Not_Logged_In_Count_Text = [string]$Total_Users_Not_Logged_In_Count + " disabled users that haven't logged in."
+    $Label_Title_3.Text = $Total_Users_Not_Logged_In_Count_Text
 }
 
     # Add functions to GUI:
@@ -227,6 +282,8 @@ function Enable_Inactive_Users{
 $Disable_Users_Button.Add_Click({Disable_Inactive_Users})
 
 $Enable_Users_Button.Add_Click({Enable_Inactive_Users})
+
+$Disable_Individual_User_Button.Add_Click({Disable_Individual_User})
 
 $Disable_Users_Dropdown.Add_SelectedIndexChanged({Show_Inactive_Users})
 

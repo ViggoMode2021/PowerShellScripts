@@ -258,12 +258,20 @@ function Disable_Individual_User{
 
     #Get OU of user
 
+    $Disable_Individual_Users_Dropdown.Items.Clear()
+
+    $OU_Name=$Disable_Users_Dropdown.SelectedItem
+
+    Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$OU_Name*" | ForEach-Object {$Disable_Individual_Users_Dropdown.Items.Add($_.Name)}
+
     $Inactive_Users = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$OU_Name*" | Select Name
 
     $Inactive_Users = $Inactive_Users | Out-String
     $Label_Title.Text = $Inactive_Users
 
     $Label_Title.Text = $Inactive_Users
+
+    $Inactive_Users = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$OU_Name*" | Select Name
 
     $Inactive_Users_Count = $Inactive_Users | Measure-Object
     $Inactive_Users_Count = $Inactive_Users_Count.Count

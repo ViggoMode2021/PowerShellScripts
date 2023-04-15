@@ -24,7 +24,7 @@ $Application_Form.ClientSize= '500,300'
 
 $Domain = Get-ADDomain -Current LocalComputer | Select Name | foreach { $_.Name } |  Out-String
 
-$Application_Form.Text = 'Disable and Enable unused accounts'
+$Application_Form.Text = "Disable and Enable unused accounts for $Domain on $Current_Date"
 
 $Application_Form.BackColor= "#ffffff"
 
@@ -34,11 +34,11 @@ $Application_Form.BackColor= "#ffffff"
 
 $Label_Title = New-Object $Label_Object
 
-$Label_Title.Text= "Select a $Domain OU from the dropdown to see inactive users who have never logged in."
+$Label_Title.Text= "Select an OU from the dropdown `r`n to see inactive users that never logged in."
 
 $Label_Title.AutoSize = $true
 
-$Label_Title.Font = 'Verdana,12,style=Bold'
+$Label_Title.Font = 'Verdana,11,style=Bold'
 
 $Label_Title.Location = New-Object System.Drawing.Point(320,20)
 
@@ -102,7 +102,7 @@ $Disable_Individual_Users_Dropdown.Text="Select a user"
 
 $Disable_Individual_Users_Dropdown.Font = New-Object System.Drawing.Font("Lucinda Console",12)
 
-$Disable_Individual_Users_Dropdown.Location = New-Object System.Drawing.Point(700,200)
+$Disable_Individual_Users_Dropdown.Location = New-Object System.Drawing.Point(700,10)
 
     # Input box: 
 
@@ -132,19 +132,31 @@ $Disable_Users_Button.Font = 'Verdana,12,style=Bold'
 
 $Disable_Users_Button.Location = New-Object System.Drawing.Point(350,190)
 
-#Disable individual user button:
+    #Disable individual user button:
 
 $Button_Object = [System.Windows.Forms.Button]
 
 $Disable_Individual_User_Button = New-Object $Button_Object
 
-$Disable_Individual_User_Button.Text= "Disable selected user."
+$Disable_Individual_User_Button.Text= "Disable selected user"
 
 $Disable_Individual_User_Button.AutoSize = $true
 
 $Disable_Individual_User_Button.Font = 'Verdana,12,style=Bold'
 
 $Disable_Individual_User_Button.Location = New-Object System.Drawing.Point(700,600)
+
+    #Enable individual user button:
+
+$Enable_Individual_User_Button = New-Object $Button_Object
+
+$Enable_Individual_User_Button.Text= "Enable selected user"
+
+$Enable_Individual_User_Button.AutoSize = $true
+
+$Enable_Individual_User_Button.Font = 'Verdana,12,style=Bold'
+
+$Enable_Individual_User_Button.Location = New-Object System.Drawing.Point(700,550)
 
     # Enable users button:
 
@@ -160,7 +172,7 @@ $Enable_Users_Button.Location = New-Object System.Drawing.Point(350,120)
 
     # Scrollbar:
 
-$Application_Form.Controls.AddRange(@($Label_Title,$Disable_Users_Dropdown,$Label_Title_2, $Disable_Users_Button, $Enable_Users_Button, $Label_Title_3, $Label_Title_4, $Disable_Individual_Users_Dropdown, $Disable_Individual_User_Button))
+$Application_Form.Controls.AddRange(@($Label_Title,$Disable_Users_Dropdown,$Label_Title_2, $Disable_Users_Button, $Enable_Users_Button, $Label_Title_3, $Label_Title_4, $Disable_Individual_Users_Dropdown, $Enable_Individual_User_Button,$Disable_Individual_User_Button))
 
     # Get all OUs for the GUI and add them to the dropdown list:
 
@@ -228,6 +240,8 @@ function Disable_Inactive_Users{
 
     #Change
     Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$OU_Name*" | ForEach-Object {$Disable_Individual_Users_Dropdown.Items.Add($_.Name)}
+
+    $Individual_User_Button.Text= "Disable selected user"
 }
 
 function Enable_Inactive_Users{
@@ -309,6 +323,8 @@ function Disable_Individual_User{
 $Disable_Users_Button.Add_Click({Disable_Inactive_Users})
 
 $Enable_Users_Button.Add_Click({Enable_Inactive_Users})
+
+$Enable_Individual_User_Button.Add_Click({Enable_Individual_User_Button})
 
 $Disable_Individual_User_Button.Add_Click({Disable_Individual_User})
 

@@ -182,6 +182,14 @@ Get-ADOrganizationalUnit -Properties CanonicalName -Filter * | Where-Object Dist
 
 function Show_Inactive_Users{
 
+    $Enable_Individual_User_Button.Add_Click({Enable_Individual_User})
+
+    $Disable_Users_Button.Add_Click({Disable_Inactive_Users})
+
+    $Enable_Users_Button.Add_Click({Enable_Inactive_Users})
+
+    $Disable_Individual_User_Button.Add_Click({Disable_Individual_User})
+
     $Label_Title.Location = New-Object System.Drawing.Point(120,20)
 
     $Label_Title.Font = 'Verdana,10,style=Bold'
@@ -296,8 +304,6 @@ function Disable_Individual_User{
 
     $Label_Title_4.Text= "$User_Name has been disabled."
 
-    $Disable_Individual_Users_Dropdown.Text="Select a user"
-
     #Get OU of user
 
     $Disable_Individual_Users_Dropdown.Items.Clear()
@@ -341,8 +347,6 @@ function Enable_Individual_User{
 
     $Label_Title_4.Text= "$User_Name has been enabled."
 
-    $Disable_Individual_Users_Dropdown.Text="Select a user"
-
     #Get OU of user
 
     $Disable_Individual_Users_Dropdown.Items.Clear()
@@ -375,14 +379,6 @@ function Enable_Individual_User{
 }
 
     # Add functions to GUI:
-
-$Disable_Users_Button.Add_Click({Disable_Inactive_Users})
-
-$Enable_Users_Button.Add_Click({Enable_Inactive_Users})
-
-$Enable_Individual_User_Button.Add_Click({Enable_Individual_User})
-
-$Disable_Individual_User_Button.Add_Click({Disable_Individual_User})
 
 $Disable_Users_Dropdown.Add_SelectedIndexChanged({Show_Inactive_Users})
 

@@ -349,7 +349,11 @@ function Disable_Individual_User{
 
     if ($User_Name -eq $null){
 
-    Write-Host "NULL"
+    $Label_Title_4.Text= "Please select a user from the dropdown."
+
+    Sleep 0.75
+
+    $Label_Title_4.Text= ""
 
     }
 
@@ -431,6 +435,16 @@ function Enable_Individual_User{
     $User_Name = $User_Name.replace("(enabled)","")
 
     $Label_Title_4.Text= "$User_Name is already enabled."
+
+    Sleep 0.75
+
+    $Label_Title_4.Text= ""
+
+    }
+
+    if ($User_Name -eq $null){
+
+    $Label_Title_4.Text= "Please select a user from the dropdown."
 
     Sleep 0.75
 

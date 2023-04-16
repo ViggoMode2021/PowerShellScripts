@@ -134,6 +134,18 @@ $Disable_Users_Button.Font = 'Verdana,12,style=Bold'
 
 $Disable_Users_Button.Location = New-Object System.Drawing.Point(350,190)
 
+    # Enable users button:
+
+$Enable_Users_Button = New-Object $Button_Object
+
+$Enable_Users_Button.Text= "Enable all users"
+
+$Enable_Users_Button.AutoSize = $true
+
+$Enable_Users_Button.Font = 'Verdana,12,style=Bold'
+
+$Enable_Users_Button.Location = New-Object System.Drawing.Point(350,120)
+
     #Disable individual user button:
 
 $Button_Object = [System.Windows.Forms.Button]
@@ -146,7 +158,7 @@ $Disable_Individual_User_Button.AutoSize = $true
 
 $Disable_Individual_User_Button.Font = 'Verdana,12,style=Bold'
 
-$Disable_Individual_User_Button.Location = New-Object System.Drawing.Point(700,600)
+$Disable_Individual_User_Button.Location = New-Object System.Drawing.Point(350,480)
 
     #Enable individual user button:
 
@@ -158,19 +170,7 @@ $Enable_Individual_User_Button.AutoSize = $true
 
 $Enable_Individual_User_Button.Font = 'Verdana,12,style=Bold'
 
-$Enable_Individual_User_Button.Location = New-Object System.Drawing.Point(700,550)
-
-    # Enable users button:
-
-$Enable_Users_Button = New-Object $Button_Object
-
-$Enable_Users_Button.Text= "Enable all users"
-
-$Enable_Users_Button.AutoSize = $true
-
-$Enable_Users_Button.Font = 'Verdana,12,style=Bold'
-
-$Enable_Users_Button.Location = New-Object System.Drawing.Point(350,120)
+$Enable_Individual_User_Button.Location = New-Object System.Drawing.Point(350,420)
 
     # Scrollbar:
 
@@ -190,7 +190,7 @@ function Show_Inactive_Users{
 
     $Disable_Individual_User_Button.Add_Click({Disable_Individual_User})
 
-    $Label_Title.Location = New-Object System.Drawing.Point(120,20)
+    $Label_Title.Location = New-Object System.Drawing.Point(50,40)
 
     $Label_Title.Font = 'Verdana,10,style=Bold'
 
@@ -212,6 +212,24 @@ function Show_Inactive_Users{
 
     $Inactive_Users_Count = $Inactive_Users | Measure-Object
     $Inactive_Users_Count = $Inactive_Users_Count.Count
+
+    if ($Inactive_Users_Count -eq 0){
+
+    $Label_Title.Text = "No enabled accounts for `r`n users who never logged in."
+
+    $Inactive_Users_Count_Text = [string]$Inactive_Users_Count + " active/enabled users that haven't logged in."
+    $Label_Title_2.Text = $Inactive_Users_Count_Text
+
+    $Total_Users_Not_Logged_In = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $false)} | Where-Object DistinguishedName -like "*$OU_Name*" | Select Name
+    $Total_Users_Not_Logged_In_Count = $Total_Users_Not_Logged_In | Measure-Object
+    $Total_Users_Not_Logged_In_Count = $Total_Users_Not_Logged_In_Count.Count
+    $Total_Users_Not_Logged_In_Count_Text = [string]$Total_Users_Not_Logged_In_Count + " disabled users that haven't logged in."
+    $Label_Title_3.Text = $Total_Users_Not_Logged_In_Count_Text
+
+    }
+
+    else{
+     
     $Inactive_Users_Count_Text = [string]$Inactive_Users_Count + " active/enabled users that haven't logged in."
     $Label_Title_2.Text = $Inactive_Users_Count_Text
   
@@ -223,6 +241,7 @@ function Show_Inactive_Users{
     $Total_Users_Not_Logged_In_Count = $Total_Users_Not_Logged_In_Count.Count
     $Total_Users_Not_Logged_In_Count_Text = [string]$Total_Users_Not_Logged_In_Count + " disabled users that haven't logged in."
     $Label_Title_3.Text = $Total_Users_Not_Logged_In_Count_Text
+    }
 }
 
 function Disable_Inactive_Users{
@@ -241,9 +260,28 @@ function Disable_Inactive_Users{
     
     $Inactive_Users_Count = $Inactive_Users | Measure-Object
     $Inactive_Users_Count = $Inactive_Users_Count.Count
+
+    if ($Inactive_Users_Count -eq 0){
+
+    $Label_Title.Text = "No enabled accounts for `r`n users who neverlogged in."
+
     $Inactive_Users_Count_Text = [string]$Inactive_Users_Count + " active/enabled users that haven't logged in."
     $Label_Title_2.Text = $Inactive_Users_Count_Text
-    $Inactive_Users = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$OU_Name*" | Select Name
+
+    $Total_Users_Not_Logged_In = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $false)} | Where-Object DistinguishedName -like "*$OU_Name*" | Select Name
+    $Total_Users_Not_Logged_In_Count = $Total_Users_Not_Logged_In | Measure-Object
+    $Total_Users_Not_Logged_In_Count = $Total_Users_Not_Logged_In_Count.Count
+    $Total_Users_Not_Logged_In_Count_Text = [string]$Total_Users_Not_Logged_In_Count + " disabled users that haven't logged in."
+    $Label_Title_3.Text = $Total_Users_Not_Logged_In_Count_Text
+
+    }
+
+    else{
+     
+    $Inactive_Users_Count_Text = [string]$Inactive_Users_Count + " active/enabled users that haven't logged in."
+    $Label_Title_2.Text = $Inactive_Users_Count_Text
+  
+    $Inactive_Users = $Inactive_Users | Out-String
     $Label_Title.Text = $Inactive_Users
 
     $Total_Users_Not_Logged_In = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $false)} | Where-Object DistinguishedName -like "*$OU_Name*" | Select Name
@@ -251,6 +289,7 @@ function Disable_Inactive_Users{
     $Total_Users_Not_Logged_In_Count = $Total_Users_Not_Logged_In_Count.Count
     $Total_Users_Not_Logged_In_Count_Text = [string]$Total_Users_Not_Logged_In_Count + " disabled users that haven't logged in."
     $Label_Title_3.Text = $Total_Users_Not_Logged_In_Count_Text
+    }
 
     #Change
     Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$OU_Name*" | ForEach-Object {$Disable_Individual_Users_Dropdown.Items.Add($_.Name)}
@@ -296,6 +335,26 @@ function Disable_Individual_User{
 
     $User_Name=$Disable_Individual_Users_Dropdown.SelectedItem
 
+    if ($User_Name -Match "(DISABLED)"){
+
+    $User_Name = $User_Name.replace("(DISABLED)","")
+
+    $Label_Title_4.Text= "$User_Name is already disabled."
+
+    Sleep 0.75
+
+    $Label_Title_4.Text= ""
+
+    }
+
+    if ($User_Name -eq $null){
+
+    Write-Host "NULL"
+
+    }
+
+    else{
+
     $User_Name = $User_Name.replace("(enabled)","")
 
     $OU_Name=$Disable_Users_Dropdown.SelectedItem
@@ -303,6 +362,10 @@ function Disable_Individual_User{
     Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$User_Name*" | Disable-ADAccount
 
     $Label_Title_4.Text= "$User_Name has been disabled."
+
+    Sleep 0.75
+
+    $Label_Title_4.Text= ""
 
     #Get OU of user
 
@@ -325,6 +388,11 @@ function Disable_Individual_User{
 
     $Inactive_Users_Count = $Inactive_Users | Measure-Object
     $Inactive_Users_Count = $Inactive_Users_Count.Count
+    
+    if ($Inactive_Users_Count -eq 0){
+
+    $Label_Title.Text = "No enabled accounts for `r`n users who neverlogged in."
+
     $Inactive_Users_Count_Text = [string]$Inactive_Users_Count + " active/enabled users that haven't logged in."
     $Label_Title_2.Text = $Inactive_Users_Count_Text
 
@@ -333,11 +401,44 @@ function Disable_Individual_User{
     $Total_Users_Not_Logged_In_Count = $Total_Users_Not_Logged_In_Count.Count
     $Total_Users_Not_Logged_In_Count_Text = [string]$Total_Users_Not_Logged_In_Count + " disabled users that haven't logged in."
     $Label_Title_3.Text = $Total_Users_Not_Logged_In_Count_Text
-}
+
+    }
+
+    else{
+     
+    $Inactive_Users_Count_Text = [string]$Inactive_Users_Count + " active/enabled users that haven't logged in."
+    $Label_Title_2.Text = $Inactive_Users_Count_Text
+  
+    $Inactive_Users = $Inactive_Users | Out-String
+    $Label_Title.Text = $Inactive_Users
+
+    $Total_Users_Not_Logged_In = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $false)} | Where-Object DistinguishedName -like "*$OU_Name*" | Select Name
+    $Total_Users_Not_Logged_In_Count = $Total_Users_Not_Logged_In | Measure-Object
+    $Total_Users_Not_Logged_In_Count = $Total_Users_Not_Logged_In_Count.Count
+    $Total_Users_Not_Logged_In_Count_Text = [string]$Total_Users_Not_Logged_In_Count + " disabled users that haven't logged in."
+    $Label_Title_3.Text = $Total_Users_Not_Logged_In_Count_Text
+
+    }
+    }
+    }
 
 function Enable_Individual_User{
 
     $User_Name=$Disable_Individual_Users_Dropdown.SelectedItem
+
+    if ($User_Name -Match "(enabled)"){
+
+    $User_Name = $User_Name.replace("(enabled)","")
+
+    $Label_Title_4.Text= "$User_Name is already enabled."
+
+    Sleep 0.75
+
+    $Label_Title_4.Text= ""
+
+    }
+
+    else{
 
     $User_Name = $User_Name.replace("(DISABLED)","")
 
@@ -347,6 +448,10 @@ function Enable_Individual_User{
 
     $Label_Title_4.Text= "$User_Name has been enabled."
 
+    Sleep 0.75
+
+    $Label_Title_4.Text= ""
+
     #Get OU of user
 
     $Disable_Individual_Users_Dropdown.Items.Clear()
@@ -376,7 +481,8 @@ function Enable_Individual_User{
     $Total_Users_Not_Logged_In_Count = $Total_Users_Not_Logged_In_Count.Count
     $Total_Users_Not_Logged_In_Count_Text = [string]$Total_Users_Not_Logged_In_Count + " disabled users that haven't logged in."
     $Label_Title_3.Text = $Total_Users_Not_Logged_In_Count_Text
-}
+    }
+    }
 
     # Add functions to GUI:
 

@@ -1,38 +1,33 @@
-Import-Module ActiveDirectory
+Import-Module ActiveDirectory # Import Active Directory PowerShell module
 
-Add-Type -AssemblyName System.Windows.Forms
+Add-Type -AssemblyName System.Windows.Forms # Add .NET Windows Forms fonctuinality
 
-$Current_Date = Get-Date -Format "MM/dd/$Current_Year"
-
-$Current_Year = Get-Date -Format "yyyy"
-
-$December_31st = [DateTime]"12/31/$Current_Year"
+$Current_Date = Get-Date -Format "MM/dd/yyyy" # Get today's date
 
 # GUI form code below:
 
-$Form_Object = [System.Windows.Forms.Form]
-$Label_Object = [System.Windows.Forms.Label]
-$Button_Object = [System.Windows.Forms.Button]
-$Combo_Box_Object = [System.Windows.Forms.ComboBox]
-$Scrollbar_Object = [System.Windows.Forms.VScrollBar]
+$Form_Object = [System.Windows.Forms.Form] # Entire form/window for GUI
+$Label_Object = [System.Windows.Forms.Label] # Label object for text
+$Button_Object = [System.Windows.Forms.Button] # Button object
+$Combo_Box_Object = [System.Windows.Forms.ComboBox] # Dropdown object
 
 # Base form code:
 
-$Application_Form = New-Object $Form_Object
+$Application_Form = New-Object $Form_Object # Create new form/window for GUI
 
 $Application_Form.ClientSize= '500,300'
 
-$Domain = Get-ADDomain -Current LocalComputer | Select Name | foreach { $_.Name } |  Out-String
+$Domain = Get-ADDomain -Current LocalComputer | Select Name | foreach { $_.Name } |  Out-String # Get-AD Domain name
 
-$Application_Form.Text = "Disable and Enable unused accounts for $Domain on $Current_Date"
+$Application_Form.Text = "Disable and Enable unused accounts for $Domain on $Current_Date" # Name of application
 
-$Application_Form.BackColor= "#ffffff"
+$Application_Form.BackColor= "#ffffff" # White bkgr color
 
 # Building the form:
 
     # Label/Text box #1:
 
-$Label_Title = New-Object $Label_Object
+$Label_Title = New-Object $Label_Object # Calling object
 
 $Label_Title.Text= "Select an OU from the dropdown `r`n to see inactive users that never logged in."
 
@@ -40,13 +35,13 @@ $Label_Title.AutoSize = $true
 
 $Label_Title.Font = 'Verdana,11,style=Bold'
 
-$Label_Title.Location = New-Object System.Drawing.Point(320,20)
+$Label_Title.Location = New-Object System.Drawing.Point(320,20) # Add location to top center of GUI
 
     # Label/Text box #2:
 
-$Label_Title_2 = New-Object $Label_Object
+$Label_Title_2 = New-Object $Label_Object 
 
-$Label_Title_2.Text= ""
+$Label_Title_2.Text= "" # This text is NULL here but will change depending on function output 
 
 $Label_Title_2.AutoSize = $true
 
@@ -54,7 +49,7 @@ $Label_Title_2.Font = 'Verdana,12,style=Bold'
 
 $Label_Title_2.ForeColor = 'Green'
 
-$Label_Title_2.Location = New-Object System.Drawing.Point(305,35)
+$Label_Title_2.Location = New-Object System.Drawing.Point(305,35) # Add location to top left of GUI
 
 # Label/Text box #3:
 
@@ -82,7 +77,7 @@ $Label_Title_4.ForeColor = 'Red'
 
 $Label_Title_4.Font = 'Verdana,12,style=Bold'
 
-$Label_Title_4.Location = New-Object System.Drawing.Point(400,550)
+$Label_Title_4.Location = New-Object System.Drawing.Point(400,550) # Add location to top left of GUI
 
     # Dropdown list:
 
@@ -182,36 +177,43 @@ Get-ADOrganizationalUnit -Properties CanonicalName -Filter * | Where-Object Dist
 
 function Show_Inactive_Users{
 
-    $Enable_Individual_User_Button.Add_Click({Enable_Individual_User})
+    $Enable_Individual_User_Button.Add_Click({Enable_Individual_User}) # Enable button once function is executed
 
-    $Disable_Users_Button.Add_Click({Disable_Inactive_Users})
+    $Disable_Users_Button.Add_Click({Disable_Inactive_Users}) # Enable button once function is executed
+     
+    $Enable_Users_Button.Add_Click({Enable_Inactive_Users}) # Enable button once function is executed
 
-    $Enable_Users_Button.Add_Click({Enable_Inactive_Users})
+    $Disable_Individual_User_Button.Add_Click({Disable_Individual_User}) # Enable button once function is executed
 
-    $Disable_Individual_User_Button.Add_Click({Disable_Individual_User})
-
-    $Label_Title.Location = New-Object System.Drawing.Point(50,40)
+    $Label_Title.Location = New-Object System.Drawing.Point(50,40) # Enable button once function is executed
 
     $Label_Title.Font = 'Verdana,10,style=Bold'
 
-    $OU_Name=$Disable_Users_Dropdown.SelectedItem
+    $OU_Name=$Disable_Users_Dropdown.SelectedItem # Select OU name from dropdown
 
     $Disable_Users_Button.Text= "Disable all users in $OU_Name"
 
     $Enable_Users_Button.Text= "Enable all users in $OU_Name"
 
-    $Disable_Individual_Users_Dropdown.Items.Clear()
+    $Disable_Individual_Users_Dropdown.Items.Clear() # Clear/reset individual users dropdown to be repopulated
 
-    $OU_Name=$Disable_Users_Dropdown.SelectedItem
+    $OU_Name=$Disable_Users_Dropdown.SelectedItem # Assign OU_Name variable to selected OU from Disable_Users_Dropdown
 
+    # Add users who haven't logged in (inactive users) to Disable_Individual_User_Dropdown and append '(DISABLED)' to their name in the dropdown to signify their status:
     Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $false)} | Where-Object DistinguishedName -like "*$OU_Name*" | ForEach-Object {$Disable_Individual_Users_Dropdown.Items.Add($_.Name + "(DISABLED)")}
+
+    # Add users who haven't logged in (inactive users) to Disable_Individual_User_Dropdown and append '(enabled)' to their name in the dropdown to signify their status:
 
     Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$OU_Name*" | ForEach-Object {$Disable_Individual_Users_Dropdown.Items.Add($_.Name + "(enabled)")}
 
+    # Show inactive users whose accounts are enabled on the left hand side of GUI
+
     $Inactive_Users = Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$OU_Name*" | Select Name
 
-    $Inactive_Users_Count = $Inactive_Users | Measure-Object
-    $Inactive_Users_Count = $Inactive_Users_Count.Count
+    $Inactive_Users_Count = $Inactive_Users | Measure-Object # Count number of inactive users
+    $Inactive_Users_Count = $Inactive_Users_Count.Count # Add .Count to make this variable callable
+
+    # If there are zeros inactive and enabled users, update Label_Title_1 to signify that to the script user:
 
     if ($Inactive_Users_Count -eq 0){
 
@@ -227,6 +229,8 @@ function Show_Inactive_Users{
     $Label_Title_3.Text = $Total_Users_Not_Logged_In_Count_Text
 
     }
+
+    # If there are more than zero inactive enabled users, list the number of inactive enabled users to the script user:
 
     else{
      
@@ -244,7 +248,7 @@ function Show_Inactive_Users{
     }
 }
 
-function Disable_Inactive_Users{
+function Disable_Inactive_Users{ # Similar to above function, but allows the user to disable all enabled inactive accounts by selecting an OU from the dropdown and the clicking the "Disable all uers" button:
 
     $OU_Name=$Disable_Users_Dropdown.SelectedItem
 
@@ -291,12 +295,11 @@ function Disable_Inactive_Users{
     $Label_Title_3.Text = $Total_Users_Not_Logged_In_Count_Text
     }
 
-    #Change
     Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $true)} | Where-Object DistinguishedName -like "*$OU_Name*" | ForEach-Object {$Disable_Individual_Users_Dropdown.Items.Add($_.Name)}
 
 }
 
-function Enable_Inactive_Users{
+function Enable_Inactive_Users{ # Similar to above function, but allows the user to enable all disabled inactive accounts by selecting an OU from the dropdown and the clicking the "Enable all users" button:
 
     $OU_Name=$Disable_Users_Dropdown.SelectedItem
 
@@ -426,7 +429,7 @@ function Disable_Individual_User{
     }
     }
 
-function Enable_Individual_User{
+function Enable_Individual_User{ # Similar to above function, but allows the user to enable a selected inactive account by selecting a user from the dropdown and the clicking the "Enable this user" button:
 
     $User_Name=$Disable_Individual_Users_Dropdown.SelectedItem
 
@@ -498,10 +501,8 @@ function Enable_Individual_User{
     }
     }
 
-    # Add functions to GUI:
+$Disable_Users_Dropdown.Add_SelectedIndexChanged({Show_Inactive_Users}) # Change index of the Disable_Users_Dropdown
 
-$Disable_Users_Dropdown.Add_SelectedIndexChanged({Show_Inactive_Users})
+$Application_Form.ShowDialog() # Show form on runtime
 
-$Application_Form.ShowDialog()
-
-$Application_Form.Dispose()
+$Application_Form.Dispose() # Garbage collection

@@ -334,13 +334,13 @@ function Enable_Inactive_Users{ # Similar to above function, but allows the user
     $Label_Title_3.Text = $Total_Users_Not_Logged_In_Count_Text
 }
 
-function Disable_Individual_User{
+function Disable_Individual_User{ # Similar to above function, but allows the user to disable a selected inactive account by selecting a user from the dropdown and the clicking the "Disable this user" button:
 
-    $User_Name=$Disable_Individual_Users_Dropdown.SelectedItem
+    $User_Name=$Disable_Individual_Users_Dropdown.SelectedItem # 
 
     if ($User_Name -Match "(DISABLED)"){
 
-    $User_Name = $User_Name.replace("(DISABLED)","")
+    $User_Name = $User_Name.replace("(DISABLED)","") # Remove "(DISABLED)" from User_Name in dropdown in order to present it to the script user.
 
     $Label_Title_4.Text= "$User_Name is already disabled."
 
@@ -362,7 +362,7 @@ function Disable_Individual_User{
 
     else{
 
-    $User_Name = $User_Name.replace("(enabled)","")
+    $User_Name = $User_Name.replace("(enabled)","") # Need to remove the "(DISABLED)" from the User_Name in the dropdown in order for the cmdlet to correctly find the user in AD.
 
     $OU_Name=$Disable_Users_Dropdown.SelectedItem
 

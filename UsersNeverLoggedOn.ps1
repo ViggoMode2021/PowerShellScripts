@@ -1,6 +1,6 @@
 Import-Module ActiveDirectory # Import Active Directory PowerShell module
 
-Add-Type -AssemblyName System.Windows.Forms # Add .NET Windows Forms fonctuinality
+Add-Type -AssemblyName System.Windows.Forms # Add .NET Windows Forms functionality
 
 $Current_Date = Get-Date -Format "MM/dd/yyyy" # Get today's date
 
@@ -141,7 +141,7 @@ $Enable_Users_Button.Font = 'Verdana,12,style=Bold'
 
 $Enable_Users_Button.Location = New-Object System.Drawing.Point(350,120)
 
-    #Disable individual user button:
+    #Disable individual user button (this button disables an individual enabled user):
 
 $Button_Object = [System.Windows.Forms.Button]
 
@@ -155,7 +155,7 @@ $Disable_Individual_User_Button.Font = 'Verdana,12,style=Bold'
 
 $Disable_Individual_User_Button.Location = New-Object System.Drawing.Point(350,480)
 
-    #Enable individual user button:
+    #Enable individual user button (this button enables an individual disabled user):
 
 $Enable_Individual_User_Button = New-Object $Button_Object
 
@@ -167,7 +167,7 @@ $Enable_Individual_User_Button.Font = 'Verdana,12,style=Bold'
 
 $Enable_Individual_User_Button.Location = New-Object System.Drawing.Point(350,420)
 
-    # Scrollbar:
+    # Pack objects into form
 
 $Application_Form.Controls.AddRange(@($Label_Title,$Disable_Users_Dropdown,$Label_Title_2, $Disable_Users_Button, $Enable_Users_Button, $Label_Title_3, $Label_Title_4, $Disable_Individual_Users_Dropdown, $Enable_Individual_User_Button,$Disable_Individual_User_Button))
 

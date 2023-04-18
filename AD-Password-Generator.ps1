@@ -136,21 +136,25 @@ $Password_Theme_Option_5.Location = New-Object System.Drawing.Point(520,220)
 
 ## ---------------------------------------------------------------------------- ##
 
-<#
+$Misc_Password_Params = New-Object System.Windows.Forms.CheckedListBox
 
-$CheckedListBox = New-Object System.Windows.Forms.CheckedListBox
+$Misc_Password_Params.Location = New-Object System.Drawing.Size(700,50)
 
-$CheckedListBox.Location = New-Object System.Drawing.Size(500,50)
+$Misc_Password_Params.Size = New-Object System.Drawing.Size(200,180)
 
-$CheckedListBox.Size = New-Object System.Drawing.Size(100,90)
+$Misc_Password_Params.Items.Insert(0, "Copenhagen"); 
 
-$CheckedListBox.Items.AddRange(1..5)
+$Misc_Password_Params.Items.Insert(1, "Italy"); 
 
-$CheckedListBox.ClearSelected()
+#$Misc_Password_Params.Items.AddRange(1..5)
 
-$CheckedListBox.CheckOnClick = $true
+$Misc_Password_Params.ClearSelected()
 
-#>
+$Misc_Password_Params.CheckOnClick = $true
+
+$Misc_Password_Params.Size = New-Object System.Drawing.Size(500,300)
+$Misc_Password_Params.Height = 200
+$Misc_Password_Params.Font = New-Object System.Drawing.Font("Lucida Console",12,[System.Drawing.FontStyle]::Regular)
 
 # Add all objects to the form:
 
@@ -158,7 +162,7 @@ $CheckedListBox.CheckOnClick = $true
 
 $Application_Form.Controls.AddRange(@($Password_Length, $Password_Length_Option_1, $Password_Length_Option_2, $Password_Length_Option_3, 
 $Password_Length_Option_4, $Password_Length_Option_5, $Password_Length_Option_6, $Password_Theme, $Password_Theme_Option_1, $Password_Theme_Option_2, $Password_Theme_Option_3,
-$Password_Theme_Option_4, $Password_Theme_Option_5, $Password_Theme_Option_6))
+$Password_Theme_Option_4, $Password_Theme_Option_5, $Password_Theme_Option_6, $Misc_Password_Params))
 
 $Application_Form.ShowDialog() # Show form on runtime
 

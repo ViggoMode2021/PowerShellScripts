@@ -57,15 +57,15 @@ $Password_Length.Location = New-Object System.Drawing.Point(220,20)
 
     # Label #2:
 
-$Passowrd_Length = New-Object $Label_Object # Calling object
+$Password_Theme = New-Object $Label_Object # Calling object
 
-$Passowrd_Length.Text= "Password length:"
+$Password_Theme.Text= "Password theme:"
 
-$Passowrd_Length.AutoSize = $true
+$Password_Theme.AutoSize = $true
 
-$Passowrd_Length.Font = 'Verdana,8,style=Bold'
+$Password_Theme.Font = 'Verdana,8,style=Bold'
 
-$Passowrd_Length.Location = New-Object System.Drawing.Point(220,20)
+$Password_Theme.Location = New-Object System.Drawing.Point(420,20)
 
 ## ---------------------------------------------------------------------------- ## 
 
@@ -114,24 +114,24 @@ $Password_Theme_Option_4 = New-Object System.Windows.Forms.RadioButton
 $Password_Theme_Option_5 = New-Object System.Windows.Forms.RadioButton
 
 $Password_Theme_Option_1.Checked = $True
-$Password_Theme_Option_1.Name = "5 characters maximum"
-$Password_Theme_Option_1.Text = "5" # Convert to Integer
+$Password_Theme_Option_1.Name = "Food"
+$Password_Theme_Option_1.Text = "Food" # Convert to String
 $Password_Theme_Option_1.Location = New-Object System.Drawing.Point(520,60)
 
-$Password_Theme_Option_2.Name = "6 characters maximum"
-$Password_Theme_Option_2.Text = "6"
+$Password_Theme_Option_2.Name = "Animals"
+$Password_Theme_Option_2.Text = "Animals"
 $Password_Theme_Option_2.Location = New-Object System.Drawing.Point(520,100)
 
-$Password_Theme_Option_3.Name = "7 characters maximum"
-$Password_Theme_Option_3.Text = "7"
+$Password_Theme_Option_3.Name = "Places"
+$Password_Theme_Option_3.Text = "Places"
 $Password_Theme_Option_3.Location = New-Object System.Drawing.Point(520,140)
 
-$Password_Theme_Option_4.Name = "8 characters maximum"
-$Password_Theme_Option_4.Text = "8"
+$Password_Theme_Option_4.Name = "Music"
+$Password_Theme_Option_4.Text = "Music"
 $Password_Theme_Option_4.Location = New-Object System.Drawing.Point(520,180)
 
-$Password_Theme_Option_5.Name = "9 characters maximum"
-$Password_Theme_Option_5.Text = "9"
+$Password_Theme_Option_5.Name = "Random"
+$Password_Theme_Option_5.Text = "Random"
 $Password_Theme_Option_5.Location = New-Object System.Drawing.Point(520,220)
 
 ## ---------------------------------------------------------------------------- ##
@@ -157,7 +157,7 @@ $CheckedListBox.CheckOnClick = $true
 <#$CheckedListBox#>
 
 $Application_Form.Controls.AddRange(@($Password_Length, $Password_Length_Option_1, $Password_Length_Option_2, $Password_Length_Option_3, 
-$Password_Length_Option_4, $Password_Length_Option_5, $Password_Length_Option_6, $Password_Theme_Option_1, $Password_Theme_Option_2, $Password_Theme_Option_3,
+$Password_Length_Option_4, $Password_Length_Option_5, $Password_Length_Option_6, $Password_Theme, $Password_Theme_Option_1, $Password_Theme_Option_2, $Password_Theme_Option_3,
 $Password_Theme_Option_4, $Password_Theme_Option_5, $Password_Theme_Option_6))
 
 $Application_Form.ShowDialog() # Show form on runtime

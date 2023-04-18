@@ -29,11 +29,6 @@ $Combo_Box_Object = [System.Windows.Forms.ComboBox] # Dropdown object
 
 $Application_Form = New-Object $Form_Object # Create new form/window for GUI
 
-
-$Application_Form.Controls.Add($groupbox1)
-$Application_Form.Controls.Add($groupbox2)
-
-
 $Application_Form.ClientSize= '500,300'
 
 #$Domain = Get-ADDomain -Current LocalComputer | Select Name | foreach { $_.Name } |  Out-String # Get-AD Domain name
@@ -113,13 +108,6 @@ $Password_Length_Option_6.Name = "10 characters maximum"
 $Password_Length_Option_6.Text = "10"
 $Password_Length_Option_6.Location = New-Object System.Drawing.Point(320,220)
 
-$groupbox1.Controls.Add($Password_Length_Option_1)
-$groupbox1.Controls.Add($Password_Length_Option_2)
-$groupbox1.Controls.Add($Password_Length_Option_3)
-$groupbox1.Controls.Add($Password_Length_Option_4)
-$groupbox1.Controls.Add($Password_Length_Option_5)
-$groupbox1.Controls.Add($Password_Length_Option_6)
-
 $groupbox1.DataBindings.DefaultDataSourceUpdateMode = [System.Windows.Forms.DataSourceUpdateMode]::OnValidation 
 
 ## ---------------------------------------------------------------------------- ## 
@@ -157,15 +145,6 @@ $Password_Theme_Option_4.Location = New-Object System.Drawing.Point(520,180)
 $Password_Theme_Option_5.Name = "Random"
 $Password_Theme_Option_5.Text = "Random"
 $Password_Theme_Option_5.Location = New-Object System.Drawing.Point(520,220)
-
-# Add all objects to the form:
-
-$groupbox2.Controls.Add($Password_Theme_Option_1)
-$groupbox2.Controls.Add($Password_Theme_Option_2)
-$groupbox2.Controls.Add($Password_Theme_Option_3)
-$groupbox2.Controls.Add($Password_Theme_Option_4)
-$groupbox2.Controls.Add($Password_Theme_Option_5)
-$groupbox2.Controls.Add($Password_Theme_Option_6)
 
 $groupbox2.DataBindings.DefaultDataSourceUpdateMode = [System.Windows.Forms.DataSourceUpdateMode]::OnValidation
 
@@ -284,15 +263,8 @@ $Application_Form.Controls.AddRange(@($Password_Length, $Password_Length_Option_
 $Password_Length_Option_4, $Password_Length_Option_5, $Password_Length_Option_6, $Password_Theme, $Password_Theme_Option_1, $Password_Theme_Option_2, $Password_Theme_Option_3,
 $Password_Theme_Option_4, $Password_Theme_Option_5, $Password_Theme_Option_6, $Misc_Password_Params, $Create_Password_Button, $groupbox1, $groupbox2))
 
-$Application_Form.ShowDialog() # Show form on runtime
-
-$Application_Form.Dispose() # Garbage collection Add all objects to the form:
-
-<#$CheckedListBox#>
-
-$Application_Form.Controls.AddRange(@($Password_Length, $Password_Length_Option_1, $Password_Length_Option_2, $Password_Length_Option_3, 
-$Password_Length_Option_4, $Password_Length_Option_5, $Password_Length_Option_6, $Password_Theme, $Password_Theme_Option_1, $Password_Theme_Option_2, $Password_Theme_Option_3,
-$Password_Theme_Option_4, $Password_Theme_Option_5, $Password_Theme_Option_6, $Misc_Password_Params))
+$groupbox1.Controls.AddRange(@($Password_Length_Option_1,$Password_Length_Option_2, $Password_Length_Option_3, $Password_Length_Option_4, $Password_Length_Option_5, $Password_Length_Option_6))
+$groupbox2.Controls.AddRange(@($Password_Theme_Option_1,$Password_Theme_Option_2, $Password_Theme_Option_3))
 
 $Application_Form.ShowDialog() # Show form on runtime
 

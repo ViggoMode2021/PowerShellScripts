@@ -39,17 +39,33 @@ $Application_Form.BackColor= "#ffffff" # White bkgr color
 
 # Building the form:
 
+## ---------------------------------------------------------------------------- ## 
+
     # Label #1:
 
-$Label_Title = New-Object $Label_Object # Calling object
+$Password_Length = New-Object $Label_Object # Calling object
 
-$Label_Title.Text= "Password length:"
+$Password_Length.Text= "Password length:"
 
-$Label_Title.AutoSize = $true
+$Password_Length.AutoSize = $true
 
-$Label_Title.Font = 'Verdana,8,style=Bold'
+$Password_Length.Font = 'Verdana,8,style=Bold'
 
-$Label_Title.Location = New-Object System.Drawing.Point(220,20)
+$Password_Length.Location = New-Object System.Drawing.Point(220,20)
+
+## ---------------------------------------------------------------------------- ## 
+
+    # Label #2:
+
+$Passowrd_Length = New-Object $Label_Object # Calling object
+
+$Passowrd_Length.Text= "Password length:"
+
+$Passowrd_Length.AutoSize = $true
+
+$Passowrd_Length.Font = 'Verdana,8,style=Bold'
+
+$Passowrd_Length.Location = New-Object System.Drawing.Point(220,20)
 
 ## ---------------------------------------------------------------------------- ## 
 
@@ -140,7 +156,7 @@ $CheckedListBox.CheckOnClick = $true
 
 <#$CheckedListBox#>
 
-$Application_Form.Controls.AddRange(@($Label_Title, $Password_Length_Option_1, $Password_Length_Option_2, $Password_Length_Option_3, 
+$Application_Form.Controls.AddRange(@($Password_Length, $Password_Length_Option_1, $Password_Length_Option_2, $Password_Length_Option_3, 
 $Password_Length_Option_4, $Password_Length_Option_5, $Password_Length_Option_6, $Password_Theme_Option_1, $Password_Theme_Option_2, $Password_Theme_Option_3,
 $Password_Theme_Option_4, $Password_Theme_Option_5, $Password_Theme_Option_6))
 

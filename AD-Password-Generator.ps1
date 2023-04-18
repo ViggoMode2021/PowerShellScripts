@@ -14,7 +14,7 @@
 
      # 6. Send password change email to user and admin.
 
-Import-Module ActiveDirectory # Import Active Directory PowerShell module
+#Import-Module ActiveDirectory # Import Active Directory PowerShell module
 
 Add-Type -AssemblyName System.Windows.Forms # Add .NET Windows Forms functionality
 
@@ -31,7 +31,7 @@ $Application_Form = New-Object $Form_Object # Create new form/window for GUI
 
 $Application_Form.ClientSize= '500,300'
 
-$Domain = Get-ADDomain -Current LocalComputer | Select Name | foreach { $_.Name } |  Out-String # Get-AD Domain name
+#$Domain = Get-ADDomain -Current LocalComputer | Select Name | foreach { $_.Name } |  Out-String # Get-AD Domain name
 
 $Application_Form.Text = "Password generator for AD users in $Domain on $Current_Date" # Name of application
 
@@ -43,13 +43,15 @@ $Application_Form.BackColor= "#ffffff" # White bkgr color
 
 $Label_Title = New-Object $Label_Object # Calling object
 
-$Label_Title.Text= "Select an OU from the dropdown `r`n to see a list of users."
+$Label_Title.Text= "Length:"
 
 $Label_Title.AutoSize = $true
 
-$Label_Title.Font = 'Verdana,11,style=Bold'
+$Label_Title.Font = 'Verdana,8,style=Bold'
 
-$Label_Title.Location = New-Object System.Drawing.Point(320,20)
+$Label_Title.Location = New-Object System.Drawing.Point(220,20)
+
+# Radio buttons for password length choice:
 
 $Password_Length_Option_1 = New-Object System.Windows.Forms.RadioButton
 $Password_Length_Option_2 = New-Object System.Windows.Forms.RadioButton
@@ -65,15 +67,23 @@ $Password_Length_Option_1.Location = New-Object System.Drawing.Point(320,20)
 
 $Password_Length_Option_2.Name = "6 characters maximum"
 $Password_Length_Option_2.Text = "6"
-$Password_Length_Option_2.Location = New-Object System.Drawing.Point(320,40)
+$Password_Length_Option_2.Location = New-Object System.Drawing.Point(320,60)
 
-$Password_Length_Option_3.Name = "6 characters maximum"
-$Password_Length_Option_3.Text = "6"
-$Password_Length_Option_3.Location = New-Object System.Drawing.Point(320,60)
+$Password_Length_Option_3.Name = "7 characters maximum"
+$Password_Length_Option_3.Text = "7"
+$Password_Length_Option_3.Location = New-Object System.Drawing.Point(320,100)
 
-$Password_Length_Option_4.Name = "6 characters maximum"
-$Password_Length_Option_4.Text = "6"
-$Password_Length_Option_4.Location = New-Object System.Drawing.Point(320,80)
+$Password_Length_Option_4.Name = "8 characters maximum"
+$Password_Length_Option_4.Text = "8"
+$Password_Length_Option_4.Location = New-Object System.Drawing.Point(320,140)
+
+$Password_Length_Option_5.Name = "9 characters maximum"
+$Password_Length_Option_5.Text = "9"
+$Password_Length_Option_5.Location = New-Object System.Drawing.Point(320,180)
+
+$Password_Length_Option_6.Name = "10 characters maximum"
+$Password_Length_Option_6.Text = "10"
+$Password_Length_Option_6.Location = New-Object System.Drawing.Point(320,220)
 
 $CheckedListBox = New-Object System.Windows.Forms.CheckedListBox
 
@@ -89,7 +99,8 @@ $CheckedListBox.CheckOnClick = $true
 
 # Add all objects to the form:
 
-$Application_Form.Controls.AddRange(@($CheckedListBox, $Password_Length_Option_1, $Password_Length_Option_2, $Password_Length_Option_3, $Password_Length_Option_4))
+$Application_Form.Controls.AddRange(@($CheckedListBox, $Label_Title, $Password_Length_Option_1, $Password_Length_Option_2, $Password_Length_Option_3, 
+$Password_Length_Option_4, $Password_Length_Option_5, $Password_Length_Option_6))
 
 $Application_Form.ShowDialog() # Show form on runtime
 

@@ -43,7 +43,7 @@ $Application_Form.BackColor= "#ffffff" # White bkgr color
 
 $Label_Title = New-Object $Label_Object # Calling object
 
-$Label_Title.Text= "Length:"
+$Label_Title.Text= "Password length:"
 
 $Label_Title.AutoSize = $true
 
@@ -51,7 +51,9 @@ $Label_Title.Font = 'Verdana,8,style=Bold'
 
 $Label_Title.Location = New-Object System.Drawing.Point(220,20)
 
-# Radio buttons for password length choice:
+## ---------------------------------------------------------------------------- ## 
+
+# Password length choice radio buttons:
 
 $Password_Length_Option_1 = New-Object System.Windows.Forms.RadioButton
 $Password_Length_Option_2 = New-Object System.Windows.Forms.RadioButton
@@ -85,6 +87,41 @@ $Password_Length_Option_6.Name = "10 characters maximum"
 $Password_Length_Option_6.Text = "10"
 $Password_Length_Option_6.Location = New-Object System.Drawing.Point(320,220)
 
+## ---------------------------------------------------------------------------- ## 
+
+# Password theme option radio buttons:
+
+$Password_Theme_Option_1 = New-Object System.Windows.Forms.RadioButton
+$Password_Theme_Option_2 = New-Object System.Windows.Forms.RadioButton
+$Password_Theme_Option_3 = New-Object System.Windows.Forms.RadioButton
+$Password_Theme_Option_4 = New-Object System.Windows.Forms.RadioButton
+$Password_Theme_Option_5 = New-Object System.Windows.Forms.RadioButton
+
+$Password_Theme_Option_1.Checked = $True
+$Password_Theme_Option_1.Name = "5 characters maximum"
+$Password_Theme_Option_1.Text = "5" # Convert to Integer
+$Password_Theme_Option_1.Location = New-Object System.Drawing.Point(520,60)
+
+$Password_Theme_Option_2.Name = "6 characters maximum"
+$Password_Theme_Option_2.Text = "6"
+$Password_Theme_Option_2.Location = New-Object System.Drawing.Point(520,100)
+
+$Password_Theme_Option_3.Name = "7 characters maximum"
+$Password_Theme_Option_3.Text = "7"
+$Password_Theme_Option_3.Location = New-Object System.Drawing.Point(520,140)
+
+$Password_Theme_Option_4.Name = "8 characters maximum"
+$Password_Theme_Option_4.Text = "8"
+$Password_Theme_Option_4.Location = New-Object System.Drawing.Point(520,180)
+
+$Password_Theme_Option_5.Name = "9 characters maximum"
+$Password_Theme_Option_5.Text = "9"
+$Password_Theme_Option_5.Location = New-Object System.Drawing.Point(520,220)
+
+## ---------------------------------------------------------------------------- ##
+
+<#
+
 $CheckedListBox = New-Object System.Windows.Forms.CheckedListBox
 
 $CheckedListBox.Location = New-Object System.Drawing.Size(500,50)
@@ -97,10 +134,15 @@ $CheckedListBox.ClearSelected()
 
 $CheckedListBox.CheckOnClick = $true
 
+#>
+
 # Add all objects to the form:
 
-$Application_Form.Controls.AddRange(@($CheckedListBox, $Label_Title, $Password_Length_Option_1, $Password_Length_Option_2, $Password_Length_Option_3, 
-$Password_Length_Option_4, $Password_Length_Option_5, $Password_Length_Option_6))
+<#$CheckedListBox#>
+
+$Application_Form.Controls.AddRange(@($Label_Title, $Password_Length_Option_1, $Password_Length_Option_2, $Password_Length_Option_3, 
+$Password_Length_Option_4, $Password_Length_Option_5, $Password_Length_Option_6, $Password_Theme_Option_1, $Password_Theme_Option_2, $Password_Theme_Option_3,
+$Password_Theme_Option_4, $Password_Theme_Option_5, $Password_Theme_Option_6))
 
 $Application_Form.ShowDialog() # Show form on runtime
 

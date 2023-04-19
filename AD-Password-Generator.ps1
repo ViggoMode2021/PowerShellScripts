@@ -179,6 +179,8 @@ function Generate_Password{
 [void] [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms")
 [void] [System.Reflection.Assembly]::LoadWithPartialName("System.Drawing") 
 
+# If statements for password length selection:
+
 if ($Password_Length_Option_1.Checked){
 
 $Password_Length_Selection = 5
@@ -215,31 +217,58 @@ $Password_Length_Selection = 10
 
 }
 
+# 'If' statements for password theme selection:
+
+$Music = "guitar", "drums", "piano"
+
+$Food = "bagel", "pizza", "sandwich"
+
+$Animals = “dog”,”cat”,”chicken”, "frog", "bull"
 
 
+if ($Password_Theme_Option_1.Checked){
 
+#Food
 
+$Password_Theme_Selection = $Food | Get-Random
 
+}
 
+if ($Password_Theme_Option_2.Checked){
 
+#Animals
 
+$Password_Theme_Selection = $Animals | Get-Random
+
+}
+
+if ($Password_Theme_Option_3.Checked){
+
+#Places
+
+$Password_Theme_Selection = $Places | Get-Random
+
+}
+
+if ($Password_Theme_Option_4.Checked){
+
+#Music
+
+$Password_Theme_Selection = $Music | Get-Random
+
+}
+
+if ($Password_Theme_Option_5.Checked){
+
+#Random
 
 }
 
 
+#$Password = [string]$Password_Length_Selection + $Password_Theme_Selection
+#Write-Host $Password
 
-
-
-
-
-
-
-
-
-
-
-
-
+}
 
 ## ---------------------------------------------------------------------------- ##
 
@@ -263,7 +292,7 @@ $Application_Form.Controls.AddRange(@($Password_Length, $Password_Length_Option_
 $Password_Length_Option_4, $Password_Length_Option_5, $Password_Length_Option_6, $Password_Theme, $Password_Theme_Option_1, $Password_Theme_Option_2, $Password_Theme_Option_3,
 $Password_Theme_Option_4, $Password_Theme_Option_5, $Password_Theme_Option_6, $Misc_Password_Params, $Create_Password_Button, $Groupbox_1, $Groupbox_2))
 
-$Groupbox_1.Controls.AddRange(@($Password_Length_Option_1,$Password_Length_Option_2, $Password_Length_Option_3, $Password_Length_Option_4, $Password_Length_Option_5, $Password_Length_Option_6))
+$Groupbox_1.Controls.AddRange(@($Password_Length_Option_1,$Password_Length_Option_2,$Password_Length_Option_3,$Password_Length_Option_4,$Password_Length_Option_5,$Password_Length_Option_6))
 $Groupbox_2.Controls.AddRange(@())
 
 $Application_Form.ShowDialog() # Show form on runtime

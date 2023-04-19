@@ -156,7 +156,7 @@ $Misc_Password_Params.Location = New-Object System.Drawing.Size(700,50)
 
 $Misc_Password_Params.Size = New-Object System.Drawing.Size(200,180)
 
-$Misc_Password_Params.Items.Insert(0, "Capital first letter"); 
+$Misc_Password_Params.Items.Insert(0, "Capitalize first letter"); 
 
 $Misc_Password_Params.Items.Insert(1, "Include numbers"); 
 
@@ -225,6 +225,7 @@ $Food = "bagel", "pizza", "sandwich"
 
 $Animals = “dog”,”cat”,”chicken”, "frog", "bull"
 
+$Places = "boston", "ecuador", "westbrook"
 
 if ($Password_Theme_Option_1.Checked){
 
@@ -264,12 +265,38 @@ if ($Password_Theme_Option_5.Checked){
 
 }
 
+## ---------------------------------------------------------------------------- ##
 
-#$Password = [string]$Password_Length_Selection + $Password_Theme_Selection
-#Write-Host $Password
+if ($Misc_Password_Params.SelectedItem -eq "Capitalize first letter"){
+
+Write-Host "Capital"
 
 }
 
+elseif ($Misc_Password_Params.CheckedItems -eq "Capitalize first letter" -and "Include special characters"){
+
+Write-Host "Capital and numbers"
+
+}
+
+elseif ($Misc_Password_Params.SelectedItem -eq "Include special characters"){
+
+Write-Host "Special"
+
+}
+
+elseif ($Misc_Password_Params.SelectedItem -eq "Include numbers"){
+
+Write-Host "Include numbers"
+
+}
+
+#$x = $Misc_Password_Params.SelectedItem
+#Write-Host $x
+
+## ---------------------------------------------------------------------------- ##
+
+}
 ## ---------------------------------------------------------------------------- ##
 
 $Button_Object = [System.Windows.Forms.Button]

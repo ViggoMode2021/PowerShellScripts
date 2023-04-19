@@ -132,19 +132,19 @@ $Password_Theme_Option_1.Location = New-Object System.Drawing.Point(520,60)
 
 $Password_Theme_Option_2.Name = "Animals"
 $Password_Theme_Option_2.Text = "Animals"
-$Password_Theme_Option_2.Location = New-Object System.Drawing.Point(520,100)
+$Password_Theme_Option_2.Location = New-Object System.Drawing.Point(520,90)
 
 $Password_Theme_Option_3.Name = "Places"
 $Password_Theme_Option_3.Text = "Places"
-$Password_Theme_Option_3.Location = New-Object System.Drawing.Point(520,140)
+$Password_Theme_Option_3.Location = New-Object System.Drawing.Point(520,120)
 
 $Password_Theme_Option_4.Name = "Music"
 $Password_Theme_Option_4.Text = "Music"
-$Password_Theme_Option_4.Location = New-Object System.Drawing.Point(520,200)
+$Password_Theme_Option_4.Location = New-Object System.Drawing.Point(520,150)
 
 $Password_Theme_Option_5.Name = "Random"
 $Password_Theme_Option_5.Text = "Random"
-$Password_Theme_Option_5.Location = New-Object System.Drawing.Point(520,220)
+$Password_Theme_Option_5.Location = New-Object System.Drawing.Point(520,180)
 
 $groupbox2.DataBindings.DefaultDataSourceUpdateMode = [System.Windows.Forms.DataSourceUpdateMode]::OnValidation
 

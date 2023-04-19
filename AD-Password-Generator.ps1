@@ -71,10 +71,10 @@ $Password_Theme.Location = New-Object System.Drawing.Point(420,20)
 
 # Password length choice radio buttons:
 
-$groupbox1 = New-Object System.Windows.Forms.GroupBox
+$Groupbox_1 = New-Object System.Windows.Forms.GroupBox
 
-$groupbox1.Location = '10,10'
-$groupbox1.size = '420,400'
+$Groupbox_1.Location = '10,10'
+$Groupbox_1.size = '420,400'
 
 $Password_Length_Option_1 = New-Object System.Windows.Forms.RadioButton
 $Password_Length_Option_2 = New-Object System.Windows.Forms.RadioButton
@@ -108,16 +108,16 @@ $Password_Length_Option_6.Name = "10 characters maximum"
 $Password_Length_Option_6.Text = "10"
 $Password_Length_Option_6.Location = New-Object System.Drawing.Point(320,240)
 
-$groupbox1.DataBindings.DefaultDataSourceUpdateMode = [System.Windows.Forms.DataSourceUpdateMode]::OnValidation 
+$Groupbox_1.DataBindings.DefaultDataSourceUpdateMode = [System.Windows.Forms.DataSourceUpdateMode]::OnValidation 
 
 ## ---------------------------------------------------------------------------- ## 
 
 # Password theme option radio buttons:
 
-$groupbox2 = New-Object System.Windows.Forms.GroupBox
+$Groupbox_2 = New-Object System.Windows.Forms.GroupBox
 
-$groupbox2.Location = '500,50'
-$groupbox2.size = '220,200'
+$Groupbox_2.Location = '500,50'
+$Groupbox_2.size = '220,200'
 
 $Password_Theme_Option_1 = New-Object System.Windows.Forms.RadioButton
 $Password_Theme_Option_2 = New-Object System.Windows.Forms.RadioButton
@@ -146,7 +146,7 @@ $Password_Theme_Option_5.Name = "Random"
 $Password_Theme_Option_5.Text = "Random"
 $Password_Theme_Option_5.Location = New-Object System.Drawing.Point(520,180)
 
-$groupbox2.DataBindings.DefaultDataSourceUpdateMode = [System.Windows.Forms.DataSourceUpdateMode]::OnValidation
+$Groupbox_2.DataBindings.DefaultDataSourceUpdateMode = [System.Windows.Forms.DataSourceUpdateMode]::OnValidation
 
 ## ---------------------------------------------------------------------------- ##
 
@@ -261,10 +261,10 @@ $Application_Form.DataBindings.DefaultDataSourceUpdateMode = [System.Windows.For
 
 $Application_Form.Controls.AddRange(@($Password_Length, $Password_Length_Option_1, $Password_Length_Option_2, $Password_Length_Option_3, 
 $Password_Length_Option_4, $Password_Length_Option_5, $Password_Length_Option_6, $Password_Theme, $Password_Theme_Option_1, $Password_Theme_Option_2, $Password_Theme_Option_3,
-$Password_Theme_Option_4, $Password_Theme_Option_5, $Password_Theme_Option_6, $Misc_Password_Params, $Create_Password_Button, $groupbox1, $groupbox2))
+$Password_Theme_Option_4, $Password_Theme_Option_5, $Password_Theme_Option_6, $Misc_Password_Params, $Create_Password_Button, $Groupbox_1, $Groupbox_2))
 
-$groupbox1.Controls.AddRange(@($Password_Length_Option_1,$Password_Length_Option_2, $Password_Length_Option_3, $Password_Length_Option_4, $Password_Length_Option_5, $Password_Length_Option_6))
-$groupbox2.Controls.AddRange(@())
+$Groupbox_1.Controls.AddRange(@($Password_Length_Option_1,$Password_Length_Option_2, $Password_Length_Option_3, $Password_Length_Option_4, $Password_Length_Option_5, $Password_Length_Option_6))
+$Groupbox_2.Controls.AddRange(@())
 
 $Application_Form.ShowDialog() # Show form on runtime
 

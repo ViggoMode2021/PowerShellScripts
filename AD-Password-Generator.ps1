@@ -86,27 +86,27 @@ $Password_Length_Option_6 = New-Object System.Windows.Forms.RadioButton
 $Password_Length_Option_1.Checked = $True
 $Password_Length_Option_1.Name = "5 characters maximum"
 $Password_Length_Option_1.Text = "5" # Convert to Integer
-$Password_Length_Option_1.Location = New-Object System.Drawing.Point(320,20)
+$Password_Length_Option_1.Location = New-Object System.Drawing.Point(320,40)
 
 $Password_Length_Option_2.Name = "6 characters maximum"
 $Password_Length_Option_2.Text = "6"
-$Password_Length_Option_2.Location = New-Object System.Drawing.Point(320,60)
+$Password_Length_Option_2.Location = New-Object System.Drawing.Point(320,80)
 
 $Password_Length_Option_3.Name = "7 characters maximum"
 $Password_Length_Option_3.Text = "7"
-$Password_Length_Option_3.Location = New-Object System.Drawing.Point(320,100)
+$Password_Length_Option_3.Location = New-Object System.Drawing.Point(320,120)
 
 $Password_Length_Option_4.Name = "8 characters maximum"
 $Password_Length_Option_4.Text = "8"
-$Password_Length_Option_4.Location = New-Object System.Drawing.Point(320,140)
+$Password_Length_Option_4.Location = New-Object System.Drawing.Point(320,160)
 
 $Password_Length_Option_5.Name = "9 characters maximum"
 $Password_Length_Option_5.Text = "9"
-$Password_Length_Option_5.Location = New-Object System.Drawing.Point(320,180)
+$Password_Length_Option_5.Location = New-Object System.Drawing.Point(320,200)
 
 $Password_Length_Option_6.Name = "10 characters maximum"
 $Password_Length_Option_6.Text = "10"
-$Password_Length_Option_6.Location = New-Object System.Drawing.Point(320,220)
+$Password_Length_Option_6.Location = New-Object System.Drawing.Point(320,240)
 
 $groupbox1.DataBindings.DefaultDataSourceUpdateMode = [System.Windows.Forms.DataSourceUpdateMode]::OnValidation 
 
@@ -140,7 +140,7 @@ $Password_Theme_Option_3.Location = New-Object System.Drawing.Point(520,140)
 
 $Password_Theme_Option_4.Name = "Music"
 $Password_Theme_Option_4.Text = "Music"
-$Password_Theme_Option_4.Location = New-Object System.Drawing.Point(520,180)
+$Password_Theme_Option_4.Location = New-Object System.Drawing.Point(520,200)
 
 $Password_Theme_Option_5.Name = "Random"
 $Password_Theme_Option_5.Text = "Random"
@@ -264,7 +264,7 @@ $Password_Length_Option_4, $Password_Length_Option_5, $Password_Length_Option_6,
 $Password_Theme_Option_4, $Password_Theme_Option_5, $Password_Theme_Option_6, $Misc_Password_Params, $Create_Password_Button, $groupbox1, $groupbox2))
 
 $groupbox1.Controls.AddRange(@($Password_Length_Option_1,$Password_Length_Option_2, $Password_Length_Option_3, $Password_Length_Option_4, $Password_Length_Option_5, $Password_Length_Option_6))
-$groupbox2.Controls.AddRange(@($Password_Theme_Option_1,$Password_Theme_Option_2, $Password_Theme_Option_3))
+$groupbox2.Controls.AddRange(@())
 
 $Application_Form.ShowDialog() # Show form on runtime
 

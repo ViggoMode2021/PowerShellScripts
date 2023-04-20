@@ -178,6 +178,11 @@ function Capitalize_first_letter{
 
 Write-Host "Capital"
 
+Write-Host $global:Password
+
+$Password = $Password.toUpper()
+
+Write-Host $Password
 }
 
 function Include_numbers{
@@ -215,6 +220,14 @@ if ($Password_Theme_Option_1.Checked){
 
 $Password_Theme_Selection = $Food | Get-Random
 
+$global:Password = $Password_Theme_Selection
+
+foreach($Param in $Misc_Password_Params.CheckedItems){
+
+    Invoke-Expression $Param 
+
+}
+
 }
 
 if ($Password_Theme_Option_2.Checked){
@@ -246,6 +259,9 @@ if ($Password_Theme_Option_5.Checked){
 #Random
 
 }
+}
+
+<#
 
 # If statements for password length selection:
 
@@ -257,7 +273,7 @@ $Password_Length_Selection = 5
 
 if($Password_Theme_Selection.Length -eq $Password_Length_Selection){
 
-Write-Host $Password_Theme_Selection
+$global:Password = $Password_Theme_Selection
 
 foreach($Param in $Misc_Password_Params.CheckedItems){
 
@@ -313,6 +329,7 @@ $Password_Length_Selection = 10
 
 }
 }
+#>
 
 ## ---------------------------------------------------------------------------- ##
 

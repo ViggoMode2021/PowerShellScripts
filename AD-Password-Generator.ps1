@@ -172,6 +172,26 @@ $Misc_Password_Params.Size = New-Object System.Drawing.Size(500,300)
 $Misc_Password_Params.Height = 200
 $Misc_Password_Params.Font = New-Object System.Drawing.Font("Lucida Console",12,[System.Drawing.FontStyle]::Regular)
 
+## Corresponding functions
+
+function Capitalize_first_letter{
+
+Write-Host "Capital"
+
+}
+
+function Include_numbers{
+
+Write-Host "Numbers"
+
+}
+
+function Include_special_characters{
+
+Write-Host "Characters"
+
+}
+
 ## ---------------------------------------------------------------------------- ##
 
 function Generate_Password{
@@ -229,19 +249,25 @@ if ($Password_Theme_Option_5.Checked){
 
 # If statements for password length selection:
 
+# 
+
 if ($Password_Length_Option_1.Checked){
 
 $Password_Length_Selection = 5
 
-if($Password_Theme_Selection.Length -lt $Password_Length_Selection){
+if($Password_Theme_Selection.Length -eq $Password_Length_Selection){
 
 Write-Host $Password_Theme_Selection
 
-Write-Host "Less Than"
+foreach($Param in $Misc_Password_Params.CheckedItems){
+
+    Invoke-Expression $Param 
 
 }
 
-elseif($Password_Theme_Selection.Length -lt $Password_Length_Selection){
+}
+
+elseif($Password_Theme_Selection.Length -eq $Password_Length_Selection){
 
 Write-Host $Password_Theme_Selection
 
@@ -286,35 +312,10 @@ if ($Password_Length_Option_6.Checked){
 $Password_Length_Selection = 10
 
 }
-
-## Corresponding functions
-
-function Capitalize_first_letter{
-
-Write-Host "Capital"
-
-}
-
-function Include_numbers{
-
-Write-Host "Numbers"
-
-}
-
-function Include_special_characters{
-
-Write-Host "Characters"
-
-}
 }
 
 ## ---------------------------------------------------------------------------- ##
 
-foreach($Param in $Misc_Password_Params.CheckedItems){
-
-    Invoke-Expression $Param 
-
-}
 
 ## ---------------------------------------------------------------------------- ##
 

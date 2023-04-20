@@ -176,18 +176,23 @@ $Misc_Password_Params.Font = New-Object System.Drawing.Font("Lucida Console",12,
 
 function Capitalize_first_letter{
 
-Write-Host "Capital"
+$Password = $global:Password
 
-Write-Host $global:Password
+$Generated_Password = $Password.substring(0,1).toupper()+$Password.substring(1).tolower()    
 
-$Password = $Password.toUpper()
+$global:Gen_Capital_Password = $Generated_Password
 
-Write-Host $Password
 }
 
 function Include_numbers{
 
-Write-Host "Numbers"
+$Password = $global:Password
+
+$Capital_Password = $global:Gen_Capital_Password
+
+$Generated_Password = $Capital_Password + "1"
+
+Write-Host $Generated_Password
 
 }
 

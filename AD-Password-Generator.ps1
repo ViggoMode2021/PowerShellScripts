@@ -156,11 +156,11 @@ $Misc_Password_Params.Location = New-Object System.Drawing.Size(700,50)
 
 $Misc_Password_Params.Size = New-Object System.Drawing.Size(200,180)
 
-$Misc_Password_Params.Items.Insert(0, "Capitalize first letter"); 
+$Misc_Password_Params.Items.Insert(0, "Capitalize_first_letter"); 
 
-$Misc_Password_Params.Items.Insert(1, "Include numbers"); 
+$Misc_Password_Params.Items.Insert(1, "Include_numbers"); 
 
-$Misc_Password_Params.Items.Insert(2, "Include special characters"); 
+$Misc_Password_Params.Items.Insert(2, "Include_special_characters"); 
 
 #$Misc_Password_Params.Items.AddRange(1..5)
 
@@ -178,44 +178,6 @@ function Generate_Password{
 
 [void] [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms")
 [void] [System.Reflection.Assembly]::LoadWithPartialName("System.Drawing") 
-
-# If statements for password length selection:
-
-if ($Password_Length_Option_1.Checked){
-
-$Password_Length_Selection = 5
-
-}
-
-if ($Password_Length_Option_2.Checked){
-
-$Password_Length_Selection = 6
-
-}
-
-if ($Password_Length_Option_3.Checked){
-
-$Password_Length_Selection = 7
-
-}
-
-if ($Password_Length_Option_4.Checked){
-
-$Password_Length_Selection = 8
-
-}
-
-if ($Password_Length_Option_5.Checked){
-
-$Password_Length_Selection = 9
-
-}
-
-if ($Password_Length_Option_6.Checked){
-
-$Password_Length_Selection = 10
-
-}
 
 # 'If' statements for password theme selection:
 
@@ -265,38 +227,97 @@ if ($Password_Theme_Option_5.Checked){
 
 }
 
-## ---------------------------------------------------------------------------- ##
+# If statements for password length selection:
 
-if ($Misc_Password_Params.SelectedItem -eq "Capitalize first letter"){
+if ($Password_Length_Option_1.Checked){
+
+$Password_Length_Selection = 5
+
+if($Password_Theme_Selection.Length -lt $Password_Length_Selection){
+
+Write-Host $Password_Theme_Selection
+
+Write-Host "Less Than"
+
+}
+
+elseif($Password_Theme_Selection.Length -lt $Password_Length_Selection){
+
+Write-Host $Password_Theme_Selection
+
+Write-Host "Equal length"
+
+}
+
+else{
+
+Write-Host $Password_Theme_Selection
+
+Write-Host "More than"
+}
+}
+
+if ($Password_Length_Option_2.Checked){
+
+$Password_Length_Selection = 6
+
+}
+
+if ($Password_Length_Option_3.Checked){
+
+$Password_Length_Selection = 7
+
+}
+
+if ($Password_Length_Option_4.Checked){
+
+$Password_Length_Selection = 8
+
+}
+
+if ($Password_Length_Option_5.Checked){
+
+$Password_Length_Selection = 9
+
+}
+
+if ($Password_Length_Option_6.Checked){
+
+$Password_Length_Selection = 10
+
+}
+
+## Corresponding functions
+
+function Capitalize_first_letter{
 
 Write-Host "Capital"
 
 }
 
-elseif ($Misc_Password_Params.CheckedItems -eq "Capitalize first letter" -and "Include special characters"){
+function Include_numbers{
 
-Write-Host "Capital and numbers"
-
-}
-
-elseif ($Misc_Password_Params.SelectedItem -eq "Include special characters"){
-
-Write-Host "Special"
+Write-Host "Numbers"
 
 }
 
-elseif ($Misc_Password_Params.SelectedItem -eq "Include numbers"){
+function Include_special_characters{
 
-Write-Host "Include numbers"
+Write-Host "Characters"
 
 }
-
-#$x = $Misc_Password_Params.SelectedItem
-#Write-Host $x
+}
 
 ## ---------------------------------------------------------------------------- ##
 
+foreach($Param in $Misc_Password_Params.CheckedItems){
+
+    Invoke-Expression $Param 
+
 }
+
+## ---------------------------------------------------------------------------- ##
+
 ## ---------------------------------------------------------------------------- ##
 
 $Button_Object = [System.Windows.Forms.Button]

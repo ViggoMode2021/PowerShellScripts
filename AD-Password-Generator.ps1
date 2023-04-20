@@ -182,9 +182,13 @@ $Generated_Password = $Password.substring(0,1).toupper()+$Password.substring(1).
 
 $global:Gen_Capital_Password = $Generated_Password
 
+Write-Host $Generated_Password
+
 }
 
 function Include_numbers{
+
+if($Misc_Password_Params.CheckedItems -Contains "Capitalize_first_letter"){
 
 $Password = $global:Password
 
@@ -193,7 +197,15 @@ $Capital_Password = $global:Gen_Capital_Password
 $Generated_Password = $Capital_Password + "1"
 
 Write-Host $Generated_Password
+}
+else{
 
+$Password = $global:Password
+
+$Generated_Password = $Password + "1"
+
+Write-Host $Generated_Password
+}
 }
 
 function Include_special_characters{

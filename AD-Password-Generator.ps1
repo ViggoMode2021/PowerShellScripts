@@ -69,6 +69,20 @@ $Password_Theme.Location = New-Object System.Drawing.Point(420,20)
 
 ## ---------------------------------------------------------------------------- ## 
 
+    # Label #3:
+
+$Generated_Password_Label = New-Object $Label_Object # Calling object
+
+$Generated_Password_Label.Text= "Password theme:"
+
+$Generated_Password_Label.AutoSize = $true
+
+$Generated_Password_Label.Font = 'Verdana,8,style=Bold'
+
+$Generated_Password_Label.Location = New-Object System.Drawing.Point(620,20)
+
+## ---------------------------------------------------------------------------- ## 
+
 # Password length choice radio buttons:
 
 $Groupbox_1 = New-Object System.Windows.Forms.GroupBox
@@ -182,7 +196,8 @@ $Generated_Password = $Password.substring(0,1).toupper()+$Password.substring(1).
 
 $global:Gen_Capital_Password = $Generated_Password
 
-Write-Host $Generated_Password
+$Generated_Password_Label.Text = $Generated_Password
+
 
 }
 
@@ -196,15 +211,14 @@ $Capital_Password = $global:Gen_Capital_Password
 
 $Generated_Password = $Capital_Password + "1"
 
-Write-Host $Generated_Password
+$Generated_Password_Label.Text = $Generated_Password
+
 }
 else{
 
-$Password = $global:Password
+$Generated_Password = $global:Password
 
-$Generated_Password = $Password + "1"
-
-Write-Host $Generated_Password
+$Generated_Password_Label.Text = $Generated_Password
 }
 }
 
@@ -239,10 +253,16 @@ $Password_Theme_Selection = $Food | Get-Random
 
 $global:Password = $Password_Theme_Selection
 
+if($Misc_Password_Params.CheckedItems.Count -eq 0){
+    Write-Host $Misc_Password_Params.CheckedItems.Count
+    }
+
+else{
+
 foreach($Param in $Misc_Password_Params.CheckedItems){
 
-    Invoke-Expression $Param 
-
+    Invoke-Expression $Param   
+}
 }
 
 }
@@ -373,7 +393,7 @@ $Application_Form.DataBindings.DefaultDataSourceUpdateMode = [System.Windows.For
 
 $Application_Form.Controls.AddRange(@($Password_Length, $Password_Length_Option_1, $Password_Length_Option_2, $Password_Length_Option_3, 
 $Password_Length_Option_4, $Password_Length_Option_5, $Password_Length_Option_6, $Password_Theme, $Password_Theme_Option_1, $Password_Theme_Option_2, $Password_Theme_Option_3,
-$Password_Theme_Option_4, $Password_Theme_Option_5, $Password_Theme_Option_6, $Misc_Password_Params, $Create_Password_Button, $Groupbox_1, $Groupbox_2))
+$Password_Theme_Option_4, $Password_Theme_Option_5, $Password_Theme_Option_6, $Misc_Password_Params, $Create_Password_Button, $Groupbox_1, $Groupbox_2, $Generated_Password_Label))
 
 $Groupbox_1.Controls.AddRange(@($Password_Length_Option_1,$Password_Length_Option_2,$Password_Length_Option_3,$Password_Length_Option_4,$Password_Length_Option_5,$Password_Length_Option_6))
 $Groupbox_2.Controls.AddRange(@())

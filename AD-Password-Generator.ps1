@@ -202,13 +202,49 @@ $Generated_Password_Label.Text = $Generated_Password
 
 function Include_numbers{
 
-if($Misc_Password_Params.CheckedItems -Contains "Capitalize_first_letter"){
+if($Misc_Password_Params.CheckedItems -Contains "Include_numbers"){
+
+$Random_Number = Get-Random -Minimum 1 -Maximum 9000
+
+$Random_Number = [string]$Random_Number
+
+$Password = $global:Password
+
+$Generated_Password = $Password + $Random_Number
+
+$Generated_Password_Label.Text = $Generated_Password
+
+}
+
+elseif($Misc_Password_Params.CheckedItems -Contains "Capitalize_first_letter" -and "Include_numbers"){
+
+$Password = $global:Password
+
+$Generated_Password = $Password.substring(0,1).toupper()+$Password.substring(1).tolower()    
+
+$global:Gen_Capital_Password = $Password
+
+$Random_Number = Get-Random -Minimum 1 -Maximum 9000
+
+$Random_Number = [string]$Random_Number
+
+$Generated_Password = $Password + $Random_Number
+
+$Generated_Password_Label.Text = $Generated_Password
+
+}
+
+elseif($Misc_Password_Params.CheckedItems -Contains "Capitalize_first_letter"){
+
+$Random_Number = Get-Random -Minimum 1 -Maximum 9000
+
+$Random_Number = [string]$Random_Number
 
 $Password = $global:Password
 
 $Capital_Password = $global:Gen_Capital_Password
 
-$Generated_Password = $Capital_Password + "1"
+$Generated_Password = $Capital_Password + $Random_Number
 
 $Generated_Password_Label.Text = $Generated_Password
 
@@ -216,11 +252,35 @@ $Generated_Password_Label.Text = $Generated_Password
 
 elseif($Misc_Password_Params.CheckedItems -Contains "Capitalize_first_letter" -and "Include_special_characters"){
 
+$Random_Number = Get-Random -Minimum 1 -Maximum 9000
+
+$Random_Number = [string]$Random_Number
+
+$Random_Special_Characters = "~", "!", "~!@", "%^&*", ")(" | Get-Random
+
 $Password = $global:Password
 
 $Capital_Password = $global:Gen_Capital_Password
 
-$Generated_Password = $Capital_Password + "1" + "^&*@"
+$Generated_Password = $Capital_Password + $Random_Number + $Random_Special_Characters
+
+$Generated_Password_Label.Text = $Generated_Password
+
+}
+
+elseif($Misc_Password_Params.CheckedItems -Contains "Capitalize_first_letter" -and "Include_numbers" -and "Include_special_characters"){
+
+$Random_Number = Get-Random -Minimum 1 -Maximum 9000
+
+$Random_Number = [string]$Random_Number
+
+$Random_Special_Characters = "~", "!", "~!@", "%^&*", ")(" | Get-Random
+
+$Password = $global:Password
+
+$Capital_Password = $global:Gen_Capital_Password
+
+$Generated_Password = $Capital_Password + $Random_Number + $Random_Special_Characters
 
 $Generated_Password_Label.Text = $Generated_Password
 
@@ -238,11 +298,13 @@ function Include_special_characters{
 
 if($Misc_Password_Params.CheckedItems -Contains "Capitalize_first_letter"){
 
+$Random_Special_Characters = "~", "!", "~!@", "%^&*", ")(" | Get-Random
+
 $Password = $global:Password
 
 $Capital_Password = $global:Gen_Capital_Password
 
-$Generated_Password = $Capital_Password + "~!"
+$Generated_Password = $Capital_Password + $Random_Special_Characters
 
 $Generated_Password_Label.Text = $Generated_Password
 
@@ -250,21 +312,29 @@ $Generated_Password_Label.Text = $Generated_Password
 
 elseif($Misc_Password_Params.CheckedItems -Contains "Capitalize_first_letter" -and "Include_numbers"){
 
+$Random_Number = Get-Random -Minimum 1 -Maximum 9000
+
 $Password = $global:Password
 
 $Capital_Password = $global:Gen_Capital_Password
 
-$Generated_Password = $Capital_Password + "~!" + "1124"
+$Generated_Password = $Capital_Password + "~!" + $Random_Number
 
 $Generated_Password_Label.Text = $Generated_Password
 
 }
 
-else{
+elseif($Misc_Password_Params.CheckedItems -Contains "Capitalize_first_letter" -and "Include_numbers" -and "Include_special_characters"){
+
+$Random_Number = Get-Random -Minimum 1 -Maximum 9000
+
+$Random_Special_Characters = "~", "!", "~!@", "%^&*", ")(" | Get-Random
 
 $Password = $global:Password
 
-$Generated_Password = $Password + "~!"
+$Capital_Password = $global:Gen_Capital_Password
+
+$Generated_Password = $Capital_Password + $Random_Special_Characters + $Random_Number
 
 $Generated_Password_Label.Text = $Generated_Password
 
@@ -317,6 +387,21 @@ if ($Password_Theme_Option_2.Checked){
 #Animals
 
 $Password_Theme_Selection = $Animals | Get-Random
+
+$global:Password = $Password_Theme_Selection
+
+if($Misc_Password_Params.CheckedItems.Count -eq 0){
+    $Generated_Password = $Password_Theme_Selection
+    $Generated_Password_Label.Text = $Generated_Password
+    }
+
+else{
+
+foreach($Param in $Misc_Password_Params.CheckedItems){
+
+    Invoke-Expression $Param   
+}
+}
 
 }
 

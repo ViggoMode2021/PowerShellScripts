@@ -73,13 +73,13 @@ $Password_Theme.Location = New-Object System.Drawing.Point(420,20)
 
 $Generated_Password_Label = New-Object $Label_Object # Calling object
 
-$Generated_Password_Label.Text= "Password theme:"
+$Generated_Password_Label.Text= "*Generated password will appear here*"
 
 $Generated_Password_Label.AutoSize = $true
 
 $Generated_Password_Label.Font = 'Verdana,8,style=Bold'
 
-$Generated_Password_Label.Location = New-Object System.Drawing.Point(620,20)
+$Generated_Password_Label.Location = New-Object System.Drawing.Point(620,520)
 
 ## ---------------------------------------------------------------------------- ## 
 
@@ -198,7 +198,6 @@ $global:Gen_Capital_Password = $Generated_Password
 
 $Generated_Password_Label.Text = $Generated_Password
 
-
 }
 
 function Include_numbers{
@@ -224,7 +223,26 @@ $Generated_Password_Label.Text = $Generated_Password
 
 function Include_special_characters{
 
-Write-Host "Characters"
+if($Misc_Password_Params.CheckedItems -Contains "Capitalize_first_letter"){
+
+$Password = $global:Password
+
+$Capital_Password = $global:Gen_Capital_Password
+
+$Generated_Password = $Capital_Password + "~!"
+
+$Generated_Password_Label.Text = $Generated_Password
+
+}
+else{
+
+$Password = $global:Password
+
+$Generated_Password = $Password + "~!"
+
+$Generated_Password_Label.Text = $Generated_Password
+
+}
 
 }
 
@@ -254,7 +272,8 @@ $Password_Theme_Selection = $Food | Get-Random
 $global:Password = $Password_Theme_Selection
 
 if($Misc_Password_Params.CheckedItems.Count -eq 0){
-    Write-Host $Misc_Password_Params.CheckedItems.Count
+    $Generated_Password = $Password_Theme_Selection
+    $Generated_Password_Label.Text = $Generated_Password
     }
 
 else{

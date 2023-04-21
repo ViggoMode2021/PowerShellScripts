@@ -213,6 +213,19 @@ $Generated_Password = $Capital_Password + "1"
 $Generated_Password_Label.Text = $Generated_Password
 
 }
+
+elseif($Misc_Password_Params.CheckedItems -Contains "Capitalize_first_letter" -and "Include_special_characters"){
+
+$Password = $global:Password
+
+$Capital_Password = $global:Gen_Capital_Password
+
+$Generated_Password = $Capital_Password + "1" + "^&*@"
+
+$Generated_Password_Label.Text = $Generated_Password
+
+}
+
 else{
 
 $Generated_Password = $global:Password
@@ -234,6 +247,19 @@ $Generated_Password = $Capital_Password + "~!"
 $Generated_Password_Label.Text = $Generated_Password
 
 }
+
+elseif($Misc_Password_Params.CheckedItems -Contains "Capitalize_first_letter" -and "Include_numbers"){
+
+$Password = $global:Password
+
+$Capital_Password = $global:Gen_Capital_Password
+
+$Generated_Password = $Capital_Password + "~!" + "1124"
+
+$Generated_Password_Label.Text = $Generated_Password
+
+}
+
 else{
 
 $Password = $global:Password

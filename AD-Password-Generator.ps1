@@ -356,6 +356,19 @@ if ($Password_Theme_Option_3.Checked){
 
 $Password_Theme_Selection = $Places | Get-Random
 
+$global:Password = $Password_Theme_Selection
+
+if($Misc_Password_Params.CheckedItems.Count -eq 0){
+    $Generated_Password = $Password_Theme_Selection
+    $Generated_Password_Label.Text = $Generated_Password
+    }
+
+else{
+
+Invoke-Expression Generate_Active_Directory_Password
+
+}
+
 }
 
 if ($Password_Theme_Option_4.Checked){
@@ -363,6 +376,19 @@ if ($Password_Theme_Option_4.Checked){
 #Music
 
 $Password_Theme_Selection = $Music | Get-Random
+
+$global:Password = $Password_Theme_Selection
+
+if($Misc_Password_Params.CheckedItems.Count -eq 0){
+    $Generated_Password = $Password_Theme_Selection
+    $Generated_Password_Label.Text = $Generated_Password
+    }
+
+else{
+
+Invoke-Expression Generate_Active_Directory_Password
+
+}
 
 }
 

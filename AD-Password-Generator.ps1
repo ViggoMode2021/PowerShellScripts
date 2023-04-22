@@ -190,13 +190,17 @@ $Misc_Password_Params.Font = New-Object System.Drawing.Font("Lucida Console",12,
 
 function Generate_Active_Directory_Password{
 
-if($Misc_Password_Params.CheckedItems -Contains "Capitalize_first_letter"){
+if($Misc_Password_Params.CheckedItems -Contains "Capitalize_first_letter" -and $Misc_Password_Params.CheckedItems.Count -eq 1){
+
+$Generated_Password_Label.Text = ""
 
 $Password = $global:Password
 
 $Capitalized_First_Letter_Password = $Password.substring(0,1).toupper()+$Password.substring(1).tolower()    
 
 $Generated_Password_Label.Text = $Capitalized_First_Letter_Password
+
+Write-Host $Generated_Password_Label.Text
 
 }
 
@@ -230,21 +234,21 @@ $Generated_Password_Label.Text = $Capitalized_First_Letter_And_Include_Numbers_P
 
 }
 
-elseif($Misc_Password_Params.CheckedItems -Contains "Capitalize_first_letter" -and "Include_special_characters"){
-
-$Random_Special_Characters = "~", "!", "~!@", "%^&*", ")(" | Get-Random
+if($Misc_Password_Params.CheckedItems -Contains "Capitalize_first_letter" -and "Include_special_characters" -and $Misc_Password_Params.CheckedItems.Count -eq 2){
 
 $Password = $global:Password
 
-$Capital_Password = $global:Gen_Capital_Password
+$Capitalized_First_Letter_Password = $Password.substring(0,1).toupper()+$Password.substring(1).tolower() 
 
-$Generated_Password = $Capital_Password + $Random_Special_Characters
+$Random_Special_Characters = "~", "!", "~!@", "%^&*", ")(" | Get-Random
 
-$Generated_Password_Label.Text = $Generated_Password
+$Capitalized_First_Letter_Password_With_Special_Characters = $Capitalized_First_Letter_Password + $Random_Special_Characters
 
+$Generated_Password_Label.Text = $Capitalized_First_Letter_Password_With_Special_Characters
 }
 
-elseif($Misc_Password_Params.CheckedItems -Contains "Capitalize_first_letter" -and "Include_numbers" -and "Include_special_characters"){
+<#
+if($Misc_Password_Params.CheckedItems -Contains "Include_special_characters" -and "Include_numbers" -and "Capitalize_first_letter"){
 
 $Random_Number = Get-Random -Minimum 1 -Maximum 9000
 
@@ -261,7 +265,7 @@ $Generated_Password = $Capital_Password + $Random_Number + $Random_Special_Chara
 $Generated_Password_Label.Text = $Generated_Password
 
 }
-
+#>
 }
 
 ## ---------------------------------------------------------------------------- ##

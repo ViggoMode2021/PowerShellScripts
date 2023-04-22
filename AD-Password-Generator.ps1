@@ -256,8 +256,7 @@ $Special_Characters_Capital_Password = $Capitalized_First_Letter_Password + $Ran
 $Generated_Password_Label.Text = $Special_Characters_Capital_Password
 }
 
-<#
-if($Misc_Password_Params.CheckedItems -Contains "Include_special_characters" -and "Include_numbers" -and "Capitalize_first_letter"){
+if($Misc_Password_Params.CheckedItems -Contains "Include_special_characters" -and "Include_numbers" -and "Capitalize_first_letter" -and $Misc_Password_Params.CheckedItems.Count -eq 3){
 
 $Password = $global:Password
 

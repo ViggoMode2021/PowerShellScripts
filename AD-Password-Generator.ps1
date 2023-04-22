@@ -198,7 +198,7 @@ $Password = $global:Password
 
 $Capitalized_First_Letter_Password = $Password.substring(0,1).toupper()+$Password.substring(1).tolower()    
 
-$Generated_Password_Label.Text = $Capitalized_First_Letter_Password
+$Generated_Password_Label.Text = $Capitalized_First_Letter_Password 
 
 }
 
@@ -256,6 +256,23 @@ $Special_Characters_Capital_Password = $Capitalized_First_Letter_Password + $Ran
 $Generated_Password_Label.Text = $Special_Characters_Capital_Password
 }
 
+if($Misc_Password_Params.CheckedItems -Contains "Include_special_characters" -and "Include_numbers" -and $Misc_Password_Params.CheckedItems.Count -eq 2){
+
+if($Misc_Password_Params.CheckedItems -NotContains "Capitalize_first_letter"){
+
+$Password = $global:Password
+
+$Random_Number = Get-Random -Minimum 1 -Maximum 9000
+
+$Random_Number = [string]$Random_Number
+
+$Random_Special_Characters = "~", "!", "~!@", "%^&*", ")(" | Get-Random
+
+$Special_Characters_Numbers_Password = $Password + $Random_Special_Characters + $Random_Number
+
+$Generated_Password_Label.Text = $Special_Characters_Numbers_Password
+}}
+#>
 if($Misc_Password_Params.CheckedItems -Contains "Include_special_characters" -and "Include_numbers" -and "Capitalize_first_letter" -and $Misc_Password_Params.CheckedItems.Count -eq 3){
 
 $Password = $global:Password
@@ -273,7 +290,6 @@ $Capitalized_First_Letter_Password_With_Numbers_And_Special_Characters = $Capita
 $Generated_Password_Label.Text = $Capitalized_First_Letter_Password_With_Numbers_And_Special_Characters
 
 }
-#>
 }
 
 ## ---------------------------------------------------------------------------- ##
@@ -328,10 +344,8 @@ if($Misc_Password_Params.CheckedItems.Count -eq 0){
 
 else{
 
-foreach($Param in $Misc_Password_Params.CheckedItems){
+Invoke-Expression Generate_Active_Directory_Password
 
-    Invoke-Expression $Param   
-}
 }
 
 }
@@ -429,6 +443,12 @@ $Password_Length_Selection = 10
 }
 #>
 
+function Copy_Password_To_Clipboard{
+
+$Generated_Password_Label.Text | Set-Clipboard
+
+}
+
 ## ---------------------------------------------------------------------------- ##
 
 
@@ -450,11 +470,24 @@ $Create_Password_Button.Location = New-Object System.Drawing.Point(550,350)
 
 $Create_Password_Button.Add_Click({Generate_Password})
 
+$Copy_To_Clipboard_Button = New-Object $Button_Object
+
+$Copy_To_Clipboard_Button.Text= "Copy password to clipboard"
+
+$Copy_To_Clipboard_Button.AutoSize = $true
+
+$Copy_To_Clipboard_Button.Font = 'Verdana,12,style=Bold'
+
+$Copy_To_Clipboard_Button.Location = New-Object System.Drawing.Point(750,350)
+
+$Copy_To_Clipboard_Button.Add_Click({Copy_Password_To_Clipboard})
+
 $Application_Form.DataBindings.DefaultDataSourceUpdateMode = [System.Windows.Forms.DataSourceUpdateMode]::OnValidation 
 
 $Application_Form.Controls.AddRange(@($Password_Length, $Password_Length_Option_1, $Password_Length_Option_2, $Password_Length_Option_3, 
 $Password_Length_Option_4, $Password_Length_Option_5, $Password_Length_Option_6, $Password_Theme, $Password_Theme_Option_1, $Password_Theme_Option_2, $Password_Theme_Option_3,
-$Password_Theme_Option_4, $Password_Theme_Option_5, $Password_Theme_Option_6, $Misc_Password_Params, $Create_Password_Button, $Groupbox_1, $Groupbox_2, $Generated_Password_Label))
+$Password_Theme_Option_4, $Password_Theme_Option_5, $Password_Theme_Option_6, $Misc_Password_Params, $Create_Password_Button, $Groupbox_1, $Groupbox_2, $Generated_Password_Label,
+$Copy_To_Clipboard_Button))
 
 $Groupbox_1.Controls.AddRange(@($Password_Length_Option_1,$Password_Length_Option_2,$Password_Length_Option_3,$Password_Length_Option_4,$Password_Length_Option_5,$Password_Length_Option_6))
 $Groupbox_2.Controls.AddRange(@())

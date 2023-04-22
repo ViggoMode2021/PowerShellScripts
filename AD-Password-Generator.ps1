@@ -200,8 +200,6 @@ $Capitalized_First_Letter_Password = $Password.substring(0,1).toupper()+$Passwor
 
 $Generated_Password_Label.Text = $Capitalized_First_Letter_Password
 
-Write-Host $Generated_Password_Label.Text
-
 }
 
 if($Misc_Password_Params.CheckedItems -Contains "Include_numbers" -and $Misc_Password_Params.CheckedItems.Count -eq 1){
@@ -218,7 +216,7 @@ $Generated_Password_Label.Text = $Include_Numbers_Password
 
 }
 
-if($Misc_Password_Params.CheckedItems -Contains "Capitalize_first_letter" -and "Include_numbers" -and $Misc_Password_Params.CheckedItems.Count -eq 2){
+if($Misc_Password_Params.CheckedItems -Contains "Capitalize_first_letter" -and $Misc_Password_Params.CheckedItems -Contains "Include_numbers" -and $Misc_Password_Params.CheckedItems.Count -eq 2){
 
 $Password = $global:Password
 
@@ -234,7 +232,18 @@ $Generated_Password_Label.Text = $Capitalized_First_Letter_And_Include_Numbers_P
 
 }
 
-if($Misc_Password_Params.CheckedItems -Contains "Capitalize_first_letter" -and "Include_special_characters" -and $Misc_Password_Params.CheckedItems.Count -eq 2){
+if($Misc_Password_Params.CheckedItems -Contains "Include_special_characters" -and $Misc_Password_Params.CheckedItems.Count -eq 1){
+
+$Password = $global:Password 
+
+$Random_Special_Characters = "~", "!", "~!@", "%^&*", ")(" | Get-Random
+
+$Special_Characters_Password = $Password + $Random_Special_Characters
+
+$Generated_Password_Label.Text = $Special_Characters_Password
+}
+
+if($Misc_Password_Params.CheckedItems -Contains "Include_special_characters" -and "Capitalize_first_letter" -and $Misc_Password_Params.CheckedItems.Count -eq 2){
 
 $Password = $global:Password
 
@@ -242,13 +251,17 @@ $Capitalized_First_Letter_Password = $Password.substring(0,1).toupper()+$Passwor
 
 $Random_Special_Characters = "~", "!", "~!@", "%^&*", ")(" | Get-Random
 
-$Capitalized_First_Letter_Password_With_Special_Characters = $Capitalized_First_Letter_Password + $Random_Special_Characters
+$Special_Characters_Capital_Password = $Capitalized_First_Letter_Password + $Random_Special_Characters
 
-$Generated_Password_Label.Text = $Capitalized_First_Letter_Password_With_Special_Characters
+$Generated_Password_Label.Text = $Special_Characters_Capital_Password
 }
 
 <#
 if($Misc_Password_Params.CheckedItems -Contains "Include_special_characters" -and "Include_numbers" -and "Capitalize_first_letter"){
+
+$Password = $global:Password
+
+$Capitalized_First_Letter_Password = $Password.substring(0,1).toupper()+$Password.substring(1).tolower() 
 
 $Random_Number = Get-Random -Minimum 1 -Maximum 9000
 
@@ -256,13 +269,9 @@ $Random_Number = [string]$Random_Number
 
 $Random_Special_Characters = "~", "!", "~!@", "%^&*", ")(" | Get-Random
 
-$Password = $global:Password
+$Capitalized_First_Letter_Password_With_Numbers_And_Special_Characters = $Capitalized_First_Letter_Password + $Random_Number + $Random_Special_Characters
 
-$Capital_Password = $global:Gen_Capital_Password
-
-$Generated_Password = $Capital_Password + $Random_Number + $Random_Special_Characters
-
-$Generated_Password_Label.Text = $Generated_Password
+$Generated_Password_Label.Text = $Capitalized_First_Letter_Password_With_Numbers_And_Special_Characters
 
 }
 #>

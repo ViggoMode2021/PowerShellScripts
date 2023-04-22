@@ -85,6 +85,8 @@ $Generated_Password_Label.Location = New-Object System.Drawing.Point(620,520)
 
 # Password length choice radio buttons:
 
+<#
+
 $Groupbox_1 = New-Object System.Windows.Forms.GroupBox
 
 $Groupbox_1.Location = '10,10'
@@ -123,7 +125,7 @@ $Password_Length_Option_6.Text = "10"
 $Password_Length_Option_6.Location = New-Object System.Drawing.Point(320,240)
 
 $Groupbox_1.DataBindings.DefaultDataSourceUpdateMode = [System.Windows.Forms.DataSourceUpdateMode]::OnValidation 
-
+#>
 ## ---------------------------------------------------------------------------- ## 
 
 # Password theme option radio buttons:
@@ -186,7 +188,32 @@ $Misc_Password_Params.Size = New-Object System.Drawing.Size(500,300)
 $Misc_Password_Params.Height = 200
 $Misc_Password_Params.Font = New-Object System.Drawing.Font("Lucida Console",12,[System.Drawing.FontStyle]::Regular)
 
+    # User Dropdown list:
+
+$OU_Select_Dropdown = New-Object $Combo_Box_Object
+
+$OU_Select_Dropdown.Width='190'
+
+$OU_Select_Dropdown.Text="Select an OU"
+
+$OU_Select_Dropdown.Font = New-Object System.Drawing.Font("Lucinda Console",12)
+
+$OU_Select_Dropdown.Location = New-Object System.Drawing.Point(10,10) # Add location to top left of GU
+
 ## Corresponding functions
+
+Get-ADOrganizationalUnit -Properties CanonicalName -Filter * | Where-Object DistinguishedName -notlike "*Domain Controllers*" |Sort-Object CanonicalName | ForEach-Object {$OU_Select_Dropdown.Items.Add($_.Name)}
+
+function Show_OUs{
+
+$OU_Name=$OU_Select_Dropdown.SelectedItem # Assign OU_Name variable to selected OU from Disable_Users_Dropdown
+
+    # Add users who haven't logged in (inactive users) to Disable_Individual_User_Dropdown and append '(DISABLED)' to their name in the dropdown to signify their status:
+    Get-ADUser Where-Object DistinguishedName -like "*$OU_Select_Dropdown*" #| ForEach-Object {$Disable_Individual_Users_Dropdown.Items.Add($_.Name )
+
+}
+
+$OU_Select_Dropdown.Add_SelectedIndexChanged({Show_OUs})
 
 function Generate_Active_Directory_Password{
 
@@ -399,6 +426,58 @@ if ($Password_Theme_Option_5.Checked){
 }
 }
 
+function Copy_Password_To_Clipboard{
+
+$Generated_Password_Label.Text | Set-Clipboard
+
+}
+
+## ---------------------------------------------------------------------------- ##
+
+
+## ---------------------------------------------------------------------------- ##
+
+## ---------------------------------------------------------------------------- ##
+
+$Button_Object = [System.Windows.Forms.Button]
+
+$Create_Password_Button = New-Object $Button_Object
+
+$Create_Password_Button.Text= "Generate Password"
+
+$Create_Password_Button.AutoSize = $true
+
+$Create_Password_Button.Font = 'Verdana,12,style=Bold'
+
+$Create_Password_Button.Location = New-Object System.Drawing.Point(550,350)
+
+$Create_Password_Button.Add_Click({Generate_Password})
+
+$Copy_To_Clipboard_Button = New-Object $Button_Object
+
+$Copy_To_Clipboard_Button.Text= "Copy password to clipboard"
+
+$Copy_To_Clipboard_Button.AutoSize = $true
+
+$Copy_To_Clipboard_Button.Font = 'Verdana,12,style=Bold'
+
+$Copy_To_Clipboard_Button.Location = New-Object System.Drawing.Point(750,350)
+
+$Copy_To_Clipboard_Button.Add_Click({Copy_Password_To_Clipboard})
+
+$Application_Form.DataBindings.DefaultDataSourceUpdateMode = [System.Windows.Forms.DataSourceUpdateMode]::OnValidation 
+
+$Application_Form.Controls.AddRange(@($Password_Theme, $Password_Theme_Option_1, $Password_Theme_Option_2, $Password_Theme_Option_3,
+$Password_Theme_Option_4, $Password_Theme_Option_5, $Password_Theme_Option_6, $Misc_Password_Params, $Create_Password_Button, $Groupbox_2, $Generated_Password_Label,
+$Copy_To_Clipboard_Button, $OU_Select_Dropdown))
+
+$Groupbox_1.Controls.AddRange(@($Password_Length_Option_1,$Password_Length_Option_2,$Password_Length_Option_3,$Password_Length_Option_4,$Password_Length_Option_5,$Password_Length_Option_6))
+$Groupbox_2.Controls.AddRange(@())
+
+$Application_Form.ShowDialog() # Show form on runtime
+
+$Application_Form.Dispose() # Garbage collection
+
 <#
 
 # If statements for password length selection:
@@ -468,56 +547,3 @@ $Password_Length_Selection = 10
 }
 }
 #>
-
-function Copy_Password_To_Clipboard{
-
-$Generated_Password_Label.Text | Set-Clipboard
-
-}
-
-## ---------------------------------------------------------------------------- ##
-
-
-## ---------------------------------------------------------------------------- ##
-
-## ---------------------------------------------------------------------------- ##
-
-$Button_Object = [System.Windows.Forms.Button]
-
-$Create_Password_Button = New-Object $Button_Object
-
-$Create_Password_Button.Text= "Generate Password"
-
-$Create_Password_Button.AutoSize = $true
-
-$Create_Password_Button.Font = 'Verdana,12,style=Bold'
-
-$Create_Password_Button.Location = New-Object System.Drawing.Point(550,350)
-
-$Create_Password_Button.Add_Click({Generate_Password})
-
-$Copy_To_Clipboard_Button = New-Object $Button_Object
-
-$Copy_To_Clipboard_Button.Text= "Copy password to clipboard"
-
-$Copy_To_Clipboard_Button.AutoSize = $true
-
-$Copy_To_Clipboard_Button.Font = 'Verdana,12,style=Bold'
-
-$Copy_To_Clipboard_Button.Location = New-Object System.Drawing.Point(750,350)
-
-$Copy_To_Clipboard_Button.Add_Click({Copy_Password_To_Clipboard})
-
-$Application_Form.DataBindings.DefaultDataSourceUpdateMode = [System.Windows.Forms.DataSourceUpdateMode]::OnValidation 
-
-$Application_Form.Controls.AddRange(@($Password_Length, $Password_Length_Option_1, $Password_Length_Option_2, $Password_Length_Option_3, 
-$Password_Length_Option_4, $Password_Length_Option_5, $Password_Length_Option_6, $Password_Theme, $Password_Theme_Option_1, $Password_Theme_Option_2, $Password_Theme_Option_3,
-$Password_Theme_Option_4, $Password_Theme_Option_5, $Password_Theme_Option_6, $Misc_Password_Params, $Create_Password_Button, $Groupbox_1, $Groupbox_2, $Generated_Password_Label,
-$Copy_To_Clipboard_Button))
-
-$Groupbox_1.Controls.AddRange(@($Password_Length_Option_1,$Password_Length_Option_2,$Password_Length_Option_3,$Password_Length_Option_4,$Password_Length_Option_5,$Password_Length_Option_6))
-$Groupbox_2.Controls.AddRange(@())
-
-$Application_Form.ShowDialog() # Show form on runtime
-
-$Application_Form.Dispose() # Garbage collection

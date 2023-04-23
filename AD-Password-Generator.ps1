@@ -97,6 +97,20 @@ $Username_Password_Label.Location = New-Object System.Drawing.Point(620,420)
 
 ## ---------------------------------------------------------------------------- ## 
 
+    # Label #5:
+
+$User_Password_Last_Set = New-Object $Label_Object # Calling object
+
+$User_Password_Last_Set.Text= "*Password last set*"
+
+$User_Password_Last_Set.AutoSize = $true
+
+$User_Password_Last_Set.Font = 'Verdana,8,style=Bold'
+
+$User_Password_Last_Set.Location = New-Object System.Drawing.Point(820,620)
+
+## ---------------------------------------------------------------------------- ## 
+
     # Select user button:
 
 $Select_User_Button = New-Object $Button_Object
@@ -241,13 +255,15 @@ $Users_Dropdown.Location = New-Object System.Drawing.Point(10,40) # Add location
 
 Get-ADOrganizationalUnit -Properties CanonicalName -Filter * | Where-Object DistinguishedName -notlike "*Domain Controllers*" |Sort-Object CanonicalName | ForEach-Object {$OU_Select_Dropdown.Items.Add($_.Name)}
 
+$User_Name=$Users_Dropdown.SelectedItem
+
 # Function to show OUs: 
 
 function Show_OUs{
 
 $Users_Dropdown.Items.Clear()
 
-$OU_Name=$OU_Select_Dropdown.SelectedItem # Assign OU_Name variable to selected OU from Disable_Users_Dropdown
+$OU_Name=$OU_Select_Dropdown.SelectedItem
 
 Get-ADUser -Filter {(enabled -eq $true)} | Where-Object DistinguishedName -like "*$OU_Name*" | ForEach-Object {$Users_Dropdown.Items.Add($_.Name)}
 
@@ -261,8 +277,9 @@ function Select_User{
 
     $Username_Password_Label.Text= "Change password for $User_Name"
 
-    Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $false)} | Where-Object DistinguishedName -like "*$User_Name*" | Enable-ADAccount
+    $yes = Get-ADUser -Filter {(enabled -eq $true)} -Properties PwdLastSet,PasswordLastSet | Where-Object DistinguishedName -like "*$User_Name*" | Sort Name | ft Name,PasswordLastSet | Out-String
 
+    $User_Password_Last_Set.Text= $yes
     }
   
 # Function to generate new password for AD users:
@@ -521,7 +538,7 @@ $Application_Form.DataBindings.DefaultDataSourceUpdateMode = [System.Windows.For
 
 $Application_Form.Controls.AddRange(@($Password_Theme, $Password_Theme_Option_1, $Password_Theme_Option_2, $Password_Theme_Option_3,
 $Password_Theme_Option_4, $Password_Theme_Option_5, $Password_Theme_Option_6, $Misc_Password_Params, $Create_Password_Button, $Groupbox_2, $Generated_Password_Label,
-$Copy_To_Clipboard_Button, $OU_Select_Dropdown, $Users_Dropdown, $Select_User_Button, $Username_Password_Label))
+$Copy_To_Clipboard_Button, $OU_Select_Dropdown, $Users_Dropdown, $Select_User_Button, $Username_Password_Label, $User_Password_Last_Set))
 
 #$Groupbox_1.Controls.AddRange(@($Password_Length_Option_1,$Password_Length_Option_2,$Password_Length_Option_3,$Password_Length_Option_4,$Password_Length_Option_5,$Password_Length_Option_6))
 $Groupbox_2.Controls.AddRange(@())

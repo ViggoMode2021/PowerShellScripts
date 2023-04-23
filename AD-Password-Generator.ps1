@@ -85,15 +85,15 @@ $Generated_Password_Label.Location = New-Object System.Drawing.Point(620,520)
 
     # Label #4:
 
-$Username_Password_Label = New-Object $Label_Object # Calling object
+$User_Name_Password_Label = New-Object $Label_Object # Calling object
 
-$Username_Password_Label.Text= "*Change password for (username)*"
+$User_Name_Password_Label.Text= "*Change password for (username)*"
 
-$Username_Password_Label.AutoSize = $true
+$User_Name_Password_Label.AutoSize = $true
 
-$Username_Password_Label.Font = 'Verdana,8,style=Bold'
+$User_Name_Password_Label.Font = 'Verdana,8,style=Bold'
 
-$Username_Password_Label.Location = New-Object System.Drawing.Point(620,420)
+$User_Name_Password_Label.Location = New-Object System.Drawing.Point(620,420)
 
 ## ---------------------------------------------------------------------------- ## 
 
@@ -107,7 +107,7 @@ $User_Password_Last_Set.AutoSize = $true
 
 $User_Password_Last_Set.Font = 'Verdana,8,style=Bold'
 
-$User_Password_Last_Set.Location = New-Object System.Drawing.Point(820,620)
+$User_Password_Last_Set.Location = New-Object System.Drawing.Point(150,420)
 
 ## ---------------------------------------------------------------------------- ## 
 
@@ -275,11 +275,12 @@ function Select_User{
 
     $User_Name=$Users_Dropdown.SelectedItem
 
-    $Username_Password_Label.Text= "Change password for $User_Name"
+    $User_Name_Password_Label.Text = "Change password for $User_Name"
 
-    $yes = Get-ADUser -Filter {(enabled -eq $true)} -Properties PwdLastSet,PasswordLastSet | Where-Object DistinguishedName -like "*$User_Name*" | Sort Name | ft Name,PasswordLastSet | Out-String
+    $User_Name_Password_Last_Set = Get-ADUser -Filter {(enabled -eq $true)} -Properties PwdLastSet,PasswordLastSet | Where-Object DistinguishedName -like "*$User_Name*" | Sort Name | ft PasswordLastSet | Out-String
 
-    $User_Password_Last_Set.Text= $yes
+    $User_Password_Last_Set.Text = $User_Name_Password_Last_Set
+
     }
   
 # Function to generate new password for AD users:
@@ -538,7 +539,7 @@ $Application_Form.DataBindings.DefaultDataSourceUpdateMode = [System.Windows.For
 
 $Application_Form.Controls.AddRange(@($Password_Theme, $Password_Theme_Option_1, $Password_Theme_Option_2, $Password_Theme_Option_3,
 $Password_Theme_Option_4, $Password_Theme_Option_5, $Password_Theme_Option_6, $Misc_Password_Params, $Create_Password_Button, $Groupbox_2, $Generated_Password_Label,
-$Copy_To_Clipboard_Button, $OU_Select_Dropdown, $Users_Dropdown, $Select_User_Button, $Username_Password_Label, $User_Password_Last_Set))
+$Copy_To_Clipboard_Button, $OU_Select_Dropdown, $Users_Dropdown, $Select_User_Button, $User_Name_Password_Label, $User_Password_Last_Set))
 
 #$Groupbox_1.Controls.AddRange(@($Password_Length_Option_1,$Password_Length_Option_2,$Password_Length_Option_3,$Password_Length_Option_4,$Password_Length_Option_5,$Password_Length_Option_6))
 $Groupbox_2.Controls.AddRange(@())

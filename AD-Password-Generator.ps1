@@ -290,6 +290,8 @@ $Users_Dropdown.Items.Clear()
 
 $OU_Name=$OU_Select_Dropdown.SelectedItem
 
+$global:OU_Global = $OU_Name
+
 Get-ADUser -Filter {(enabled -eq $true)} | Where-Object DistinguishedName -like "*$OU_Name*" | ForEach-Object {$Users_Dropdown.Items.Add($_.Name)}
 
 }
@@ -447,14 +449,18 @@ if($Misc_Password_Params.CheckedItems.Count -eq 0){
     $Generated_Password = $Password_Theme_Selection
     $Generated_Password_Label.Text = $Generated_Password
 
+    $New_User_Password = ConvertTo-SecureString $Generated_Password -AsPlainText -Force
+
     $MessageBoxTitle = "Change password for $User_Name_Global"
 
     $MessageBoxBody = "Change password to '$Generated_Password' for '$User_Name_Global'?"
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIcon)
 
+    Get-ADUser -Filter {(enabled -eq $true)} | Where-Object DistinguishedName -like "*$User_Name_Global*" | Select-Object SamAccountName | Out-Host
+
     if($Confirmation -eq 'Yes') {
-        Write-Host "Sisas papote"
+        #Set-ADAccountPassword -Identity 'CN=$User_Name_Global,OU=$OU_Global,DC=vigschools,DC=org' -NewPassword $New_User_Password -Reset
     }
 
     else{

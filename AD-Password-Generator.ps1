@@ -18,6 +18,8 @@
 
 Add-Type -AssemblyName System.Windows.Forms # Add .NET Windows Forms functionality
 
+Add-Type -AssemblyName PresentationCore,PresentationFramework
+
 $Current_Date = Get-Date -Format "MM/dd/yyyy" # Get today's date
 
 # GUI form code below:
@@ -138,6 +140,14 @@ $Special_Characters_Label.AutoSize = $true
 $Special_Characters_Label.Font = 'Verdana,8,style=Bold'
 
 $Special_Characters_Label.Location = New-Object System.Drawing.Point(750,20)
+
+## ---------------------------------------------------------------------------- ## 
+
+    # MessageBox:
+
+$ButtonType = [System.Windows.MessageBoxButton]::YesNo
+
+$MessageIcon = [System.Windows.MessageBoxImage]::Warning
 
 ## ---------------------------------------------------------------------------- ## 
 
@@ -290,6 +300,8 @@ function Select_User{
 
     $User_Name=$Users_Dropdown.SelectedItem
 
+    $global:User_Name_Global = $User_Name
+
     $User_Name_Password_Label.Text = "Change password for $User_Name"
 
     $User_Name_Password_Last_Set = Get-ADUser -Filter {(enabled -eq $true)} -Properties PwdLastSet,PasswordLastSet | Where-Object DistinguishedName -like "*$User_Name*" | Sort Name | ft PasswordLastSet | Out-String
@@ -435,15 +447,9 @@ if($Misc_Password_Params.CheckedItems.Count -eq 0){
     $Generated_Password = $Password_Theme_Selection
     $Generated_Password_Label.Text = $Generated_Password
 
-    Add-Type -AssemblyName PresentationCore,PresentationFramework
+    $MessageBoxTitle = "Change password for $User_Name_Global"
 
-    $ButtonType = [System.Windows.MessageBoxButton]::YesNo
-
-    $MessageBoxTitle = "Test"
-
-    $MessageBoxBody = "Serious fam?"
-
-    $MessageIcon = [System.Windows.MessageBoxImage]::Warning
+    $MessageBoxBody = "Change password to '$Generated_Password' for '$User_Name_Global'?"
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIcon)
 

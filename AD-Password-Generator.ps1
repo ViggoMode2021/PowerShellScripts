@@ -83,6 +83,35 @@ $Generated_Password_Label.Location = New-Object System.Drawing.Point(620,520)
 
 ## ---------------------------------------------------------------------------- ## 
 
+    # Label #4:
+
+$Username_Password_Label = New-Object $Label_Object # Calling object
+
+$Username_Password_Label.Text= "*Change password for (username)*"
+
+$Username_Password_Label.AutoSize = $true
+
+$Username_Password_Label.Font = 'Verdana,8,style=Bold'
+
+$Username_Password_Label.Location = New-Object System.Drawing.Point(620,420)
+
+## ---------------------------------------------------------------------------- ## 
+
+    # Select user button:
+
+$Select_User_Button = New-Object $Button_Object
+
+$Select_User_Button.Text= "Select user"
+
+$Select_User_Button.AutoSize = $true
+
+$Select_User_Button.Font = 'Verdana,12,style=Bold'
+
+$Select_User_Button.Location = New-Object System.Drawing.Point(220,40)
+
+$Select_User_Button.Add_Click({Select_User})
+
+## ---------------------------------------------------------------------------- ## 
 # Password length choice radio buttons:
 
 <#
@@ -132,8 +161,8 @@ $Groupbox_1.DataBindings.DefaultDataSourceUpdateMode = [System.Windows.Forms.Dat
 
 $Groupbox_2 = New-Object System.Windows.Forms.GroupBox
 
-$Groupbox_2.Location = '500,50'
-$Groupbox_2.size = '220,200'
+$Groupbox_2.Location = '420,50'
+$Groupbox_2.size = '170,170'
 
 $Password_Theme_Option_1 = New-Object System.Windows.Forms.RadioButton
 $Password_Theme_Option_2 = New-Object System.Windows.Forms.RadioButton
@@ -144,23 +173,23 @@ $Password_Theme_Option_5 = New-Object System.Windows.Forms.RadioButton
 $Password_Theme_Option_1.Checked = $True
 $Password_Theme_Option_1.Name = "Food"
 $Password_Theme_Option_1.Text = "Food" # Convert to String
-$Password_Theme_Option_1.Location = New-Object System.Drawing.Point(520,60)
+$Password_Theme_Option_1.Location = New-Object System.Drawing.Point(425,60)
 
 $Password_Theme_Option_2.Name = "Animals"
 $Password_Theme_Option_2.Text = "Animals"
-$Password_Theme_Option_2.Location = New-Object System.Drawing.Point(520,90)
+$Password_Theme_Option_2.Location = New-Object System.Drawing.Point(425,90)
 
 $Password_Theme_Option_3.Name = "Places"
 $Password_Theme_Option_3.Text = "Places"
-$Password_Theme_Option_3.Location = New-Object System.Drawing.Point(520,120)
+$Password_Theme_Option_3.Location = New-Object System.Drawing.Point(425,120)
 
 $Password_Theme_Option_4.Name = "Music"
 $Password_Theme_Option_4.Text = "Music"
-$Password_Theme_Option_4.Location = New-Object System.Drawing.Point(520,150)
+$Password_Theme_Option_4.Location = New-Object System.Drawing.Point(425,150)
 
 $Password_Theme_Option_5.Name = "Random"
 $Password_Theme_Option_5.Text = "Random"
-$Password_Theme_Option_5.Location = New-Object System.Drawing.Point(520,180)
+$Password_Theme_Option_5.Location = New-Object System.Drawing.Point(425,180)
 
 $Groupbox_2.DataBindings.DefaultDataSourceUpdateMode = [System.Windows.Forms.DataSourceUpdateMode]::OnValidation
 
@@ -170,15 +199,11 @@ $Misc_Password_Params = New-Object System.Windows.Forms.CheckedListBox
 
 $Misc_Password_Params.Location = New-Object System.Drawing.Size(700,50)
 
-$Misc_Password_Params.Size = New-Object System.Drawing.Size(200,180)
-
 $Misc_Password_Params.Items.Insert(0, "Capitalize_first_letter"); 
 
 $Misc_Password_Params.Items.Insert(1, "Include_numbers"); 
 
 $Misc_Password_Params.Items.Insert(2, "Include_special_characters"); 
-
-#$Misc_Password_Params.Items.AddRange(1..5)
 
 $Misc_Password_Params.ClearSelected()
 
@@ -188,7 +213,7 @@ $Misc_Password_Params.Size = New-Object System.Drawing.Size(500,300)
 $Misc_Password_Params.Height = 200
 $Misc_Password_Params.Font = New-Object System.Drawing.Font("Lucida Console",12,[System.Drawing.FontStyle]::Regular)
 
-    # User Dropdown list:
+    # OU Dropdown list:
 
 $OU_Select_Dropdown = New-Object $Combo_Box_Object
 
@@ -198,22 +223,49 @@ $OU_Select_Dropdown.Text="Select an OU"
 
 $OU_Select_Dropdown.Font = New-Object System.Drawing.Font("Lucinda Console",12)
 
-$OU_Select_Dropdown.Location = New-Object System.Drawing.Point(10,10) # Add location to top left of GU
+$OU_Select_Dropdown.Location = New-Object System.Drawing.Point(10,10) # Add location to top left of GUI
+
+# User Dropdown list:
+
+$Users_Dropdown = New-Object $Combo_Box_Object
+
+$Users_Dropdown.Width='190'
+
+$Users_Dropdown.Text="Select a user"
+
+$Users_Dropdown.Font = New-Object System.Drawing.Font("Lucinda Console",12)
+
+$Users_Dropdown.Location = New-Object System.Drawing.Point(10,40) # Add location to top left of GUI
 
 ## Corresponding functions
 
 Get-ADOrganizationalUnit -Properties CanonicalName -Filter * | Where-Object DistinguishedName -notlike "*Domain Controllers*" |Sort-Object CanonicalName | ForEach-Object {$OU_Select_Dropdown.Items.Add($_.Name)}
 
+# Function to show OUs: 
+
 function Show_OUs{
+
+$Users_Dropdown.Items.Clear()
 
 $OU_Name=$OU_Select_Dropdown.SelectedItem # Assign OU_Name variable to selected OU from Disable_Users_Dropdown
 
-    # Add users who haven't logged in (inactive users) to Disable_Individual_User_Dropdown and append '(DISABLED)' to their name in the dropdown to signify their status:
-    Get-ADUser Where-Object DistinguishedName -like "*$OU_Select_Dropdown*" #| ForEach-Object {$Disable_Individual_Users_Dropdown.Items.Add($_.Name )
+Get-ADUser -Filter {(enabled -eq $true)} | Where-Object DistinguishedName -like "*$OU_Name*" | ForEach-Object {$Users_Dropdown.Items.Add($_.Name)}
 
 }
 
 $OU_Select_Dropdown.Add_SelectedIndexChanged({Show_OUs})
+
+function Select_User{
+
+    $User_Name=$Users_Dropdown.SelectedItem
+
+    $Username_Password_Label.Text= "Change password for $User_Name"
+
+    Get-ADUser -Filter {(lastlogontimestamp -notlike "*") -and (enabled -eq $false)} | Where-Object DistinguishedName -like "*$User_Name*" | Enable-ADAccount
+
+    }
+  
+# Function to generate new password for AD users:
 
 function Generate_Active_Directory_Password{
 
@@ -299,7 +351,7 @@ $Special_Characters_Numbers_Password = $Password + $Random_Special_Characters + 
 
 $Generated_Password_Label.Text = $Special_Characters_Numbers_Password
 }}
-#>
+
 if($Misc_Password_Params.CheckedItems -Contains "Include_special_characters" -and "Include_numbers" -and "Capitalize_first_letter" -and $Misc_Password_Params.CheckedItems.Count -eq 3){
 
 $Password = $global:Password
@@ -328,13 +380,13 @@ function Generate_Password{
 
 # 'If' statements for password theme selection:
 
-$Music = "guitar", "drums", "piano"
+$Music = "guitar", "drums", "piano", "trumpet", "trombone", "keyboard"
 
-$Food = "bagel", "pizza", "sandwich"
+$Food = "bagel", "pizza", "sandwich", "banana", "cheese", "burrito", "pupusa", "kebab", "baklava", "pierogi"
 
 $Animals = “dog”,”cat”,”chicken”, "frog", "bull"
 
-$Places = "boston", "ecuador", "westbrook"
+$Places = "boston", "ecuador", "westbrook", "groton", "connecticut", "massachusetts", "colombia", "mexico", "peru", "iceland"
 
 if ($Password_Theme_Option_1.Checked){
 
@@ -469,9 +521,9 @@ $Application_Form.DataBindings.DefaultDataSourceUpdateMode = [System.Windows.For
 
 $Application_Form.Controls.AddRange(@($Password_Theme, $Password_Theme_Option_1, $Password_Theme_Option_2, $Password_Theme_Option_3,
 $Password_Theme_Option_4, $Password_Theme_Option_5, $Password_Theme_Option_6, $Misc_Password_Params, $Create_Password_Button, $Groupbox_2, $Generated_Password_Label,
-$Copy_To_Clipboard_Button, $OU_Select_Dropdown))
+$Copy_To_Clipboard_Button, $OU_Select_Dropdown, $Users_Dropdown, $Select_User_Button, $Username_Password_Label))
 
-$Groupbox_1.Controls.AddRange(@($Password_Length_Option_1,$Password_Length_Option_2,$Password_Length_Option_3,$Password_Length_Option_4,$Password_Length_Option_5,$Password_Length_Option_6))
+#$Groupbox_1.Controls.AddRange(@($Password_Length_Option_1,$Password_Length_Option_2,$Password_Length_Option_3,$Password_Length_Option_4,$Password_Length_Option_5,$Password_Length_Option_6))
 $Groupbox_2.Controls.AddRange(@())
 
 $Application_Form.ShowDialog() # Show form on runtime

@@ -65,7 +65,7 @@ $Password_Theme.AutoSize = $true
 
 $Password_Theme.Font = 'Verdana,8,style=Bold'
 
-$Password_Theme.Location = New-Object System.Drawing.Point(420,20)
+$Password_Theme.Location = New-Object System.Drawing.Point(520,20)
 
 ## ---------------------------------------------------------------------------- ## 
 
@@ -79,7 +79,7 @@ $Generated_Password_Label.AutoSize = $true
 
 $Generated_Password_Label.Font = 'Verdana,8,style=Bold'
 
-$Generated_Password_Label.Location = New-Object System.Drawing.Point(620,520)
+$Generated_Password_Label.Location = New-Object System.Drawing.Point(620,620)
 
 ## ---------------------------------------------------------------------------- ## 
 
@@ -105,9 +105,9 @@ $User_Password_Last_Set.Text= "*Password last set*"
 
 $User_Password_Last_Set.AutoSize = $true
 
-$User_Password_Last_Set.Font = 'Verdana,8,style=Bold'
+$User_Password_Last_Set.Font = 'Verdana,10,style=Bold'
 
-$User_Password_Last_Set.Location = New-Object System.Drawing.Point(150,420)
+$User_Password_Last_Set.Location = New-Object System.Drawing.Point(650,470)
 
 ## ---------------------------------------------------------------------------- ## 
 
@@ -126,6 +126,21 @@ $Select_User_Button.Location = New-Object System.Drawing.Point(220,40)
 $Select_User_Button.Add_Click({Select_User})
 
 ## ---------------------------------------------------------------------------- ## 
+
+# Label #6:
+
+$Special_Characters_Label = New-Object $Label_Object # Calling object
+
+$Special_Characters_Label.Text= "Special characters:"
+
+$Special_Characters_Label.AutoSize = $true
+
+$Special_Characters_Label.Font = 'Verdana,8,style=Bold'
+
+$Special_Characters_Label.Location = New-Object System.Drawing.Point(750,20)
+
+## ---------------------------------------------------------------------------- ## 
+
 # Password length choice radio buttons:
 
 <#
@@ -175,7 +190,7 @@ $Groupbox_1.DataBindings.DefaultDataSourceUpdateMode = [System.Windows.Forms.Dat
 
 $Groupbox_2 = New-Object System.Windows.Forms.GroupBox
 
-$Groupbox_2.Location = '420,50'
+$Groupbox_2.Location = '483,50'
 $Groupbox_2.size = '170,170'
 
 $Password_Theme_Option_1 = New-Object System.Windows.Forms.RadioButton
@@ -187,23 +202,23 @@ $Password_Theme_Option_5 = New-Object System.Windows.Forms.RadioButton
 $Password_Theme_Option_1.Checked = $True
 $Password_Theme_Option_1.Name = "Food"
 $Password_Theme_Option_1.Text = "Food" # Convert to String
-$Password_Theme_Option_1.Location = New-Object System.Drawing.Point(425,60)
+$Password_Theme_Option_1.Location = New-Object System.Drawing.Point(490,60)
 
 $Password_Theme_Option_2.Name = "Animals"
 $Password_Theme_Option_2.Text = "Animals"
-$Password_Theme_Option_2.Location = New-Object System.Drawing.Point(425,90)
+$Password_Theme_Option_2.Location = New-Object System.Drawing.Point(490,90)
 
 $Password_Theme_Option_3.Name = "Places"
 $Password_Theme_Option_3.Text = "Places"
-$Password_Theme_Option_3.Location = New-Object System.Drawing.Point(425,120)
+$Password_Theme_Option_3.Location = New-Object System.Drawing.Point(490,120)
 
 $Password_Theme_Option_4.Name = "Music"
 $Password_Theme_Option_4.Text = "Music"
-$Password_Theme_Option_4.Location = New-Object System.Drawing.Point(425,150)
+$Password_Theme_Option_4.Location = New-Object System.Drawing.Point(490,150)
 
 $Password_Theme_Option_5.Name = "Random"
 $Password_Theme_Option_5.Text = "Random"
-$Password_Theme_Option_5.Location = New-Object System.Drawing.Point(425,180)
+$Password_Theme_Option_5.Location = New-Object System.Drawing.Point(490,180)
 
 $Groupbox_2.DataBindings.DefaultDataSourceUpdateMode = [System.Windows.Forms.DataSourceUpdateMode]::OnValidation
 
@@ -280,6 +295,8 @@ function Select_User{
     $User_Name_Password_Last_Set = Get-ADUser -Filter {(enabled -eq $true)} -Properties PwdLastSet,PasswordLastSet | Where-Object DistinguishedName -like "*$User_Name*" | Sort Name | ft PasswordLastSet | Out-String
 
     $User_Password_Last_Set.Text = $User_Name_Password_Last_Set
+
+    $User_Password_Last_Set.Location = New-Object System.Drawing.Point(650,470)
 
     }
   
@@ -417,12 +434,33 @@ $global:Password = $Password_Theme_Selection
 if($Misc_Password_Params.CheckedItems.Count -eq 0){
     $Generated_Password = $Password_Theme_Selection
     $Generated_Password_Label.Text = $Generated_Password
+
+    Add-Type -AssemblyName PresentationCore,PresentationFramework
+
+    $ButtonType = [System.Windows.MessageBoxButton]::YesNo
+
+    $MessageBoxTitle = "Test"
+
+    $MessageBoxBody = "Serious fam?"
+
+    $MessageIcon = [System.Windows.MessageBoxImage]::Warning
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIcon)
+
+    if($Confirmation -eq 'Yes') {
+        Write-Host "Sisas papote"
+    }
+
+    else{
+        Write-Host "No mames wey"
+    }
+
+    }
     }
 
 else{
 
-    Invoke-Expression Generate_Active_Directory_Password   
-}
+    Invoke-Expression Generate_Active_Directory_Password
 
 }
 
@@ -539,7 +577,8 @@ $Application_Form.DataBindings.DefaultDataSourceUpdateMode = [System.Windows.For
 
 $Application_Form.Controls.AddRange(@($Password_Theme, $Password_Theme_Option_1, $Password_Theme_Option_2, $Password_Theme_Option_3,
 $Password_Theme_Option_4, $Password_Theme_Option_5, $Password_Theme_Option_6, $Misc_Password_Params, $Create_Password_Button, $Groupbox_2, $Generated_Password_Label,
-$Copy_To_Clipboard_Button, $OU_Select_Dropdown, $Users_Dropdown, $Select_User_Button, $User_Name_Password_Label, $User_Password_Last_Set))
+$Copy_To_Clipboard_Button, $OU_Select_Dropdown, $Users_Dropdown, $Select_User_Button, $User_Name_Password_Label, $User_Password_Last_Set,
+$Special_Characters_Label))
 
 #$Groupbox_1.Controls.AddRange(@($Password_Length_Option_1,$Password_Length_Option_2,$Password_Length_Option_3,$Password_Length_Option_4,$Password_Length_Option_5,$Password_Length_Option_6))
 $Groupbox_2.Controls.AddRange(@())

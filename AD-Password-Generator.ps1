@@ -22,6 +22,10 @@ Add-Type -AssemblyName PresentationCore,PresentationFramework
 
 $Current_Date = Get-Date -Format "MM/dd/yyyy" # Get today's date
 
+$Min_Password_Length = Get-ADDefaultDomainPasswordPolicy | Select -ExpandProperty MinPasswordLength
+
+$Min_Password_Length = [int]$Min_Password_Length
+
 # GUI form code below:
 
 $Form_Object = [System.Windows.Forms.Form] # Entire form/window for GUI
@@ -147,7 +151,9 @@ $Special_Characters_Label.Location = New-Object System.Drawing.Point(750,20)
 
 $ButtonType = [System.Windows.MessageBoxButton]::YesNo
 
-$MessageIcon = [System.Windows.MessageBoxImage]::Warning
+$MessageIcon = [System.Windows.MessageBoxImage]::Question
+
+$MessageIconError = [System.Windows.MessageBoxImage]::Error
 
 ## ---------------------------------------------------------------------------- ## 
 
@@ -278,7 +284,7 @@ $Users_Dropdown.Location = New-Object System.Drawing.Point(10,40) # Add location
 
 ## Corresponding functions
 
-#Get-ADOrganizationalUnit -Properties CanonicalName -Filter * | Where-Object DistinguishedName -notlike "*Domain Controllers*" |Sort-Object CanonicalName | ForEach-Object {$OU_Select_Dropdown.Items.Add($_.Name)}
+Get-ADOrganizationalUnit -Properties CanonicalName -Filter * | Where-Object DistinguishedName -notlike "*Domain Controllers*" |Sort-Object CanonicalName | ForEach-Object {$OU_Select_Dropdown.Items.Add($_.Name)}
 
 $User_Name=$Users_Dropdown.SelectedItem
 
@@ -583,7 +589,7 @@ function Generate_Password{
 
 $Music = "guitar", "drums", "piano", "trumpet", "trombone", "keyboard"
 
-$Food = "bagel", "pizza", "sandwich", "banana", "cheese", "burrito", "pupusa", "kebab", "baklava", "pierogi"
+$Food = "bagel", "pizza", "sandwich", "banana", "cheese", "burritos", "pupusa", "kebab", "baklava", "pierogi", "quesadilla"
 
 $Animals = “dog”,”cat”,”chicken”, "frog", "bull"
 
@@ -601,6 +607,8 @@ if($Misc_Password_Params.CheckedItems.Count -eq 0){
     $Generated_Password = $Password_Theme_Selection
     $Generated_Password_Label.Text = $Generated_Password
 
+    $Generated_Password_Length = $Generated_Password.Length 
+
     $New_User_Password = ConvertTo-SecureString $Generated_Password -AsPlainText -Force
 
     $MessageBoxTitle = "Change password for $User_Name_Global"
@@ -609,15 +617,21 @@ if($Misc_Password_Params.CheckedItems.Count -eq 0){
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIcon)
 
-    $Sam_Account_Name = Get-ADUser -Filter {(enabled -eq $true)} | Where-Object DistinguishedName -like "*$User_Name_Global*" | Select-Object SamAccountName | Out-Host
+    $User_Name = $User_Name_Global
 
-    if($Confirmation -eq 'Yes') {
+    $Sam_Account_Name = Get-ADUser -Filter {(enabled -eq $true)} | Where-Object DistinguishedName -like "*$User_Name*" | Select -ExpandProperty SamAccountName
+
+    if($Confirmation -eq 'Yes'-and $Generated_Password_Length -gt $Min_Password_Length) {
         Set-ADAccountPassword -Identity $Sam_Account_Name -NewPassword $New_User_Password -Reset
         $Generated_Password_Label.Text = "Password updated for $User_Name_Global on $Current_Date."
     }
 
     else{
-      
+      $MessageBoxTitle = "Password length error!"
+
+      $MessageBoxBody = "Your password's length of $Generated_Password_Length is less than the domain requirement of $Min_Password_Length."
+
+      $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIconError)
     }
 
     }

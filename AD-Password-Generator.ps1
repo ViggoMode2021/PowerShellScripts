@@ -278,7 +278,7 @@ $Users_Dropdown.Location = New-Object System.Drawing.Point(10,40) # Add location
 
 ## Corresponding functions
 
-Get-ADOrganizationalUnit -Properties CanonicalName -Filter * | Where-Object DistinguishedName -notlike "*Domain Controllers*" |Sort-Object CanonicalName | ForEach-Object {$OU_Select_Dropdown.Items.Add($_.Name)}
+#Get-ADOrganizationalUnit -Properties CanonicalName -Filter * | Where-Object DistinguishedName -notlike "*Domain Controllers*" |Sort-Object CanonicalName | ForEach-Object {$OU_Select_Dropdown.Items.Add($_.Name)}
 
 $User_Name=$Users_Dropdown.SelectedItem
 
@@ -343,7 +343,11 @@ if($Confirmation -eq 'Yes') {
     $Generated_Password_Label.Text = "Password updated for $User_Name_Global on $Current_Date."
 }
 
-else{
+if($Confirmation -eq 'No') {
+    
+    $Generated_Password_Label.Text = "*Generated password will appear here.*"
+    Write-Host "Kodak"
+    
       
 } 
 
@@ -379,7 +383,7 @@ if($Confirmation -eq 'Yes') {
 }
 
 else{
-      
+    
 } 
 
 }
@@ -724,13 +728,13 @@ $Create_Password_Button.Add_Click({Generate_Password})
 
 $Copy_To_Clipboard_Button = New-Object $Button_Object
 
-$Copy_To_Clipboard_Button.Text= "Copy password to clipboard"
+$Copy_To_Clipboard_Button.Text= "Copy password"
 
 $Copy_To_Clipboard_Button.AutoSize = $true
 
 $Copy_To_Clipboard_Button.Font = 'Verdana,12,style=Bold'
 
-$Copy_To_Clipboard_Button.Location = New-Object System.Drawing.Point(750,350)
+$Copy_To_Clipboard_Button.Location = New-Object System.Drawing.Point(950,350)
 
 $Copy_To_Clipboard_Button.Add_Click({Copy_Password_To_Clipboard})
 
@@ -816,4 +820,33 @@ $Password_Length_Selection = 10
 
 }
 }
+#>
+
+#########################################################
+
+<#
+
+
+$Desktop = 'Desktop'
+
+Function Open-File($Desktop)
+{
+    Add-Type -AssemblyName System.Windows.Forms
+    $OpenFileDialog = New-Object System.Windows.Forms.OpenFileDialog
+    $OpenFileDialog.Title = "Please Select File"
+    $OpenFileDialog.InitialDirectory = $initialDirectory
+    $OpenFileDialog.filter = "(*.csv)|*.csv|SpreadSheet (*.xlsx)|*.xlsx'"
+    # Out-Null supresses the "OK" after selecting the file.
+    $OpenFileDialog.ShowDialog() | Out-Null
+    $Global:Selected_File = $OpenFileDialog.FileName
+}
+
+$ColNames = ($Selected_File[0].psobject.Properties).name
+
+Open-File
+
+$Custom_CSV = Import-CSV -Path $Selected_File | Get-Random | Select -ExpandProperty $ColNames | Select-Object -Skip 1 | Format-List
+
+$Custom_CSV
+
 #>

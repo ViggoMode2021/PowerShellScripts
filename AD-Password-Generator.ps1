@@ -426,7 +426,7 @@ if($Confirmation -eq 'Yes') {
 }
 
 else{
-      
+    $Generated_Password_Label.Text= "*Generated password will appear here*"
 } 
 
 }
@@ -564,15 +564,27 @@ $MessageBoxBody = "Change password to '$Include_Numbers_Password' for '$User_Nam
 
 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIcon)
 
-$Sam_Account_Name = Get-ADUser -Filter {(enabled -eq $true)} | Where-Object DistinguishedName -like "*$User_Name_Global*" | Select-Object SamAccountName | Out-Host
+$User_Name = $User_Name_Global
 
-if($Confirmation -eq 'Yes') {
+$Sam_Account_Name = Get-ADUser -Filter {(enabled -eq $true)} | Where-Object DistinguishedName -like "*$User_Name*" | Select -ExpandProperty SamAccountName
+
+if($Confirmation -eq 'Yes'-and $Generated_Password_Length -gt $Min_Password_Length) {
     Set-ADAccountPassword -Identity $Sam_Account_Name -NewPassword $New_User_Password -Reset
     $Generated_Password_Label.Text = "Password updated for $User_Name_Global on $Current_Date."
 }
 
+elseif($Confirmation -eq 'No'){
+$Generated_Password_Label.Text= "*Generated password will appear here*"
+}
+
 else{
+    $Generated_Password_Label.Text= "*Generated password will appear here*"
       
+    $MessageBoxTitle = "Password length error!"
+
+    $MessageBoxBody = "Your password's length of $Generated_Password_Length is either equal or less than the domain requirement of $Min_Password_Length."
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIconError)
 }
 
 }
@@ -626,10 +638,16 @@ if($Misc_Password_Params.CheckedItems.Count -eq 0){
         $Generated_Password_Label.Text = "Password updated for $User_Name_Global on $Current_Date."
     }
 
+    elseif($Confirmation -eq 'No'){
+    $Generated_Password_Label.Text= "*Generated password will appear here*"
+    }
+
     else{
+      $Generated_Password_Label.Text= "*Generated password will appear here*"
+      
       $MessageBoxTitle = "Password length error!"
 
-      $MessageBoxBody = "Your password's length of $Generated_Password_Length is less than the domain requirement of $Min_Password_Length."
+      $MessageBoxBody = "Your password's length of $Generated_Password_Length is either equal or less than the domain requirement of $Min_Password_Length."
 
       $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIconError)
     }

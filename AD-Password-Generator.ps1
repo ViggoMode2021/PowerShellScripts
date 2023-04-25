@@ -322,8 +322,75 @@ function Select_User{
   
 # Function to generate new password for AD users:
 
-function Generate_Active_Directory_Password{
 
+## ---------------------------------------------------------------------------- ##
+
+function Generate_Password{
+
+[void] [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms")
+[void] [System.Reflection.Assembly]::LoadWithPartialName("System.Drawing") 
+
+# 'If' statements for password theme selection:
+
+$Music = "guitar", "drums", "piano", "trumpet", "trombone", "keyboard"
+
+$Food = "bagel", "pizza", "sandwich", "banana", "cheese", "burritos", "pupusa", "kebab", "baklava", "pierogi", "quesadilla"
+
+$Animals = “dog”,”cat”,”chicken”, "frog", "bull"
+
+$Places = "boston", "ecuador", "westbrook", "groton", "connecticut", "massachusetts", "colombia", "mexico", "peru", "iceland"
+
+if ($Password_Theme_Option_1.Checked){
+
+#Food
+
+$Password_Theme_Selection = $Food | Get-Random
+
+$global:Password = $Password_Theme_Selection
+
+if($Misc_Password_Params.CheckedItems.Count -eq 0){
+    $Generated_Password = $Password_Theme_Selection
+    $Generated_Password_Label.Text = $Generated_Password
+
+    $Generated_Password_Length = $Generated_Password.Length 
+
+    $New_User_Password = ConvertTo-SecureString $Generated_Password -AsPlainText -Force
+
+    $MessageBoxTitle = "Change password for $User_Name_Global"
+
+    $MessageBoxBody = "Change password to '$Generated_Password' for '$User_Name_Global'?"
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIcon)
+
+    $User_Name = $User_Name_Global
+
+    $Sam_Account_Name = Get-ADUser -Filter {(enabled -eq $true)} | Where-Object DistinguishedName -like "*$User_Name*" | Select -ExpandProperty SamAccountName
+
+    if($Confirmation -eq 'Yes'-and $Generated_Password_Length -gt $Min_Password_Length) {
+        Set-ADAccountPassword -Identity $Sam_Account_Name -NewPassword $New_User_Password -Reset
+        $Generated_Password_Label.Text = "Password updated for $User_Name_Global on $Current_Date."
+    }
+
+    elseif($Confirmation -eq 'No'){
+    $Generated_Password_Label.Text= "*Generated password will appear here*"
+    }
+
+    else{
+      $Generated_Password_Label.Text= "*Generated password will appear here*"
+      
+      $MessageBoxTitle = "Password length error!"
+
+      $MessageBoxBody = "Your password's length of $Generated_Password_Length is either equal or less than the domain requirement of $Min_Password_Length."
+
+      $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIconError)
+    }
+
+    
+    }
+
+else{
+
+    
 if($Misc_Password_Params.CheckedItems -Contains "Capitalize_first_letter" -and $Misc_Password_Params.CheckedItems.Count -eq 1){
 
 $Generated_Password_Label.Text = ""
@@ -332,30 +399,40 @@ $Password = $global:Password
 
 $Capitalized_First_Letter_Password = $Password.substring(0,1).toupper()+$Password.substring(1).tolower()    
 
+$Capitalized_First_Letter_Password_Length = $Capitalized_First_Letter_Password.Length 
+
 $Generated_Password_Label.Text = $Capitalized_First_Letter_Password
 
 $New_User_Password = ConvertTo-SecureString $Capitalized_First_Letter_Password -AsPlainText -Force
 
 $MessageBoxTitle = "Change password for $User_Name_Global"
 
-$MessageBoxBody = "Change password to '$Generated_Password' for '$User_Name_Global'?"
+$MessageBoxBody = "Change password to '$Capitalized_First_Letter_Password' for '$User_Name_Global'?"
 
 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIcon)
 
-$Sam_Account_Name = Get-ADUser -Filter {(enabled -eq $true)} | Where-Object DistinguishedName -like "*$User_Name_Global*" | Select-Object SamAccountName | Out-Host
+$User_Name = $User_Name_Global
 
-if($Confirmation -eq 'Yes') {
+$Sam_Account_Name = Get-ADUser -Filter {(enabled -eq $true)} | Where-Object DistinguishedName -like "*$User_Name*" | Select -ExpandProperty SamAccountName
+
+if($Confirmation -eq 'Yes'-and $Capitalized_First_Letter_Password_Length -gt $Min_Password_Length) {
     Set-ADAccountPassword -Identity $Sam_Account_Name -NewPassword $New_User_Password -Reset
-    $Generated_Password_Label.Text = "Password updated for $User_Name_Global on $Current_Date."
+    $Generated_Password_Label.Text = "Password updated for $User_Name on $Current_Date."
 }
 
-if($Confirmation -eq 'No') {
-    
-    $Generated_Password_Label.Text = "*Generated password will appear here.*"
-    Write-Host "Kodak"
-    
+elseif($Confirmation -eq 'No'){
+$Generated_Password_Label.Text= "*Generated password will appear here*"
+}
+
+else{
+    $Generated_Password_Label.Text= "*Generated password will appear here*"
       
-} 
+    $MessageBoxTitle = "Password length error!"
+
+    $MessageBoxBody = "Your password's length of $Generated_Password_Length is either equal or less than the domain requirement of $Min_Password_Length."
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIconError)
+}
 
 }
 
@@ -590,75 +667,6 @@ else{
 }
 }
 
-## ---------------------------------------------------------------------------- ##
-
-function Generate_Password{
-
-[void] [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms")
-[void] [System.Reflection.Assembly]::LoadWithPartialName("System.Drawing") 
-
-# 'If' statements for password theme selection:
-
-$Music = "guitar", "drums", "piano", "trumpet", "trombone", "keyboard"
-
-$Food = "bagel", "pizza", "sandwich", "banana", "cheese", "burritos", "pupusa", "kebab", "baklava", "pierogi", "quesadilla"
-
-$Animals = “dog”,”cat”,”chicken”, "frog", "bull"
-
-$Places = "boston", "ecuador", "westbrook", "groton", "connecticut", "massachusetts", "colombia", "mexico", "peru", "iceland"
-
-if ($Password_Theme_Option_1.Checked){
-
-#Food
-
-$Password_Theme_Selection = $Food | Get-Random
-
-$global:Password = $Password_Theme_Selection
-
-if($Misc_Password_Params.CheckedItems.Count -eq 0){
-    $Generated_Password = $Password_Theme_Selection
-    $Generated_Password_Label.Text = $Generated_Password
-
-    $Generated_Password_Length = $Generated_Password.Length 
-
-    $New_User_Password = ConvertTo-SecureString $Generated_Password -AsPlainText -Force
-
-    $MessageBoxTitle = "Change password for $User_Name_Global"
-
-    $MessageBoxBody = "Change password to '$Generated_Password' for '$User_Name_Global'?"
-
-    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIcon)
-
-    $User_Name = $User_Name_Global
-
-    $Sam_Account_Name = Get-ADUser -Filter {(enabled -eq $true)} | Where-Object DistinguishedName -like "*$User_Name*" | Select -ExpandProperty SamAccountName
-
-    if($Confirmation -eq 'Yes'-and $Generated_Password_Length -gt $Min_Password_Length) {
-        Set-ADAccountPassword -Identity $Sam_Account_Name -NewPassword $New_User_Password -Reset
-        $Generated_Password_Label.Text = "Password updated for $User_Name_Global on $Current_Date."
-    }
-
-    elseif($Confirmation -eq 'No'){
-    $Generated_Password_Label.Text= "*Generated password will appear here*"
-    }
-
-    else{
-      $Generated_Password_Label.Text= "*Generated password will appear here*"
-      
-      $MessageBoxTitle = "Password length error!"
-
-      $MessageBoxBody = "Your password's length of $Generated_Password_Length is either equal or less than the domain requirement of $Min_Password_Length."
-
-      $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIconError)
-    }
-
-    }
-    }
-
-else{
-
-    Invoke-Expression Generate_Active_Directory_Password
-
 }
 
 if ($Password_Theme_Option_2.Checked){
@@ -676,7 +684,7 @@ if($Misc_Password_Params.CheckedItems.Count -eq 0){
 
 else{
 
-Invoke-Expression Generate_Active_Directory_Password
+#Invoke-Expression Generate_Active_Directory_Password
 
 }
 
@@ -697,7 +705,7 @@ if($Misc_Password_Params.CheckedItems.Count -eq 0){
 
 else{
 
-Invoke-Expression Generate_Active_Directory_Password
+#Invoke-Expression Generate_Active_Directory_Password
 
 }
 
@@ -718,7 +726,7 @@ if($Misc_Password_Params.CheckedItems.Count -eq 0){
 
 else{
 
-Invoke-Expression Generate_Active_Directory_Password
+#Invoke-Expression Generate_Active_Directory_Password
 
 }
 

@@ -385,12 +385,10 @@ if($Misc_Password_Params.CheckedItems.Count -eq 0){
       $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIconError)
     }
 
-    
     }
 
 else{
 
-    
 if($Misc_Password_Params.CheckedItems -Contains "Capitalize_first_letter" -and $Misc_Password_Params.CheckedItems.Count -eq 1){
 
 $Generated_Password_Label.Text = ""
@@ -584,7 +582,7 @@ else{
 }
 
 }
-
+<#
 if($Misc_Password_Params.CheckedItems -Contains "Capitalize_first_letter" -and $Misc_Password_Params.CheckedItems -Contains "Include_numbers" -and $Misc_Password_Params.CheckedItems.Count -eq 2){
 
 $Password = $global:Password
@@ -634,9 +632,9 @@ else{
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIconError)
 
 }
+#>
 
 }
-#>
 
 if($Misc_Password_Params.CheckedItems -Contains "Include_special_characters" -and "Include_numbers" -and $Misc_Password_Params.CheckedItems.Count -eq 2){
 
@@ -664,7 +662,7 @@ $New_User_Password = ConvertTo-SecureString $Special_Characters_Numbers_Password
 
 $MessageBoxTitle = "Change password for $User_Name_Global"
 
-$MessageBoxBody = "Change password to '$Include_Numbers_Password' for '$User_Name_Global'?"
+$MessageBoxBody = "Change password to '$Special_Characters_Numbers_Password' for '$User_Name_Global'?"
 
 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIcon)
 
@@ -675,7 +673,7 @@ if($Confirmation -eq 'Yes'-and $Special_Characters_Numbers_Password_Length -gt $
     $Generated_Password_Label.Text = "Password updated for $User_Name on $Current_Date."
 }
 
-if($Confirmation -eq 'No'){
+elseif($Confirmation -eq 'No'){
 $Generated_Password_Label.Text= "*Generated password will appear here*"
 }
 
@@ -684,15 +682,16 @@ else{
       
     $MessageBoxTitle = "Password length error!"
 
-    $MessageBoxBody = "Your password's length of $Capitalized_First_Letter_And_Include_Numbers_Password_Length is either equal or less than the domain requirement of $Min_Password_Length."
+    $MessageBoxBody = "Your password's length of $Special_Characters_Numbers_Password_Length is either equal or less than the domain requirement of $Min_Password_Length."
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIconError)
 
+}}
+
+#>
 }
 
-}
-
-if($Misc_Password_Params.CheckedItems -Contains "Include_special_characters" -and "Include_numbers" -and "Capitalize_first_letter" -and $Misc_Password_Params.CheckedItems.Count -eq 3){
+if($Misc_Password_Params.CheckedItems -Contains "Capitalize_first_letter" -and "Include_special_characters" -and "Include_numbers" -and $Misc_Password_Params.CheckedItems.Count -eq 3){
 
 $Password = $global:Password
 
@@ -706,6 +705,8 @@ $Random_Special_Characters = "~", "!", "~!@", "%^&*", ")(" | Get-Random
 
 $Capitalized_First_Letter_Password_With_Numbers_And_Special_Characters = $Capitalized_First_Letter_Password + $Random_Number + $Random_Special_Characters
 
+$Capitalized_First_Letter_Password_With_Numbers_And_Special_Characters_Length = $Capitalized_First_Letter_Password_With_Numbers_And_Special_Characters.Length
+
 $Generated_Password_Label.Text = $Capitalized_First_Letter_Password_With_Numbers_And_Special_Characters
 
 ##
@@ -714,7 +715,7 @@ $New_User_Password = ConvertTo-SecureString $Capitalized_First_Letter_Password_W
 
 $MessageBoxTitle = "Change password for $User_Name_Global"
 
-$MessageBoxBody = "Change password to '$Include_Numbers_Password' for '$User_Name_Global'?"
+$MessageBoxBody = "Change password to '$Capitalized_First_Letter_Password_With_Numbers_And_Special_Characters' for '$User_Name_Global'?"
 
 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIcon)
 
@@ -722,9 +723,9 @@ $User_Name = $User_Name_Global
 
 $Sam_Account_Name = Get-ADUser -Filter {(enabled -eq $true)} | Where-Object DistinguishedName -like "*$User_Name*" | Select -ExpandProperty SamAccountName
 
-if($Confirmation -eq 'Yes'-and $Generated_Password_Length -gt $Min_Password_Length) {
+if($Confirmation -eq 'Yes'-and $Capitalized_First_Letter_Password_With_Numbers_And_Special_Characters_Length -gt $Min_Password_Length) {
     Set-ADAccountPassword -Identity $Sam_Account_Name -NewPassword $New_User_Password -Reset
-    $Generated_Password_Label.Text = "Password updated for $User_Name_Global on $Current_Date."
+    $Generated_Password_Label.Text = "Password updated for $User_Name on $Current_Date."
 }
 
 elseif($Confirmation -eq 'No'){
@@ -736,14 +737,13 @@ else{
       
     $MessageBoxTitle = "Password length error!"
 
-    $MessageBoxBody = "Your password's length of $Generated_Password_Length is either equal or less than the domain requirement of $Min_Password_Length."
+    $MessageBoxBody = "Your password's length of $Capitalized_First_Letter_Password_With_Numbers_And_Special_Characters_Length is either equal or less than the domain requirement of $Min_Password_Length."
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIconError)
+
 }
 
 }
-}
-
 }
 
 if ($Password_Theme_Option_2.Checked){
@@ -814,7 +814,7 @@ if ($Password_Theme_Option_5.Checked){
 #Random
 
 }
-}
+
 
 function Copy_Password_To_Clipboard{
 

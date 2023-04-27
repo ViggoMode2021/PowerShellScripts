@@ -22,10 +22,6 @@ Add-Type -AssemblyName PresentationCore,PresentationFramework
 
 $Current_Date = Get-Date -Format "MM/dd/yyyy" # Get today's date
 
-$Min_Password_Length = Get-ADDefaultDomainPasswordPolicy | Select -ExpandProperty MinPasswordLength
-
-$Min_Password_Length = [int]$Min_Password_Length
-
 # GUI form code below:
 
 $Form_Object = [System.Windows.Forms.Form] # Entire form/window for GUI
@@ -151,9 +147,7 @@ $Special_Characters_Label.Location = New-Object System.Drawing.Point(750,20)
 
 $ButtonType = [System.Windows.MessageBoxButton]::YesNo
 
-$MessageIcon = [System.Windows.MessageBoxImage]::Question
-
-$MessageIconError = [System.Windows.MessageBoxImage]::Error
+$MessageIcon = [System.Windows.MessageBoxImage]::Warning
 
 ## ---------------------------------------------------------------------------- ## 
 
@@ -284,7 +278,7 @@ $Users_Dropdown.Location = New-Object System.Drawing.Point(10,40) # Add location
 
 ## Corresponding functions
 
-Get-ADOrganizationalUnit -Properties CanonicalName -Filter * | Where-Object DistinguishedName -notlike "*Domain Controllers*" |Sort-Object CanonicalName | ForEach-Object {$OU_Select_Dropdown.Items.Add($_.Name)}
+#Get-ADOrganizationalUnit -Properties CanonicalName -Filter * | Where-Object DistinguishedName -notlike "*Domain Controllers*" |Sort-Object CanonicalName | ForEach-Object {$OU_Select_Dropdown.Items.Add($_.Name)}
 
 $User_Name=$Users_Dropdown.SelectedItem
 
@@ -322,166 +316,7 @@ function Select_User{
   
 # Function to generate new password for AD users:
 
-
-## ---------------------------------------------------------------------------- ##
-
-function Generate_Password{
-
-[void] [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms")
-[void] [System.Reflection.Assembly]::LoadWithPartialName("System.Drawing") 
-
-# 'If' statements for password theme selection:
-
-$Music = "guitar", "drums", "piano", "trumpet", "trombone", "keyboard"
-
-$Food = "bagel", "pizza", "sandwich", "banana", "cheese", "burritos", "pupusa", "kebab", "baklava", "pierogi", "quesadilla"
-
-$Animals = “dog”,”cat”,”chicken”, "frog", "bull"
-
-$Places = "boston", "ecuador", "westbrook", "groton", "connecticut", "massachusetts", "colombia", "mexico", "peru", "iceland"
-
-if ($Password_Theme_Option_1.Checked){
-
-#Food
-
-$Password_Theme_Selection = $Food | Get-Random
-
-$global:Password = $Password_Theme_Selection
-}
-
-if ($Password_Theme_Option_2.Checked){
-
-#Animals
-
-$Password_Theme_Selection = $Animals | Get-Random
-
-$global:Password = $Password_Theme_Selection
-
-if($Misc_Password_Params.CheckedItems.Count -eq 0){
-    $Generated_Password = $Password_Theme_Selection
-    $Generated_Password_Label.Text = $Generated_Password
-    }
-
-else{
-
-#Invoke-Expression Generate_Active_Directory_Password
-
-}
-
-}
-
-if ($Password_Theme_Option_3.Checked){
-
-#Places
-
-$Password_Theme_Selection = $Places | Get-Random
-
-$global:Password = $Password_Theme_Selection
-
-if($Misc_Password_Params.CheckedItems.Count -eq 0){
-    $Generated_Password = $Password_Theme_Selection
-    $Generated_Password_Label.Text = $Generated_Password
-    }
-
-else{
-
-#Invoke-Expression Generate_Active_Directory_Password
-
-}
-
-}
-
-if ($Password_Theme_Option_4.Checked){
-
-#Music
-
-$Password_Theme_Selection = $Music | Get-Random
-
-$global:Password = $Password_Theme_Selection
-
-if($Misc_Password_Params.CheckedItems.Count -eq 0){
-    $Generated_Password = $Password_Theme_Selection
-    $Generated_Password_Label.Text = $Generated_Password
-    }
-
-else{
-
-#Invoke-Expression Generate_Active_Directory_Password
-
-}
-
-}
-
-if ($Password_Theme_Option_5.Checked){
-
-$Desktop = 'Desktop'
-
-Function Open-File($Desktop)
-{
-    Add-Type -AssemblyName System.Windows.Forms
-    $OpenFileDialog = New-Object System.Windows.Forms.OpenFileDialog
-    $OpenFileDialog.Title = "Please Select File"
-    $OpenFileDialog.InitialDirectory = $initialDirectory
-    $OpenFileDialog.filter = "(*.csv)|*.csv|SpreadSheet (*.xlsx)|*.xlsx'"
-    # Out-Null supresses the "OK" after selecting the file.
-    $OpenFileDialog.ShowDialog() | Out-Null
-    $Global:Selected_File = $OpenFileDialog.FileName
-}
-
-$ColNames = ($Selected_File[0].psobject.Properties).name
-
-Open-File
-
-$Custom_CSV = Import-CSV -Path $Selected_File | Get-Random | Select -ExpandProperty $ColNames | Select-Object -Skip 1 | Format-List
-
-$Custom_CSV
-
-}
-
-if($Misc_Password_Params.CheckedItems.Count -eq 0){
-    $Generated_Password = $Password_Theme_Selection
-    $Generated_Password_Label.Text = $Generated_Password
-
-    $Generated_Password_Length = $Generated_Password.Length 
-
-    $New_User_Password = ConvertTo-SecureString $Generated_Password -AsPlainText -Force
-
-    $MessageBoxTitle = "Change password for $User_Name_Global"
-
-    $MessageBoxBody = "Change password to '$Generated_Password' for '$User_Name_Global'?"
-
-    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIcon)
-
-    $User_Name = $User_Name_Global
-
-    $Sam_Account_Name = Get-ADUser -Filter {(enabled -eq $true)} | Where-Object DistinguishedName -like "*$User_Name*" | Select -ExpandProperty SamAccountName
-
-    if($Confirmation -eq 'Yes'-and $Generated_Password_Length -gt $Min_Password_Length) {
-        Set-ADAccountPassword -Identity $Sam_Account_Name -NewPassword $New_User_Password -Reset
-        $Generated_Password_Label.Text = "Password updated for $User_Name_Global on $Current_Date."
-    }
-
-    elseif($Confirmation -eq 'No'){
-    $Generated_Password_Label.Text= "*Generated password will appear here*"
-    }
-
-    else{
-      $Generated_Password_Label.Text= "*Generated password will appear here*"
-      
-      $MessageBoxTitle = "Password length error!"
-
-      $MessageBoxBody = "Your password's length of $Generated_Password_Length is either equal or less than the domain requirement of $Min_Password_Length."
-
-      $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIconError)
-    }
-
-    
-    }
-
-else{
-
-    
-# Capitalize first letter
+function Generate_Active_Directory_Password{
 
 if($Misc_Password_Params.CheckedItems -Contains "Capitalize_first_letter" -and $Misc_Password_Params.CheckedItems.Count -eq 1){
 
@@ -491,44 +326,32 @@ $Password = $global:Password
 
 $Capitalized_First_Letter_Password = $Password.substring(0,1).toupper()+$Password.substring(1).tolower()    
 
-$Capitalized_First_Letter_Password_Length = $Capitalized_First_Letter_Password.Length 
-
 $Generated_Password_Label.Text = $Capitalized_First_Letter_Password
 
 $New_User_Password = ConvertTo-SecureString $Capitalized_First_Letter_Password -AsPlainText -Force
 
 $MessageBoxTitle = "Change password for $User_Name_Global"
 
-$MessageBoxBody = "Change password to '$Capitalized_First_Letter_Password' for '$User_Name_Global'?"
+$MessageBoxBody = "Change password to '$Generated_Password' for '$User_Name_Global'?"
 
 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIcon)
 
-$User_Name = $User_Name_Global
+$Sam_Account_Name = Get-ADUser -Filter {(enabled -eq $true)} | Where-Object DistinguishedName -like "*$User_Name_Global*" | Select-Object SamAccountName | Out-Host
 
-$Sam_Account_Name = Get-ADUser -Filter {(enabled -eq $true)} | Where-Object DistinguishedName -like "*$User_Name*" | Select -ExpandProperty SamAccountName
-
-if($Confirmation -eq 'Yes'-and $Capitalized_First_Letter_Password_Length -gt $Min_Password_Length) {
+if($Confirmation -eq 'Yes') {
     Set-ADAccountPassword -Identity $Sam_Account_Name -NewPassword $New_User_Password -Reset
-    $Generated_Password_Label.Text = "Password updated for $User_Name on $Current_Date."
+    $Generated_Password_Label.Text = "Password updated for $User_Name_Global on $Current_Date."
 }
 
-elseif($Confirmation -eq 'No'){
-$Generated_Password_Label.Text= "*Generated password will appear here*"
-}
-
-else{
-    $Generated_Password_Label.Text= "*Generated password will appear here*"
+if($Confirmation -eq 'No') {
+    
+    $Generated_Password_Label.Text = "*Generated password will appear here.*"
+    Write-Host "Kodak"
+    
       
-    $MessageBoxTitle = "Password length error!"
-
-    $MessageBoxBody = "Your password's length of $Capitalized_First_Letter_Password_Length is either equal or less than the domain requirement of $Min_Password_Length."
-
-    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIconError)
-}
+} 
 
 }
-
-# Include numbers 
 
 if($Misc_Password_Params.CheckedItems -Contains "Include_numbers" -and $Misc_Password_Params.CheckedItems.Count -eq 1){
 
@@ -539,8 +362,6 @@ $Random_Number = [string]$Random_Number
 $Password = $global:Password
 
 $Include_Numbers_Password = $Password + $Random_Number
-
-$Include_Numbers_Password_Length = $Include_Numbers_Password.Length 
 
 $Generated_Password_Label.Text = $Include_Numbers_Password
 
@@ -554,32 +375,18 @@ $MessageBoxBody = "Change password to '$Include_Numbers_Password' for '$User_Nam
 
 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIcon)
 
-$User_Name = $User_Name_Global
+$Sam_Account_Name = Get-ADUser -Filter {(enabled -eq $true)} | Where-Object DistinguishedName -like "*$User_Name_Global*" | Select-Object SamAccountName | Out-Host
 
-$Sam_Account_Name = Get-ADUser -Filter {(enabled -eq $true)} | Where-Object DistinguishedName -like "*$User_Name*" | Select -ExpandProperty SamAccountName
-
-if($Confirmation -eq 'Yes'-and $Include_Numbers_Password_Length -gt $Min_Password_Length) {
+if($Confirmation -eq 'Yes') {
     Set-ADAccountPassword -Identity $Sam_Account_Name -NewPassword $New_User_Password -Reset
-    $Generated_Password_Label.Text = "Password updated for $User_Name on $Current_Date."
-}
-
-elseif($Confirmation -eq 'No'){
-$Generated_Password_Label.Text= "*Generated password will appear here*"
+    $Generated_Password_Label.Text = "Password updated for $User_Name_Global on $Current_Date."
 }
 
 else{
-    $Generated_Password_Label.Text= "*Generated password will appear here*"
-      
-    $MessageBoxTitle = "Password length error!"
-
-    $MessageBoxBody = "Your password's length of $Include_Numbers_Password_Length is either equal or less than the domain requirement of $Min_Password_Length."
-
-    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIconError)
-}
+    
+} 
 
 }
-
-# Capitalize first letter and include numbers
 
 if($Misc_Password_Params.CheckedItems -Contains "Capitalize_first_letter" -and $Misc_Password_Params.CheckedItems -Contains "Include_numbers" -and $Misc_Password_Params.CheckedItems.Count -eq 2){
 
@@ -591,10 +398,7 @@ $Random_Number = Get-Random -Minimum 1 -Maximum 9000
 
 $Random_Number = [string]$Random_Number
 
-
 $Capitalized_First_Letter_And_Include_Numbers_Password = $Capitalized_First_Letter_Password + $Random_Number
-
-$Capitalized_First_Letter_And_Include_Numbers_Password_Length = $Capitalized_First_Letter_And_Include_Numbers_Password.Length 
 
 $Generated_Password_Label.Text = $Capitalized_First_Letter_And_Include_Numbers_Password
 
@@ -604,32 +408,20 @@ $New_User_Password = ConvertTo-SecureString $Capitalized_First_Letter_And_Includ
 
 $MessageBoxTitle = "Change password for $User_Name_Global"
 
-$MessageBoxBody = "Change password to '$Capitalized_First_Letter_And_Include_Numbers_Password' for '$User_Name_Global'?"
+$MessageBoxBody = "Change password to '$Include_Numbers_Password' for '$User_Name_Global'?"
 
 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIcon)
 
-$User_Name = $User_Name_Global
+$Sam_Account_Name = Get-ADUser -Filter {(enabled -eq $true)} | Where-Object DistinguishedName -like "*$User_Name_Global*" | Select-Object SamAccountName | Out-Host
 
-$Sam_Account_Name = Get-ADUser -Filter {(enabled -eq $true)} | Where-Object DistinguishedName -like "*$User_Name*" | Select -ExpandProperty SamAccountName
-
-if($Confirmation -eq 'Yes' -and $Capitalized_First_Letter_And_Include_Numbers_Password_Length -gt $Min_Password_Length) {
+if($Confirmation -eq 'Yes') {
     Set-ADAccountPassword -Identity $Sam_Account_Name -NewPassword $New_User_Password -Reset
-    $Generated_Password_Label.Text = "Password updated for $User_Name on $Current_Date."
-}
-
-elseif($Confirmation -eq 'No'){
-$Generated_Password_Label.Text= "*Generated password will appear here*"
+    $Generated_Password_Label.Text = "Password updated for $User_Name_Global on $Current_Date."
 }
 
 else{
-    $Generated_Password_Label.Text= "*Generated password will appear here*"
       
-    $MessageBoxTitle = "Password length error!"
-
-    $MessageBoxBody = "Your password's length of $Capitalized_First_Letter_And_Include_Numbers_Password is either equal or less than the domain requirement of $Min_Password_Length."
-
-    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIconError)
-}
+} 
 
 }
 
@@ -653,7 +445,7 @@ $MessageBoxBody = "Change password to '$Include_Numbers_Password' for '$User_Nam
 
 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIcon)
 
-$Sam_Account_Name = Get-ADUser -Filter {(enabled -eq $true)} | Where-Object DistinguishedName -like "*$User_Name_Global*" | Select-Object SamAccountName
+$Sam_Account_Name = Get-ADUser -Filter {(enabled -eq $true)} | Where-Object DistinguishedName -like "*$User_Name_Global*" | Select-Object SamAccountName | Out-Host
 
 if($Confirmation -eq 'Yes') {
     Set-ADAccountPassword -Identity $Sam_Account_Name -NewPassword $New_User_Password -Reset
@@ -666,53 +458,37 @@ else{
 
 }
 
-if($Misc_Password_Params.CheckedItems -Contains "Capitalize_first_letter" -and $Misc_Password_Params.CheckedItems -Contains "Include_numbers" -and $Misc_Password_Params.CheckedItems.Count -eq 2){
+if($Misc_Password_Params.CheckedItems -Contains "Include_special_characters" -and "Capitalize_first_letter" -and $Misc_Password_Params.CheckedItems.Count -eq 2){
 
 $Password = $global:Password
 
-$Capitalized_First_Letter_Password = $Password.substring(0,1).toupper()+$Password.substring(1).tolower()    
+$Capitalized_First_Letter_Password = $Password.substring(0,1).toupper()+$Password.substring(1).tolower() 
 
-$Random_Number = Get-Random -Minimum 1 -Maximum 9000
+$Random_Special_Characters = "~", "!", "~!@", "%^&*", ")(" | Get-Random
 
-$Random_Number = [string]$Random_Number
+$Special_Characters_Capital_Password = $Capitalized_First_Letter_Password + $Random_Special_Characters
 
-$Capitalized_First_Letter_And_Include_Numbers_Password = $Capitalized_First_Letter_Password + $Random_Number
-
-$Capitalized_First_Letter_And_Include_Numbers_Password_Length = $Capitalized_First_Letter_And_Include_Numbers_Password.Length 
-
-$Generated_Password_Label.Text = $Capitalized_First_Letter_And_Include_Numbers_Password
+$Generated_Password_Label.Text = $Special_Characters_Capital_Password
 
 ##
 
-$New_User_Password = ConvertTo-SecureString $Capitalized_First_Letter_And_Include_Numbers_Password -AsPlainText -Force
+$New_User_Password = ConvertTo-SecureString $Special_Characters_Capital_Password -AsPlainText -Force
 
 $MessageBoxTitle = "Change password for $User_Name_Global"
 
-$MessageBoxBody = "Change password to '$Capitalized_First_Letter_And_Include_Numbers_Password' for '$User_Name_Global'?"
+$MessageBoxBody = "Change password to '$Include_Numbers_Password' for '$User_Name_Global'?"
 
 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIcon)
 
-$User_Name = $User_Name_Global
+$Sam_Account_Name = Get-ADUser -Filter {(enabled -eq $true)} | Where-Object DistinguishedName -like "*$User_Name_Global*" | Select-Object SamAccountName | Out-Host
 
-$Sam_Account_Name = Get-ADUser -Filter {(enabled -eq $true)} | Where-Object DistinguishedName -like "*$User_Name*" | Select -ExpandProperty SamAccountName
-
-if($Confirmation -eq 'Yes'-and $Capitalized_First_Letter_And_Include_Numbers_Password_Length -gt $Min_Password_Length) {
+if($Confirmation -eq 'Yes') {
     Set-ADAccountPassword -Identity $Sam_Account_Name -NewPassword $New_User_Password -Reset
-    $Generated_Password_Label.Text = "Password updated for $User_Name on $Current_Date."
-}
-
-elseif($Confirmation -eq 'No'){
-$Generated_Password_Label.Text= "*Generated password will appear here*"
+    $Generated_Password_Label.Text = "Password updated for $User_Name_Global on $Current_Date."
 }
 
 else{
-    $Generated_Password_Label.Text= "*Generated password will appear here*"
       
-    $MessageBoxTitle = "Password length error!"
-
-    $MessageBoxBody = "Your password's length of $Capitalized_First_Letter_And_Include_Numbers_Password_Length is either equal or less than the domain requirement of $Min_Password_Length."
-
-    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIconError)
 }
 
 }
@@ -735,45 +511,24 @@ $Generated_Password_Label.Text = $Special_Characters_Numbers_Password
 
 ##
 
-$Special_Characters_Numbers_Password_Length = $Special_Characters_Numbers_Password.Length 
-
-$Generated_Password_Label.Text = $Special_Characters_Numbers_Password
-
-##
-
 $New_User_Password = ConvertTo-SecureString $Special_Characters_Numbers_Password -AsPlainText -Force
 
 $MessageBoxTitle = "Change password for $User_Name_Global"
 
-$MessageBoxBody = "Change password to '$Special_Characters_Numbers_Password' for '$User_Name_Global'?"
+$MessageBoxBody = "Change password to '$Include_Numbers_Password' for '$User_Name_Global'?"
 
 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIcon)
 
-$User_Name = $User_Name_Global
+$Sam_Account_Name = Get-ADUser -Filter {(enabled -eq $true)} | Where-Object DistinguishedName -like "*$User_Name_Global*" | Select-Object SamAccountName | Out-Host
 
-$Sam_Account_Name = Get-ADUser -Filter {(enabled -eq $true)} | Where-Object DistinguishedName -like "*$User_Name*" | Select -ExpandProperty SamAccountName
-
-if($Confirmation -eq 'Yes'-and $Special_Characters_Numbers_Password_Length -gt $Min_Password_Length) {
+if($Confirmation -eq 'Yes') {
     Set-ADAccountPassword -Identity $Sam_Account_Name -NewPassword $New_User_Password -Reset
-    $Generated_Password_Label.Text = "Password updated for $User_Name on $Current_Date."
-}
-
-elseif($Confirmation -eq 'No'){
-
-$Generated_Password_Label.Text= "*Generated password will appear here*"
-
+    $Generated_Password_Label.Text = "Password updated for $User_Name_Global on $Current_Date."
 }
 
 else{
-    $Generated_Password_Label.Text= "*Generated password will appear here*"
       
-    $MessageBoxTitle = "Password length error!"
-
-    $MessageBoxBody = "Your password's length of $Special_Characters_Numbers_Password_Length is either equal or less than the domain requirement of $Min_Password_Length."
-
-    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIconError)
 }
-
 
 }}
 
@@ -791,8 +546,6 @@ $Random_Special_Characters = "~", "!", "~!@", "%^&*", ")(" | Get-Random
 
 $Capitalized_First_Letter_Password_With_Numbers_And_Special_Characters = $Capitalized_First_Letter_Password + $Random_Number + $Random_Special_Characters
 
-$Capitalized_First_Letter_Password_With_Numbers_And_Special_Characters_Length = $Special_Characters_Numbers_Password.Length 
-
 $Generated_Password_Label.Text = $Capitalized_First_Letter_Password_With_Numbers_And_Special_Characters
 
 ##
@@ -805,32 +558,170 @@ $MessageBoxBody = "Change password to '$Include_Numbers_Password' for '$User_Nam
 
 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIcon)
 
-$User_Name = $User_Name_Global
+$Sam_Account_Name = Get-ADUser -Filter {(enabled -eq $true)} | Where-Object DistinguishedName -like "*$User_Name_Global*" | Select-Object SamAccountName | Out-Host
 
-$Sam_Account_Name = Get-ADUser -Filter {(enabled -eq $true)} | Where-Object DistinguishedName -like "*$User_Name*" | Select -ExpandProperty SamAccountName
-
-if($Confirmation -eq 'Yes'-and $Generated_Password_Length -gt $Min_Password_Length) {
+if($Confirmation -eq 'Yes') {
     Set-ADAccountPassword -Identity $Sam_Account_Name -NewPassword $New_User_Password -Reset
     $Generated_Password_Label.Text = "Password updated for $User_Name_Global on $Current_Date."
 }
 
-elseif($Confirmation -eq 'No'){
-$Generated_Password_Label.Text= "*Generated password will appear here*"
+else{
+      
 }
+
+}
+}
+
+## ---------------------------------------------------------------------------- ##
+
+function Generate_Password{
+
+[void] [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms")
+[void] [System.Reflection.Assembly]::LoadWithPartialName("System.Drawing") 
+
+# 'If' statements for password theme selection:
+
+$Music = "guitar", "drums", "piano", "trumpet", "trombone", "keyboard"
+
+$Food = "bagel", "pizza", "sandwich", "banana", "cheese", "burrito", "pupusa", "kebab", "baklava", "pierogi"
+
+$Animals = “dog”,”cat”,”chicken”, "frog", "bull"
+
+$Places = "boston", "ecuador", "westbrook", "groton", "connecticut", "massachusetts", "colombia", "mexico", "peru", "iceland"
+
+if ($Password_Theme_Option_1.Checked){
+
+#Food
+
+$Password_Theme_Selection = $Food | Get-Random
+
+$global:Password = $Password_Theme_Selection
+
+if($Misc_Password_Params.CheckedItems.Count -eq 0){
+    $Generated_Password = $Password_Theme_Selection
+    $Generated_Password_Label.Text = $Generated_Password
+
+    $New_User_Password = ConvertTo-SecureString $Generated_Password -AsPlainText -Force
+
+    $MessageBoxTitle = "Change password for $User_Name_Global"
+
+    $MessageBoxBody = "Change password to '$Generated_Password' for '$User_Name_Global'?"
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIcon)
+
+    $Sam_Account_Name = Get-ADUser -Filter {(enabled -eq $true)} | Where-Object DistinguishedName -like "*$User_Name_Global*" | Select-Object SamAccountName | Out-Host
+
+    if($Confirmation -eq 'Yes') {
+        Set-ADAccountPassword -Identity $Sam_Account_Name -NewPassword $New_User_Password -Reset
+        $Generated_Password_Label.Text = "Password updated for $User_Name_Global on $Current_Date."
+    }
+
+    else{
+      
+    }
+
+    }
+    }
 
 else{
-    $Generated_Password_Label.Text= "*Generated password will appear here*"
-      
-    $MessageBoxTitle = "Password length error!"
 
-    $MessageBoxBody = "Your password's length of $Generated_Password_Length is either equal or less than the domain requirement of $Min_Password_Length."
+    Invoke-Expression Generate_Active_Directory_Password
 
-    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIconError)
+}
+
+if ($Password_Theme_Option_2.Checked){
+
+#Animals
+
+$Password_Theme_Selection = $Animals | Get-Random
+
+$global:Password = $Password_Theme_Selection
+
+if($Misc_Password_Params.CheckedItems.Count -eq 0){
+    $Generated_Password = $Password_Theme_Selection
+    $Generated_Password_Label.Text = $Generated_Password
+    }
+
+else{
+
+Invoke-Expression Generate_Active_Directory_Password
+
 }
 
 }
+
+if ($Password_Theme_Option_3.Checked){
+
+#Places
+
+$Password_Theme_Selection = $Places | Get-Random
+
+$global:Password = $Password_Theme_Selection
+
+if($Misc_Password_Params.CheckedItems.Count -eq 0){
+    $Generated_Password = $Password_Theme_Selection
+    $Generated_Password_Label.Text = $Generated_Password
+    }
+
+else{
+
+Invoke-Expression Generate_Active_Directory_Password
+
 }
 
+}
+
+if ($Password_Theme_Option_4.Checked){
+
+#Music
+
+$Password_Theme_Selection = $Music | Get-Random
+
+$global:Password = $Password_Theme_Selection
+
+if($Misc_Password_Params.CheckedItems.Count -eq 0){
+    $Generated_Password = $Password_Theme_Selection
+    $Generated_Password_Label.Text = $Generated_Password
+    }
+
+else{
+
+Invoke-Expression Generate_Active_Directory_Password
+
+}
+
+}
+
+if ($Password_Theme_Option_5.Checked){
+
+$Desktop = 'Desktop'
+
+Function Open-File($Desktop)
+{
+    Add-Type -AssemblyName System.Windows.Forms
+    $OpenFileDialog = New-Object System.Windows.Forms.OpenFileDialog
+    $OpenFileDialog.Title = "Please Select File"
+    $OpenFileDialog.InitialDirectory = $initialDirectory
+    $OpenFileDialog.filter = "(*.csv)|*.csv|SpreadSheet (*.xlsx)|*.xlsx'"
+    # Out-Null supresses the "OK" after selecting the file.
+    $OpenFileDialog.ShowDialog() | Out-Null
+    $Global:Selected_File = $OpenFileDialog.FileName
+}
+
+Open-File
+
+Import-Csv $Selected_File |ForEach-Object {
+    if($null -eq $First_Column_Name) {
+        # first row, grab the first column name
+        $First_Column_Name = @($_.psobject.Properties)[0].Name
+    }
+    }
+    
+    # access the value in the given column
+
+$Random_CSV_Word = Import-Csv $Selected_File | select -ExpandProperty $First_Column_Name | Get-Random
+
+}
 }
 
 function Copy_Password_To_Clipboard{
@@ -960,5 +851,27 @@ $Password_Length_Selection = 10
 
 <#
 
+
+$Desktop = 'Desktop'
+
+Function Open-File($Desktop)
+{
+    Add-Type -AssemblyName System.Windows.Forms
+    $OpenFileDialog = New-Object System.Windows.Forms.OpenFileDialog
+    $OpenFileDialog.Title = "Please Select File"
+    $OpenFileDialog.InitialDirectory = $initialDirectory
+    $OpenFileDialog.filter = "(*.csv)|*.csv|SpreadSheet (*.xlsx)|*.xlsx'"
+    # Out-Null supresses the "OK" after selecting the file.
+    $OpenFileDialog.ShowDialog() | Out-Null
+    $Global:Selected_File = $OpenFileDialog.FileName
+}
+
+$ColNames = ($Selected_File[0].psobject.Properties).name
+
+Open-File
+
+$Custom_CSV = Import-CSV -Path $Selected_File | Get-Random | Select -ExpandProperty $ColNames | Select-Object -Skip 1 | Format-List
+
+$Custom_CSV
 
 #>

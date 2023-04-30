@@ -55,19 +55,31 @@ $Password_Length.Font = 'Verdana,8,style=Bold'
 
 $Password_Length.Location = New-Object System.Drawing.Point(200,20)
 
+Write-Host $Selected_File
+
 ## ---------------------------------------------------------------------------- ## 
 
     # Label #2:
 
 $CSV_Name_Label = New-Object $Label_Object # Calling object
 
-$CSV_Name_Label.Text= "Select CSV file:"
-
 $CSV_Name_Label.AutoSize = $true
 
 $CSV_Name_Label.Font = 'Verdana,8,style=Bold'
 
 $CSV_Name_Label.Location = New-Object System.Drawing.Point(470,30)
+
+if($CSV_Filename -eq $null){
+
+$CSV_Name_Label.Text= "Select CSV file:"
+
+}
+
+else{
+
+$CSV_Name_Label.Text= "Current CSV: $CSV_Filename"
+
+}
 
 ## ---------------------------------------------------------------------------- ## 
 
@@ -113,6 +125,16 @@ $User_Password_Last_Set.Location = New-Object System.Drawing.Point(650,470)
 
 ## ---------------------------------------------------------------------------- ## 
 
+# Label #6:
+
+$Select_Name_Label = New-Object $Label_Object # Calling object
+
+$Select_Name_Label.AutoSize = $true
+
+$Select_Name_Label.Font = 'Verdana,8,style=Bold'
+
+$Select_Name_Label.Location = New-Object System.Drawing.Point(470,30)
+
     # Select user button:
 
 $Select_User_Button = New-Object $Button_Object
@@ -152,20 +174,26 @@ $MessageIcon = [System.Windows.MessageBoxImage]::Warning
 $Groupbox_2 = New-Object System.Windows.Forms.GroupBox
 
 $Groupbox_2.Location = '483,50'
-$Groupbox_2.size = '170,170'
+$Groupbox_2.size = '110,60'
 
 $Upload_CSV_Button = New-Object System.Windows.Forms.RadioButton
-$Select_Word_Button = New-Object System.Windows.Forms.RadioButton
 
 $Upload_CSV_Button.Name = "Upload"
 $Upload_CSV_Button.Text = "Upload CSV"
 $Upload_CSV_Button.Location = New-Object System.Drawing.Point(490,60)
 
-$Select_Word_Button.Name = "Select word"
-$Select_Word_Button.Text = "NOT SELECTED"
-$Select_Word_Button.Location = New-Object System.Drawing.Point(490,105)
+$Groupbox_3 = New-Object System.Windows.Forms.GroupBox
 
-$Groupbox_2.DataBindings.DefaultDataSourceUpdateMode = [System.Windows.Forms.DataSourceUpdateMode]::OnValidation
+$Groupbox_3.Location = '483,170'
+$Groupbox_3.size = '110,60'
+
+$Select_Word_Button = New-Object System.Windows.Forms.RadioButton
+
+$Select_Word_Button.Name = "Select word"
+$Select_Word_Button.Text = "*no file selected*"
+$Select_Word_Button.Location = New-Object System.Drawing.Point(490,180)
+
+$Groupbox_3.DataBindings.DefaultDataSourceUpdateMode = [System.Windows.Forms.DataSourceUpdateMode]::OnValidation
 
 ## ---------------------------------------------------------------------------- ##
 
@@ -281,9 +309,6 @@ if($Confirmation -eq 'Yes') {
 if($Confirmation -eq 'No') {
     
     $Generated_Password_Label.Text = "*Generated password will appear here.*"
-    Write-Host "Kodak"
-    
-      
 } 
 
 }
@@ -566,6 +591,20 @@ function Select_CSV ($Desktop){
 
 function Select_Random_Word{
 
+if($Selected_File -eq $null){
+
+$MessageBoxTitle = "No file error!"
+
+$MessageBoxBody = "No CSV file loaded. You will be prompted to select one."
+
+$Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIcon)
+
+Invoke-Expression Select_CSV
+
+}
+
+else{
+
 Import-Csv $Selected_File | ForEach-Object {
     if($null -eq $First_Column_Name) {
         # first row, grab the first column name
@@ -578,6 +617,8 @@ Import-Csv $Selected_File | ForEach-Object {
 $Random_CSV_Word = Import-Csv $Selected_File | select -ExpandProperty $First_Column_Name | Get-Random
 
 $Generated_Password_Label.Text = "$Random_CSV_Word"
+
+}
 
 }
 
@@ -623,15 +664,6 @@ if($Misc_Password_Params.CheckedItems.Count -eq 0){
     }
 
     }
-
-Import-Csv $Selected_File | ForEach-Object {
-    if($null -eq $First_Column_Name) {
-        # first row, grab the first column name
-        $First_Column_Name = @($_.psobject.Properties)[0].Name
-    }
-    }
-    
-    # access the value in the given column
 
 }
 
@@ -701,9 +733,9 @@ $Upload_CSV_Button.Add_Click({Select_CSV})
 
 $Application_Form.DataBindings.DefaultDataSourceUpdateMode = [System.Windows.Forms.DataSourceUpdateMode]::OnValidation 
 
-$Application_Form.Controls.AddRange(@($CSV_Name_Label, $Upload_CSV_Button, $Select_Word_Button, $Misc_Password_Params, $Create_Password_Button, $Groupbox_2, $Generated_Password_Label,
+$Application_Form.Controls.AddRange(@($CSV_Name_Label, $Upload_CSV_Button, $Select_Word_Button, $Misc_Password_Params, $Create_Password_Button, $Groupbox_2, $Groupbox_3, $Generated_Password_Label,
 $Copy_To_Clipboard_Button, $OU_Select_Dropdown, $Users_Dropdown, $Select_User_Button, $User_Name_Password_Label, $User_Password_Last_Set,
-$Special_Characters_Label))
+$Special_Characters_Label, $Select_Name_Label))
 
 #$Groupbox_1.Controls.AddRange(@($Password_Length_Option_1,$Password_Length_Option_2,$Password_Length_Option_3,$Password_Length_Option_4,$Password_Length_Option_5,$Password_Length_Option_6))
 $Groupbox_2.Controls.AddRange(@())

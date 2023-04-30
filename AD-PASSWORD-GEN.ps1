@@ -20,6 +20,16 @@ Add-Type -AssemblyName System.Windows.Forms # Add .NET Windows Forms functionali
 
 Add-Type -AssemblyName PresentationCore,PresentationFramework
 
+<#
+
+Remove-Variable –Name $OU_Name –Scope Global
+
+Remove-Variable –Name $User_Name –Scope Global
+
+Remove-Variable –Name $Selected_File –Scope Global
+
+#>
+
 $Current_Date = Get-Date -Format "MM/dd/yyyy" # Get today's date
 
 $Domain = Get-ADDomain -Current LocalComputer | Select Name | foreach { $_.Name } | Out-String # Get-AD Domain name
@@ -59,8 +69,6 @@ $Password_Length.Font = 'Verdana,8,style=Bold'
 
 $Password_Length.Location = New-Object System.Drawing.Point(200,20)
 
-Write-Host $Selected_File
-
 ## ---------------------------------------------------------------------------- ## 
 
     # Label #2:
@@ -73,7 +81,7 @@ $CSV_Name_Label.Font = 'Verdana,8,style=Bold'
 
 $CSV_Name_Label.Location = New-Object System.Drawing.Point(470,30)
 
-if($CSV_Filename -eq $null){
+if($Selected_File -eq $null){
 
 $CSV_Name_Label.Text= "Select CSV file:"
 
@@ -152,6 +160,22 @@ $Select_User_Button.Font = 'Verdana,12,style=Bold'
 $Select_User_Button.Location = New-Object System.Drawing.Point(220,40)
 
 $Select_User_Button.Add_Click({Select_User})
+
+## ---------------------------------------------------------------------------- ## 
+
+# Change CSV button:
+
+$Change_CSV_Button = New-Object $Button_Object
+
+$Change_CSV_Button.Text= "Change_CSV"
+
+$Change_CSV_Button.AutoSize = $true
+
+$Change_CSV_Button.Font = 'Times,10,style=Bold'
+
+$Change_CSV_Button.Location = New-Object System.Drawing.Point(620,320)
+
+$Change_CSV_Button.Add_Click({Change_CSV})
 
 ## ---------------------------------------------------------------------------- ## 
 
@@ -273,6 +297,18 @@ $OU_Select_Dropdown.Add_SelectedIndexChanged({Show_OUs})
 function Select_User{
 
     $User_Name=$Users_Dropdown.SelectedItem
+	
+	if($User_Name -eq $null){
+
+	$MessageBoxTitle = "No user or OU selected error!"
+
+    $MessageBoxBody = "Please select a user and/or OU from the dropdown."
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+	}
+	
+	else{
 
     $global:User_Name_Global = $User_Name
 
@@ -285,12 +321,16 @@ function Select_User{
     $User_Password_Last_Set.Location = New-Object System.Drawing.Point(650,470)
 
     }
+}
 
 ## ---------------------------------------------------------------------------- ##
 
 $Desktop = 'Desktop'
 
 function Select_CSV ($Desktop){
+	
+	if (!$Selected_File){
+		
     Add-Type -AssemblyName System.Windows.Forms
     $OpenFileDialog = New-Object System.Windows.Forms.OpenFileDialog
     $OpenFileDialog.Title = "Please Select File"
@@ -314,6 +354,8 @@ function Select_CSV ($Desktop){
     $MessageBoxBody = "No file has been selected. Please select a csv file."
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconWarning)
+	
+	Invoke-Expression Select_CSV
 
     }
 
@@ -326,6 +368,12 @@ function Select_CSV ($Desktop){
     $Upload_CSV_Button.Text = "CSV Selected"
 
     $Upload_CSV_Button.ForeColor = 'Green'
+	
+	$Application_Form.Controls.AddRange(@($CSV_Name_Label, $Upload_CSV_Button, $Min_Password_Length_Label, $Misc_Password_Params, $Generate_Password_Button, $Groupbox_2, $Generated_Password_Label,
+	$Copy_To_Clipboard_Button, $OU_Select_Dropdown, $Users_Dropdown, $Select_User_Button, $User_Name_Password_Label, $User_Password_Last_Set,
+	$Special_Characters_Label, $Select_Name_Label, $Change_CSV_Button))
+	
+	$Change_CSV_Button.Add_Click({Change_CSV})
 
     }
 
@@ -338,12 +386,58 @@ function Select_CSV ($Desktop){
     $Upload_CSV_Button.Text = "CSV Selected"
 
     $Upload_CSV_Button.ForeColor = 'Green'
+	
+	$Application_Form.Controls.AddRange(@($CSV_Name_Label, $Upload_CSV_Button, $Min_Password_Length_Label, $Misc_Password_Params, $Generate_Password_Button, $Groupbox_2, $Generated_Password_Label,
+	$Copy_To_Clipboard_Button, $OU_Select_Dropdown, $Users_Dropdown, $Select_User_Button, $User_Name_Password_Label, $User_Password_Last_Set,
+	$Special_Characters_Label, $Select_Name_Label, $Change_CSV_Button))
+	
+	$Change_CSV_Button.Add_Click({Change_CSV})
 
     }
+	}
 
 }
 
-function Select_Random_Word{
+function Change_CSV ($Desktop){
+	
+	Add-Type -AssemblyName System.Windows.Forms
+    $OpenFileDialog = New-Object System.Windows.Forms.OpenFileDialog
+    $OpenFileDialog.Title = "Please Select File"
+    $OpenFileDialog.InitialDirectory = $initialDirectory
+    $OpenFileDialog.filter = "(*.csv)|*.csv|SpreadSheet (*.xlsx)|*.xlsx'"
+    # Out-Null supresses the "OK" after selecting the file.
+    $OpenFileDialog.ShowDialog() | Out-Null
+
+    $Global:Selected_File = $OpenFileDialog.FileName
+
+    $CSV_Filename = Split-Path $Selected_File -Leaf
+
+    $CSV = [string]$CSV_Filename
+	
+	$CSV_Name_Label.Text= "Current CSV: $CSV_Filename"
+
+    $Upload_CSV_Button.Text = "CSV Selected"
+
+    $Upload_CSV_Button.ForeColor = 'Green'
+	
+}
+	
+
+function Generate_Password{
+	
+$User_Name=$Users_Dropdown.SelectedItem
+	
+if($User_Name -eq $null){
+
+$MessageBoxTitle = "No user or OU selected error!"
+
+$MessageBoxBody = "Please select a user and/or OU from the dropdown."
+
+$Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+}
+
+else{
 
 if($Selected_File -eq $null){
 
@@ -401,12 +495,11 @@ if($Confirmation -eq 'Yes' -and $Generated_Password_Length -gt $Min_Password_Len
 if($Confirmation -eq 'No') {
     $Generated_Password_Label.Text = "*Generated password will appear here.*"
 	
-	## Add code to cycle through possible passwords.
+	Invoke-Expression Generate_Password
+
 } 
 
 if($Confirmation -eq 'Yes' -and $Generated_Password_Length -lt $Min_Password_Length){
-	
-	Write-Host "wtf"
 	
 	$MessageBoxTitle = "Password length error!"
 
@@ -419,71 +512,9 @@ if($Confirmation -eq 'Yes' -and $Generated_Password_Length -lt $Min_Password_Len
 }
 }
 
+}
+
 ## ---------------------------------------------------------------------------- ##
-
-function Generate_Password{
-
-[void] [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms")
-[void] [System.Reflection.Assembly]::LoadWithPartialName("System.Drawing") 
-
-# 'If' statements for password theme selection:
-
-if ($Password_Theme_Option_1.Checked){
-
-#Food
-
-$Password_Theme_Selection = $Food | Get-Random
-
-$global:Password = $Password_Theme_Selection
-
-if($Misc_Password_Params.CheckedItems.Count -eq 0){
-    $Generated_Password = $Password_Theme_Selection
-    $Generated_Password_Label.Text = $Generated_Password
-
-    $New_User_Password = ConvertTo-SecureString $Generated_Password -AsPlainText -Force
-
-    $MessageBoxTitle = "Change password for $User_Name_Global"
-
-    $MessageBoxBody = "Change password to '$Generated_Password' for '$User_Name_Global'?"
-
-    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconWarning)
-
-    $Sam_Account_Name = Get-ADUser -Filter {(enabled -eq $true)} | Where-Object DistinguishedName -like "*$User_Name_Global*" | Select-Object SamAccountName | Out-Host
-
-    if($Confirmation -eq 'Yes') {
-        Set-ADAccountPassword -Identity $Sam_Account_Name -NewPassword $New_User_Password -Reset
-        $Generated_Password_Label.Text = "Password updated for $User_Name_Global on $Current_Date."
-    }
-
-    else{
-      
-    }
-    }
-
-    }
-
-}
-
-if ($Select_Word_Button.Checked){
-
-#Music
-
-$Random_CSV_Word = Import-Csv $Selected_File | select -ExpandProperty $First_Column_Name | Get-Random
-
-$Generated_Password_Label.Text = "$Random_CSV_Word" 
-
-if($Misc_Password_Params.CheckedItems.Count -eq 0){
-    $Generated_Password = $Password_Theme_Selection
-    $Generated_Password_Label.Text = $Generated_Password
-    }
-
-else{
-
-Invoke-Expression Generate_Active_Directory_Password
-
-}
-
-}
 
 function Copy_Password_To_Clipboard{
 
@@ -510,7 +541,7 @@ $Generate_Password_Button.Font = 'Verdana,12,style=Bold'
 
 $Generate_Password_Button.Location = New-Object System.Drawing.Point(490,190)
 
-$Generate_Password_Button.Add_Click({Select_Random_Word})
+$Generate_Password_Button.Add_Click({Generate_Password})
 
 $Copy_To_Clipboard_Button = New-Object $Button_Object
 

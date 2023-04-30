@@ -59,15 +59,15 @@ $Password_Length.Location = New-Object System.Drawing.Point(200,20)
 
     # Label #2:
 
-$Password_Theme = New-Object $Label_Object # Calling object
+$CSV_Name_Label = New-Object $Label_Object # Calling object
 
-$Password_Theme.Text= "Password theme:"
+$CSV_Name_Label.Text= "Select CSV file:"
 
-$Password_Theme.AutoSize = $true
+$CSV_Name_Label.AutoSize = $true
 
-$Password_Theme.Font = 'Verdana,8,style=Bold'
+$CSV_Name_Label.Font = 'Verdana,8,style=Bold'
 
-$Password_Theme.Location = New-Object System.Drawing.Point(520,20)
+$CSV_Name_Label.Location = New-Object System.Drawing.Point(470,30)
 
 ## ---------------------------------------------------------------------------- ## 
 
@@ -145,7 +145,7 @@ $Special_Characters_Label.Location = New-Object System.Drawing.Point(750,20)
 
     # MessageBox:
 
-$ButtonType = [System.Windows.MessageBoxButton]::YesNo
+$ButtonType = [System.Windows.MessageBoxButton]::Ok
 
 $MessageIcon = [System.Windows.MessageBoxImage]::Warning
 
@@ -157,13 +157,13 @@ $Groupbox_2.size = '170,170'
 $Upload_CSV_Button = New-Object System.Windows.Forms.RadioButton
 $Select_Word_Button = New-Object System.Windows.Forms.RadioButton
 
-$Upload_CSV_Button.Name = "Upload CSV"
-$Upload_CSV_Button.Text = "Upload"
-$Upload_CSV_Button.Location = New-Object System.Drawing.Point(490,150)
+$Upload_CSV_Button.Name = "Upload"
+$Upload_CSV_Button.Text = "Upload CSV"
+$Upload_CSV_Button.Location = New-Object System.Drawing.Point(490,60)
 
 $Select_Word_Button.Name = "Select word"
-$Select_Word_Button.Text = ""
-#$Select_Word_Button.Location = New-Object System.Drawing.Point(490,180)
+$Select_Word_Button.Text = "NOT SELECTED"
+$Select_Word_Button.Location = New-Object System.Drawing.Point(490,105)
 
 $Groupbox_2.DataBindings.DefaultDataSourceUpdateMode = [System.Windows.Forms.DataSourceUpdateMode]::OnValidation
 
@@ -213,7 +213,7 @@ $Users_Dropdown.Location = New-Object System.Drawing.Point(10,40) # Add location
 
 ## Corresponding functions
 
-#Get-ADOrganizationalUnit -Properties CanonicalName -Filter * | Where-Object DistinguishedName -notlike "*Domain Controllers*" |Sort-Object CanonicalName | ForEach-Object {$OU_Select_Dropdown.Items.Add($_.Name)}
+Get-ADOrganizationalUnit -Properties CanonicalName -Filter * | Where-Object DistinguishedName -notlike "*Domain Controllers*" |Sort-Object CanonicalName | ForEach-Object {$OU_Select_Dropdown.Items.Add($_.Name)}
 
 $User_Name=$Users_Dropdown.SelectedItem
 
@@ -509,20 +509,86 @@ else{
 
 ## ---------------------------------------------------------------------------- ##
 
+$Desktop = 'Desktop'
+
+function Select_CSV ($Desktop){
+    Add-Type -AssemblyName System.Windows.Forms
+    $OpenFileDialog = New-Object System.Windows.Forms.OpenFileDialog
+    $OpenFileDialog.Title = "Please Select File"
+    $OpenFileDialog.InitialDirectory = $initialDirectory
+    $OpenFileDialog.filter = "(*.csv)|*.csv|SpreadSheet (*.xlsx)|*.xlsx'"
+    # Out-Null supresses the "OK" after selecting the file.
+    $OpenFileDialog.ShowDialog() | Out-Null
+
+    $Global:Selected_File = $OpenFileDialog.FileName
+
+    $CSV_Filename = Split-Path $Selected_File -Leaf
+
+    $CSV = [string]$CSV_Filename
+
+    [bool]$string
+
+    if(!$CSV){
+
+    $MessageBoxTitle = "No file selected error!"
+
+    $MessageBoxBody = "No file has been selected. Please select a csv file."
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonType,$MessageIcon)
+
+    }
+
+    elseif($CSV_Name_Label.Text= "Current CSV: $CSV_Filename"){
+
+    $Select_Word_Button.Text = 'Select random word'
+
+    $CSV_Name_Label.Text= "Current CSV: $CSV_Filename"
+
+    $Upload_CSV_Button.Text = "CSV Selected"
+
+    $Upload_CSV_Button.ForeColor = 'Green'
+
+    }
+
+    else{
+
+    $Select_Word_Button.Text = 'Select random word'
+
+    $CSV_Name_Label.Text= "Current CSV: $CSV_Filename"
+
+    $Upload_CSV_Button.Text = "CSV Selected"
+
+    $Upload_CSV_Button.ForeColor = 'Green'
+
+    }
+
+}
+
+function Select_Random_Word{
+
+Import-Csv $Selected_File | ForEach-Object {
+    if($null -eq $First_Column_Name) {
+        # first row, grab the first column name
+        $First_Column_Name = @($_.psobject.Properties)[0].Name
+    }
+    }
+    
+    # access the value in the given column
+
+$Random_CSV_Word = Import-Csv $Selected_File | select -ExpandProperty $First_Column_Name | Get-Random
+
+$Generated_Password_Label.Text = "$Random_CSV_Word"
+
+}
+
+## ---------------------------------------------------------------------------- ##
+
 function Generate_Password{
 
 [void] [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms")
 [void] [System.Reflection.Assembly]::LoadWithPartialName("System.Drawing") 
 
 # 'If' statements for password theme selection:
-
-$Music = "guitar", "drums", "piano", "trumpet", "trombone", "keyboard"
-
-$Food = "bagel", "pizza", "sandwich", "banana", "cheese", "burrito", "pupusa", "kebab", "baklava", "pierogi"
-
-$Animals = “dog”,”cat”,”chicken”, "frog", "bull"
-
-$Places = "boston", "ecuador", "westbrook", "groton", "connecticut", "massachusetts", "colombia", "mexico", "peru", "iceland"
 
 if ($Password_Theme_Option_1.Checked){
 
@@ -554,96 +620,9 @@ if($Misc_Password_Params.CheckedItems.Count -eq 0){
     else{
       
     }
-
-    }
     }
 
-else{
-
-    Invoke-Expression Generate_Active_Directory_Password
-
-}
-
-if ($Password_Theme_Option_2.Checked){
-
-#Animals
-
-$Password_Theme_Selection = $Animals | Get-Random
-
-$global:Password = $Password_Theme_Selection
-
-if($Misc_Password_Params.CheckedItems.Count -eq 0){
-    $Generated_Password = $Password_Theme_Selection
-    $Generated_Password_Label.Text = $Generated_Password
     }
-
-else{
-
-Invoke-Expression Generate_Active_Directory_Password
-
-}
-
-}
-
-if ($Password_Theme_Option_3.Checked){
-
-#Places
-
-$Password_Theme_Selection = $Places | Get-Random
-
-$global:Password = $Password_Theme_Selection
-
-if($Misc_Password_Params.CheckedItems.Count -eq 0){
-    $Generated_Password = $Password_Theme_Selection
-    $Generated_Password_Label.Text = $Generated_Password
-    }
-
-else{
-
-Invoke-Expression Generate_Active_Directory_Password
-
-}
-
-}
-
-if ($Password_Theme_Option_4.Checked){
-
-#Music
-
-$Password_Theme_Selection = $Music | Get-Random
-
-$global:Password = $Password_Theme_Selection
-
-if($Misc_Password_Params.CheckedItems.Count -eq 0){
-    $Generated_Password = $Password_Theme_Selection
-    $Generated_Password_Label.Text = $Generated_Password
-    }
-
-else{
-
-Invoke-Expression Generate_Active_Directory_Password
-
-}
-
-}
-
-if ($Password_Theme_Option_5.Checked){
-
-$Desktop = 'Desktop'
-
-Function Open-File($Desktop)
-{
-    Add-Type -AssemblyName System.Windows.Forms
-    $OpenFileDialog = New-Object System.Windows.Forms.OpenFileDialog
-    $OpenFileDialog.Title = "Please Select File"
-    $OpenFileDialog.InitialDirectory = $initialDirectory
-    $OpenFileDialog.filter = "(*.csv)|*.csv|SpreadSheet (*.xlsx)|*.xlsx'"
-    # Out-Null supresses the "OK" after selecting the file.
-    $OpenFileDialog.ShowDialog() | Out-Null
-    $Global:Selected_File = $OpenFileDialog.FileName
-}
-
-Open-File
 
 Import-Csv $Selected_File | ForEach-Object {
     if($null -eq $First_Column_Name) {
@@ -654,11 +633,27 @@ Import-Csv $Selected_File | ForEach-Object {
     
     # access the value in the given column
 
+}
+
+if ($Select_Word_Button.Checked){
+
+#Music
+
 $Random_CSV_Word = Import-Csv $Selected_File | select -ExpandProperty $First_Column_Name | Get-Random
 
-$Generated_Password_Label.Text = "$Random_CSV_Word"
+$Generated_Password_Label.Text = "$Random_CSV_Word" 
+
+if($Misc_Password_Params.CheckedItems.Count -eq 0){
+    $Generated_Password = $Password_Theme_Selection
+    $Generated_Password_Label.Text = $Generated_Password
+    }
+
+else{
+
+Invoke-Expression Generate_Active_Directory_Password
 
 }
+
 }
 
 function Copy_Password_To_Clipboard{
@@ -688,6 +683,8 @@ $Create_Password_Button.Location = New-Object System.Drawing.Point(550,350)
 
 $Create_Password_Button.Add_Click({Generate_Password})
 
+$Select_Word_Button.Add_Click({Select_Random_Word})
+
 $Copy_To_Clipboard_Button = New-Object $Button_Object
 
 $Copy_To_Clipboard_Button.Text= "Copy password"
@@ -700,9 +697,11 @@ $Copy_To_Clipboard_Button.Location = New-Object System.Drawing.Point(950,350)
 
 $Copy_To_Clipboard_Button.Add_Click({Copy_Password_To_Clipboard})
 
+$Upload_CSV_Button.Add_Click({Select_CSV})
+
 $Application_Form.DataBindings.DefaultDataSourceUpdateMode = [System.Windows.Forms.DataSourceUpdateMode]::OnValidation 
 
-$Application_Form.Controls.AddRange(@($Password_Theme, $Upload_CSV_Button, $Select_Word_Button, $Misc_Password_Params, $Create_Password_Button, $Groupbox_2, $Generated_Password_Label,
+$Application_Form.Controls.AddRange(@($CSV_Name_Label, $Upload_CSV_Button, $Select_Word_Button, $Misc_Password_Params, $Create_Password_Button, $Groupbox_2, $Generated_Password_Label,
 $Copy_To_Clipboard_Button, $OU_Select_Dropdown, $Users_Dropdown, $Select_User_Button, $User_Name_Password_Label, $User_Password_Last_Set,
 $Special_Characters_Label))
 

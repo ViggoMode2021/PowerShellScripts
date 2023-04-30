@@ -211,7 +211,7 @@ $Min_Password_Length_Label.Location = New-Object System.Drawing.Point(350,250)
 
 $ButtonTypeOk = [System.Windows.MessageBoxButton]::Ok
 
-$ButtonTypeYesNo = [System.Windows.MessageBoxButton]::YesNo
+$ButtonTypeYesNo = [System.Windows.MessageBoxButton]::YesNoCancel 
 
 $MessageIconWarning = [System.Windows.MessageBoxImage]::Warning
 

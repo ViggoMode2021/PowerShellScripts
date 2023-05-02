@@ -20,16 +20,6 @@ Add-Type -AssemblyName System.Windows.Forms # Add .NET Windows Forms functionali
 
 Add-Type -AssemblyName PresentationCore,PresentationFramework
 
-<#
-
-Remove-Variable –Name $OU_Name –Scope Global
-
-Remove-Variable –Name $User_Name –Scope Global
-
-Remove-Variable –Name $Selected_File –Scope Global
-
-#>
-
 $Current_Date = Get-Date -Format "MM/dd/yyyy" # Get today's date
 
 $Domain = Get-ADDomain -Current LocalComputer | Select Name | foreach { $_.Name } | Out-String # Get-AD Domain name
@@ -117,9 +107,11 @@ $User_Name_Password_Label.Text= "*Change password for (username)*"
 
 $User_Name_Password_Label.AutoSize = $true
 
-$User_Name_Password_Label.Font = 'Verdana,8,style=Bold'
+$User_Name_Password_Label.Font = 'Verdana,11,style=Bold'
 
-$User_Name_Password_Label.Location = New-Object System.Drawing.Point(620,420)
+$User_Name_Password_Label.ForeColor = 'Blue'
+
+$User_Name_Password_Label.Location = New-Object System.Drawing.Point(20,150)
 
 ## ---------------------------------------------------------------------------- ## 
 
@@ -400,29 +392,12 @@ function Select_CSV ($Desktop){
 
 function Change_CSV ($Desktop){
 	
-	Add-Type -AssemblyName System.Windows.Forms
-    $OpenFileDialog = New-Object System.Windows.Forms.OpenFileDialog
-    $OpenFileDialog.Title = "Please Select File"
-    $OpenFileDialog.InitialDirectory = $initialDirectory
-    $OpenFileDialog.filter = "(*.csv)|*.csv|SpreadSheet (*.xlsx)|*.xlsx'"
-    # Out-Null supresses the "OK" after selecting the file.
-    $OpenFileDialog.ShowDialog() | Out-Null
+$Global:Selected_File = $null
 
-    $Global:Selected_File = $OpenFileDialog.FileName
+Invoke-Expression Select_CSV
 
-    $CSV_Filename = Split-Path $Selected_File -Leaf
-
-    $CSV = [string]$CSV_Filename
-	
-	$CSV_Name_Label.Text= "Current CSV: $CSV_Filename"
-
-    $Upload_CSV_Button.Text = "CSV Selected"
-
-    $Upload_CSV_Button.ForeColor = 'Green'
-	
 }
 	
-
 function Generate_Password{
 	
 $User_Name=$Users_Dropdown.SelectedItem
@@ -470,7 +445,12 @@ $Generated_Password = $Random_CSV_Word
 
 $Generated_Password_Label.Text = $Generated_Password
 
-$Generated_Password_Length = $Generated_Password.Length 
+$Generated_Password_Length = $Generated_Password.Length
+
+if($Misc_Password_Params.CheckedItems -Contains "Include_special_characters"){
+		$Generated_Password = $Generated_Password + "(!!~"
+		Write-Host "Yeah"
+	}
 
 $New_User_Password = ConvertTo-SecureString $Generated_Password -AsPlainText -Force
 
@@ -496,17 +476,43 @@ if($Confirmation -eq 'No') {
     $Generated_Password_Label.Text = "*Generated password will appear here.*"
 	
 	Invoke-Expression Generate_Password
-
 } 
 
 if($Confirmation -eq 'Yes' -and $Generated_Password_Length -lt $Min_Password_Length){
 	
 	$MessageBoxTitle = "Password length error!"
 
-	$MessageBoxBody = "Generated password length of $Generated_Password_Length does not 
-	satisy the password length constraint of $Domain of $Min_Password_Length =(!Please generate another password."
+	$MessageBoxBody = "Length of $Generated_Password_Length does not satisfy the password length constraint of $Domain of $Min_Password_Length."
 
 	$Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+	
+	$Password_Length_Difference = $Min_Password_Length - $Generated_Password_Length
+	
+	$Random_Number = Get-Random -Minimum 1000 -Maximum 999999
+
+	$Random_Number = [string]$Random_Number
+	
+	$Alternate_Password = $Random_CSV_Word + $Random_Number
+	
+	$New_User_Password = ConvertTo-SecureString $Alternate_Password -AsPlainText -Force
+	
+	$MessageBoxTitle = "Alternate password for $User_Name_Global"
+
+	$MessageBoxBody = "The alternate password '$Alternate_Password' satisfies the domain's password contstraints. Would you like to use this password?"
+
+	$Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeYesNo,$MessageIconWarning)
+	
+	if($Confirmation -eq 'Yes'){
+	Set-ADAccountPassword -Identity $Sam_Account_Name -NewPassword $New_User_Password -Reset
+	$Generated_Password_Label.Text = "Password updated for $User_Name_Global on $Current_Date."
+	
+	if($Confirmation -eq 'No') {
+    $Generated_Password_Label.Text = "*Generated password will appear here.*"
+	
+	Invoke-Expression Generate_Password
+}       
+}
+	
 }
 
 }

@@ -214,7 +214,7 @@ $Groupbox_2 = New-Object System.Windows.Forms.GroupBox
 $Groupbox_2.Location = '483,50'
 $Groupbox_2.size = '110,60'
 
-$Upload_CSV_Button = New-Object System.Windows.Forms.RadioButton
+$Upload_CSV_Button = New-Object $Button_Object
 
 $Upload_CSV_Button.Name = "Upload"
 $Upload_CSV_Button.Text = "Upload CSV"
@@ -226,11 +226,7 @@ $Misc_Password_Params = New-Object System.Windows.Forms.CheckedListBox
 
 $Misc_Password_Params.Location = New-Object System.Drawing.Size(700,50)
 
-$Misc_Password_Params.Items.Insert(0, "Capitalize_first_letter"); 
-
-$Misc_Password_Params.Items.Insert(1, "Include_numbers"); 
-
-$Misc_Password_Params.Items.Insert(2, "Include_special_characters"); 
+$Misc_Password_Params.Items.Insert(0, "Include_special_characters"); 
 
 $Misc_Password_Params.ClearSelected()
 
@@ -263,6 +259,36 @@ $Users_Dropdown.Text="Select a user"
 $Users_Dropdown.Font = New-Object System.Drawing.Font("Lucinda Console",12)
 
 $Users_Dropdown.Location = New-Object System.Drawing.Point(10,40) # Add location to top left of GUI
+
+# Generate Password Button:
+
+$Generate_Password_Button = New-Object $Button_Object
+
+$Generate_Password_Button.Text= "*no file selected*"
+
+$Generate_Password_Button.AutoSize = $true
+
+$Generate_Password_Button.Font = 'Verdana,12,style=Bold'
+
+$Generate_Password_Button.Location = New-Object System.Drawing.Point(490,190)
+
+$Generate_Password_Button.Add_Click({Generate_Password})
+
+# Copy to Clipboard Button:
+
+$Copy_To_Clipboard_Button = New-Object $Button_Object
+
+$Copy_To_Clipboard_Button.Text= "Copy password"
+
+$Copy_To_Clipboard_Button.AutoSize = $true
+
+$Copy_To_Clipboard_Button.Font = 'Verdana,12,style=Bold'
+
+$Copy_To_Clipboard_Button.Location = New-Object System.Drawing.Point(950,350)
+
+$Copy_To_Clipboard_Button.Add_Click({Copy_Password_To_Clipboard})
+
+$Upload_CSV_Button.Add_Click({Select_CSV})
 
 ## Corresponding functions
 
@@ -448,15 +474,27 @@ $Generated_Password_Label.Text = $Generated_Password
 $Generated_Password_Length = $Generated_Password.Length
 
 if($Misc_Password_Params.CheckedItems -Contains "Include_special_characters"){
-		$Generated_Password = $Generated_Password + "(!!~"
-		Write-Host "Yeah"
+		
+		$random_array = "!#$%&''()*+,-./:;<=>?@[\]^_`{|}~".ToCharArray()
+		$random_object = New-Object System.Random
+		$random_string = ""
+		$random_integer = Get-Random -Minimum 1 -Maximum 5
+		for ($i = $random_integer; $i -lt 6; $i++) {
+			$random_index = $random_object.Next(0, $random_array.Length)
+			$random_character = $random_array[$random_index]
+			$random_string += $random_character
+}
+		
+		$Generated_Password = $Generated_Password + $random_string
 	}
+
+}
 
 $New_User_Password = ConvertTo-SecureString $Generated_Password -AsPlainText -Force
 
 $MessageBoxTitle = "Change password for $User_Name_Global"
 
-$MessageBoxBody = "Change password to '$Random_CSV_Word' for '$User_Name_Global'?"
+$MessageBoxBody = "Change password to '$Generated_Password' for '$User_Name_Global'?"
 
 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeYesNo,$MessageIconWarning)
 
@@ -482,7 +520,7 @@ if($Confirmation -eq 'Yes' -and $Generated_Password_Length -lt $Min_Password_Len
 	
 	$MessageBoxTitle = "Password length error!"
 
-	$MessageBoxBody = "Length of $Generated_Password_Length does not satisfy the password length constraint of $Domain of $Min_Password_Length."
+	$MessageBoxBody = "Length of $Generated_Password_Length doesn't satisfy min password length of $Domain of $Min_Password_Length."
 
 	$Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
 	
@@ -516,7 +554,6 @@ if($Confirmation -eq 'Yes' -and $Generated_Password_Length -lt $Min_Password_Len
 }
 
 }
-}
 
 }
 
@@ -530,147 +567,14 @@ $Generated_Password_Label.Text | Set-Clipboard
 
 ## ---------------------------------------------------------------------------- ##
 
-
-## ---------------------------------------------------------------------------- ##
-
-## ---------------------------------------------------------------------------- ##
-
-$Button_Object = [System.Windows.Forms.Button]
-
-$Generate_Password_Button = New-Object $Button_Object
-
-$Generate_Password_Button.Text= "*no file selected*"
-
-$Generate_Password_Button.AutoSize = $true
-
-$Generate_Password_Button.Font = 'Verdana,12,style=Bold'
-
-$Generate_Password_Button.Location = New-Object System.Drawing.Point(490,190)
-
-$Generate_Password_Button.Add_Click({Generate_Password})
-
-$Copy_To_Clipboard_Button = New-Object $Button_Object
-
-$Copy_To_Clipboard_Button.Text= "Copy password"
-
-$Copy_To_Clipboard_Button.AutoSize = $true
-
-$Copy_To_Clipboard_Button.Font = 'Verdana,12,style=Bold'
-
-$Copy_To_Clipboard_Button.Location = New-Object System.Drawing.Point(950,350)
-
-$Copy_To_Clipboard_Button.Add_Click({Copy_Password_To_Clipboard})
-
-$Upload_CSV_Button.Add_Click({Select_CSV})
-
 $Application_Form.DataBindings.DefaultDataSourceUpdateMode = [System.Windows.Forms.DataSourceUpdateMode]::OnValidation 
 
 $Application_Form.Controls.AddRange(@($CSV_Name_Label, $Upload_CSV_Button, $Min_Password_Length_Label, $Misc_Password_Params, $Generate_Password_Button, $Groupbox_2, $Generated_Password_Label,
 $Copy_To_Clipboard_Button, $OU_Select_Dropdown, $Users_Dropdown, $Select_User_Button, $User_Name_Password_Label, $User_Password_Last_Set,
 $Special_Characters_Label, $Select_Name_Label))
 
-#$Groupbox_1.Controls.AddRange(@($Password_Length_Option_1,$Password_Length_Option_2,$Password_Length_Option_3,$Password_Length_Option_4,$Password_Length_Option_5,$Password_Length_Option_6))
 $Groupbox_2.Controls.AddRange(@())
 
 $Application_Form.ShowDialog() # Show form on runtime
 
 $Application_Form.Dispose() # Garbage collection
-
-<#
-
-# If statements for password length selection:
-
-# 
-
-if ($Password_Length_Option_1.Checked){
-
-$Password_Length_Selection = 5
-
-if($Password_Theme_Selection.Length -eq $Password_Length_Selection){
-
-$global:Password = $Password_Theme_Selection
-
-foreach($Param in $Misc_Password_Params.CheckedItems){
-
-    Invoke-Expression $Param 
-
-}
-
-}
-
-elseif($Password_Theme_Selection.Length -eq $Password_Length_Selection){
-
-Write-Host $Password_Theme_Selection
-
-Write-Host "Equal length"
-
-}
-
-else{
-
-Write-Host $Password_Theme_Selection
-
-Write-Host "More than"
-}
-}
-
-if ($Password_Length_Option_2.Checked){
-
-$Password_Length_Selection = 6
-
-}
-
-if ($Password_Length_Option_3.Checked){
-
-$Password_Length_Selection = 7
-
-}
-
-if ($Password_Length_Option_4.Checked){
-
-$Password_Length_Selection = 8
-
-}
-
-if ($Password_Length_Option_5.Checked){
-
-$Password_Length_Selection = 9
-
-}
-
-if ($Password_Length_Option_6.Checked){
-
-$Password_Length_Selection = 10
-
-}
-}
-#>
-
-#########################################################
-
-<#
-
-
-$Desktop = 'Desktop'
-
-Function Open-File($Desktop)
-{
-    Add-Type -AssemblyName System.Windows.Forms
-    $OpenFileDialog = New-Object System.Windows.Forms.OpenFileDialog
-    $OpenFileDialog.Title = "Please Select File"
-    $OpenFileDialog.InitialDirectory = $initialDirectory
-    $OpenFileDialog.filter = "(*.csv)|*.csv|SpreadSheet (*.xlsx)|*.xlsx'"
-    # Out-Null supresses the "OK" after selecting the file.
-    $OpenFileDialog.ShowDialog() | Out-Null
-    $Global:Selected_File = $OpenFileDialog.FileName
-}
-
-$ColNames = ($Selected_File[0].psobject.Properties).name
-
-Open-File
-
-$Custom_CSV = Import-CSV -Path $Selected_File | Get-Random | Select -ExpandProperty $ColNames | Select-Object -Skip 1 | Format-List
-
-$Custom_CSV
-
-#>

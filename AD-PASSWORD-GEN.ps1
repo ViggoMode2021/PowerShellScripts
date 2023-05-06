@@ -211,7 +211,7 @@ $Include_Special_Characters_Checkbox = New-Object System.Windows.Forms.CheckedLi
 
 $Include_Special_Characters_Checkbox.Location = New-Object System.Drawing.Size(10,350)
 
-$Include_Special_Characters_Checkbox.Items.Insert(0, "Include_special_characters"); 
+$Include_Special_Characters_Checkbox.Items.Insert(0, "Include Special Characters"); 
 
 $Include_Special_Characters_Checkbox.ClearSelected()
 
@@ -426,7 +426,7 @@ if($Selected_File -eq $null){
 
 $MessageBoxTitle = "No file error!"
 
-$MessageBoxBody = "No CSV file loaded. You will be prompted to select one."
+$MessageBoxBody = "No CSV file loaded. You need to select one."
 
 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconWarning)
 
@@ -455,7 +455,7 @@ $Generated_Password_Label.Text = $Generated_Password
 
 $Generated_Password_Length = $Generated_Password.Length
 
-if($Include_Special_Characters_Checkbox.CheckedItems -Contains "Include_special_characters"){
+if($Include_Special_Characters_Checkbox.CheckedItems -Contains "Include Special Characters"){
 		
 		$random_array = "!#$%&''()*+,-./:;<=>?@[\]^_`{|}~".ToCharArray()
 		$random_object = New-Object System.Random

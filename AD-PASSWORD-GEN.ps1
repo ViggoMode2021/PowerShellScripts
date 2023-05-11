@@ -1,18 +1,12 @@
 # Generate a random password for an Active Directory user:
 
-     # 1. User parameters selected from 4 different checkbox columns, such as: length + capitalization + number + special characters. 
-    
-     # script user can mix and match these parameters if they so please. Also, have a selected number of themes - animals, food, music etc.
+     # 1. Select a CSV file from local computer.
+	 
+     # 2. Select Active Directory user from dropdown.
+	 
+     # 3. Check the optional "Include special characters" checkbox to append special characters to the file. 
 
-     # 2. Allow user to save settings for 'presets' and save to a txt or csv (preferred) file. This will create a folder an then subsequent csv file.
-     
-     # 3. Select one or multiple users from an OU dropdown and an individual user dropdown. 
-
-     # 4. Have a password security meter.
-
-     # 5. Create a csv for user password history and show user password change dates.
-
-     # 6. Send password change email to user and admin.
+     # 4. Click the "Generate Password" button to generate 
 
 Import-Module ActiveDirectory # Import Active Directory PowerShell module
 
@@ -39,7 +33,7 @@ $Combo_Box_Object = [System.Windows.Forms.ComboBox] # Dropdown object
 
 $Application_Form = New-Object $Form_Object # Create new form/window for GUI
 
-$Application_Form.ClientSize= '500,300'
+$Application_Form.ClientSize= '300,300'
 
 $Application_Form.Text = "Password generator for AD users in $Domain on $Current_Date" # Name of application
 
@@ -139,6 +133,19 @@ $Select_Name_Label.Font = 'Verdana,8,style=Bold'
 
 $Select_Name_Label.Location = New-Object System.Drawing.Point(470,30)
 
+## ---------------------------------------------------------------------------- ## 
+
+# Label #7:
+
+$CSV_Length_Label = New-Object $Label_Object # Calling object
+
+$CSV_Length_Label.AutoSize = $true
+
+$CSV_Length_Label.Font = 'Verdana,8,style=Bold'
+
+$CSV_Length_Label.Location = New-Object System.Drawing.Point(370,120) 
+
+
     # Select user button:
 
 $Select_User_Button = New-Object $Button_Object
@@ -225,9 +232,9 @@ $Include_Special_Characters_Checkbox.Font = New-Object System.Drawing.Font("Aria
 
 $OU_Select_Dropdown = New-Object $Combo_Box_Object
 
-$OU_Select_Dropdown.Width='190'
+$OU_Select_Dropdown.Width= '190'
 
-$OU_Select_Dropdown.Text="Select an OU"
+$OU_Select_Dropdown.Text= "Select an OU"
 
 $OU_Select_Dropdown.Font = New-Object System.Drawing.Font("Lucinda Console",12)
 
@@ -237,9 +244,9 @@ $OU_Select_Dropdown.Location = New-Object System.Drawing.Point(10,10) # Add loca
 
 $Users_Dropdown = New-Object $Combo_Box_Object
 
-$Users_Dropdown.Width='190'
+$Users_Dropdown.Width= '190'
 
-$Users_Dropdown.Text="Select a user"
+$Users_Dropdown.Text= "Select a user"
 
 $Users_Dropdown.Font = New-Object System.Drawing.Font("Lucinda Console",12)
 
@@ -305,9 +312,9 @@ function Select_User{
 
     $User_Name_Password_Label.Text = "Change password for $User_Name"
 
-    $User_Name_Password_Last_Set = Get-ADUser -Filter {(enabled -eq $true)} -Properties PwdLastSet,PasswordLastSet | Where-Object DistinguishedName -like "*$User_Name*" | Sort Name | ft PasswordLastSet | Out-String
+    $User_Name_Password_Last_Set = Get-ADUser -Filter {(enabled -eq $true)} -Properties PwdLastSet,PasswordLastSet | Where-Object DistinguishedName -like "*$User_Name*" | Select -ExpandProperty PasswordLastSet					
 
-    $User_Password_Last_Set.Text = $User_Name_Password_Last_Set
+    $User_Password_Last_Set.Text = "Password Last Set: " + $User_Name_Password_Last_Set
 
     $User_Password_Last_Set.Location = New-Object System.Drawing.Point(50,190)
 
@@ -337,6 +344,10 @@ function Select_CSV ($Desktop){
     $CSV_Filename = Split-Path $Selected_File -Leaf
 
     $CSV = [string]$CSV_Filename
+	
+	$CSV_Length = Import-CSV $Selected_File | Measure-Object | Select-Object -expand Count
+	
+	$CSV_Length_Label.Text = "This CSV file contains $CSV_Length values for password creation."
 
     [bool]$string
 	
@@ -369,6 +380,10 @@ function Select_CSV ($Desktop){
 
     $Upload_CSV_Button.ForeColor = 'Green'
 	
+	$CSV_Length = Import-CSV $Selected_File | Measure-Object | Select-Object -expand Count
+	
+	$CSV_Length_Label.Text = "This CSV file contains $CSV_Length values for password creation."
+	
 	$Application_Form.Controls.AddRange(@($CSV_Name_Label, $Upload_CSV_Button, $Min_Password_Length_Label, $Include_Special_Characters_Checkbox, $Generate_Password_Button, $Groupbox_2, $Generated_Password_Label,
 	$OU_Select_Dropdown, $Users_Dropdown, $Select_User_Button, $User_Name_Password_Label, $User_Password_Last_Set,
 	$Select_Name_Label, $Change_CSV_Button))
@@ -382,8 +397,12 @@ function Select_CSV ($Desktop){
     $Generate_Password_Button.Text = 'Select random word'
 
     $CSV_Name_Label.Text= "Current CSV: $CSV_Filename"
+	
+	$CSV_Length = Import-CSV $Selected_File | Measure-Object | Select-Object -expand Count
+	
+	$CSV_Length_Label.Text = "This CSV file contains $CSV_Length values for password creation."
 
-    $Upload_CSV_Button.Text = "CSV Selected"
+    $Upload_CSV_Button.Text = "Selected"
 
     $Upload_CSV_Button.ForeColor = 'Green'
 	
@@ -418,19 +437,17 @@ $MessageBoxBody = "Please select a user and/or OU from the dropdown."
 
 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
 
+#break
+
 }
 
-else{
-
-if($Selected_File -eq $null){
+elseif($Selected_File -eq $null){
 
 $MessageBoxTitle = "No file error!"
 
 $MessageBoxBody = "No CSV file loaded. You need to select one."
 
 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconWarning)
-
-Invoke-Expression Select_CSV
 
 }
 
@@ -471,8 +488,6 @@ if($Include_Special_Characters_Checkbox.CheckedItems -Contains "Include Special 
 		
 	}
 
-}
-
 $Generated_Password_Length = $Generated_Password.Length
 
 $New_User_Password = ConvertTo-SecureString $Generated_Password -AsPlainText -Force
@@ -488,6 +503,10 @@ $Sam_Account_Name = Get-ADUser -Filter {(enabled -eq $true)} | Where-Object Dist
 if($Confirmation -eq 'Yes' -and $Generated_Password_Length -eq $Min_Password_Length){
 	Set-ADAccountPassword -Identity $Sam_Account_Name -NewPassword $New_User_Password -Reset
 	$Generated_Password_Label.Text = "Password updated for $User_Name_Global on $Current_Date."
+	
+	$User_Name_Password_Last_Set = Get-ADUser -Filter {(enabled -eq $true)} -Properties PwdLastSet,PasswordLastSet | Where-Object DistinguishedName -like "*$User_Name*" | Select -ExpandProperty PasswordLastSet					
+
+    $User_Password_Last_Set.Text = "Password Last Set: " + $User_Name_Password_Last_Set
 	
 	$MessageBoxTitle = "Password updated successfully"
 
@@ -508,6 +527,10 @@ if($Confirmation -eq 'Yes' -and $Generated_Password_Length -eq $Min_Password_Len
 if($Confirmation -eq 'Yes' -and $Generated_Password_Length -gt $Min_Password_Length){
 	Set-ADAccountPassword -Identity $Sam_Account_Name -NewPassword $New_User_Password -Reset
 	$Generated_Password_Label.Text = "Password updated for $User_Name_Global on $Current_Date."
+	
+	$User_Name_Password_Last_Set = Get-ADUser -Filter {(enabled -eq $true)} -Properties PwdLastSet,PasswordLastSet | Where-Object DistinguishedName -like "*$User_Name*" | Select -ExpandProperty PasswordLastSet					
+
+    $User_Password_Last_Set.Text = "Password Last Set: " + $User_Name_Password_Last_Set
 	
 	$MessageBoxTitle = "Password updated successfully"
 
@@ -599,7 +622,7 @@ $Application_Form.DataBindings.DefaultDataSourceUpdateMode = [System.Windows.For
 
 $Application_Form.Controls.AddRange(@($CSV_Name_Label, $Upload_CSV_Button, $Min_Password_Length_Label, $Include_Special_Characters_Checkbox, $Generate_Password_Button, $Groupbox_2, $Generated_Password_Label,
 $Copy_To_Clipboard_Button, $OU_Select_Dropdown, $Users_Dropdown, $Select_User_Button, $User_Name_Password_Label, $User_Password_Last_Set,
-$Select_Name_Label))
+$Select_Name_Label, $CSV_Length_Label))
 
 #$Groupbox_2.Controls.AddRange(@())
 

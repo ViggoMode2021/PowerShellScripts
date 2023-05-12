@@ -2,40 +2,50 @@ Add-Type -AssemblyName System.Windows.Forms
 $Form = New-Object System.Windows.Forms.Form
 $Form.StartPosition = 'CenterScreen'
 
-$MenuBar = New-Object System.Windows.Forms.MenuStrip
-$fileToolStripMenuItem = New-Object System.Windows.Forms.ToolStripMenuItem
-$editionToolStripMenuItem = New-Object System.Windows.Forms.ToolStripMenuItem
-$socialToolStripMenuItem  = New-Object System.Windows.Forms.ToolStripMenuItem
-$YtToolStripMenuItem = New-Object System.Windows.Forms.ToolStripMenuItem
+$Menu_Bar = New-Object System.Windows.Forms.MenuStrip
+$Learn_Tool_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
+$Practice_Tool_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
+$Boot_Process_Strip_Menu_Item_Learn= New-Object System.Windows.Forms.ToolStripMenuItem
+$Boot_Process_Strip_Menu_Item_Practice= New-Object System.Windows.Forms.ToolStripMenuItem
 
-$Form.Controls.Add($MenuBar)
+$Form.Controls.Add($Menu_Bar)
 
-$MenuBar.Items.AddRange(@(
-$fileToolStripMenuItem,
-$editionToolStripMenuItem,
-$socialToolStripMenuItem))
+$Menu_Bar.Items.AddRange(@(
+$Learn_Tool_Strip_Menu_Item,
+$Practice_Tool_Strip_Menu_Item,
+$Boot_Process_Strip_Menu_Item_Learn,
+$Boot_Process_Strip_Menu_Item_Practice))
 
-$fileToolStripMenuItem.Name = "fileToolStripMenuItem"
-$fileToolStripMenuItem.Size = New-Object System.Drawing.Size(35, 20)
-$fileToolStripMenuItem.Text = "&File"
+$Learn_Tool_Strip_Menu_Item.Name = "Learn_Tool_Strip_Menu_Item"
+$Learn_Tool_Strip_Menu_Item.Size = New-Object System.Drawing.Size(35, 20)
+$Learn_Tool_Strip_Menu_Item.Text = "Learn General"
 
-$editionToolStripMenuItem.Name = "editionToolStripMenuItem"
-$editionToolStripMenuItem.Size = New-Object System.Drawing.Size(51, 20)
-$editionToolStripMenuItem.Text = "&Edition"
+$Practice_Tool_Strip_Menu_Item.Name = "Practice_Tool_Strip_Menu_Item"
+$Practice_Tool_Strip_Menu_Item.Size = New-Object System.Drawing.Size(51, 20)
+$Practice_Tool_Strip_Menu_Item.Text = "Practice General"
 
-$socialToolStripMenuItem.DropDownItems.AddRange(@($YtToolStripMenuItem))
-$socialToolStripMenuItem.Name = "socialToolStripMenuItem"
-$socialToolStripMenuItem.Size = New-Object System.Drawing.Size(67, 20)
-$socialToolStripMenuItem.Text = "&Socials"
+$Boot_Process_Strip_Menu_Item_Practice.Name = "Boot_Process_Strip_Menu_Item_Practice"
+$Boot_Process_Strip_Menu_Item_Practice.Size = New-Object System.Drawing.Size(152, 22)
+$Boot_Process_Strip_Menu_Item_Practice.Text = "Boot Process"
 
-$YtToolStripMenuItem.Name = "YtToolStripMenuItem"
-$YtToolStripMenuItem.Size = New-Object System.Drawing.Size(152, 22)
-$YtToolStripMenuItem.Text = "&YouTube"
+$Boot_Process_Strip_Menu_Item_Learn.Name = "Boot_Process_Strip_Menu_Item_Learn"
+$Boot_Process_Strip_Menu_Item_Learn.Size = New-Object System.Drawing.Size(152, 22)
+$Boot_Process_Strip_Menu_Item_Learn.Text = "Boot Process"
 
-function OnClick_YtToolStripMenuItem($Sender,$e){
-    #powershell -w h -NoP -NonI -Exec Bypass Start-Process https://www.youtube.com"     
+$Learn_Tool_Strip_Menu_Item.DropDownItems.AddRange(@($Boot_Process_Strip_Menu_Item_Learn))
+
+$Practice_Tool_Strip_Menu_Item.DropDownItems.AddRange(@($Boot_Process_Strip_Menu_Item_Practice))
+
+function On_Click_DC_Tool_Strip_Menu_Item_Practice($Sender,$e){     
     [void][System.Windows.Forms.MessageBox]::Show("Subscribe to my youtube")
 }
-$YtToolStripMenuItem.Add_Click( { OnClick_YtToolStripMenuItem $YtToolStripMenuItem $EventArgs} )
+
+$Boot_Process_Strip_Menu_Item.Add_Click( { On_Click_DC_Tool_Strip_Menu_Item_Practice $Boot_Process_Strip_Menu_Item_Practice $EventArgs} )
+
+function On_Click_DC_Tool_Strip_Menu_Item_Learn($Sender,$e){     
+    [void][System.Windows.Forms.MessageBox]::Show("Subscribe to my youtube")
+}
+
+$Boot_Process_Strip_Menu_Item_Learn.Add_Click( { On_Click_DC_Tool_Strip_Menu_Item_Learn $Boot_Process_Strip_Menu_Item_Learn $EventArgs} )
 
 $Form.ShowDialog()

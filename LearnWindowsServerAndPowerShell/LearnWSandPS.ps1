@@ -1,43 +1,41 @@
-Add-Type -assembly System.Windows.Forms
+Add-Type -AssemblyName System.Windows.Forms
+$form=New-Object System.Windows.Forms.Form
+$form.StartPosition='CenterScreen'
 
-$main_form = New-Object System.Windows.Forms.Form
+$MenuBar = New-Object System.Windows.Forms.MenuStrip
+$fileToolStripMenuItem        = new-object System.Windows.Forms.ToolStripMenuItem
+$editionToolStripMenuItem     = new-object System.Windows.Forms.ToolStripMenuItem
+$socialToolStripMenuItem      = new-object System.Windows.Forms.ToolStripMenuItem
+$YtToolStripMenuItem      = new-object System.Windows.Forms.ToolStripMenuItem
 
-$main_form.Text ='GUI for my PoSh script'
+$Form.Controls.Add($MenuBar)
 
-$main_form.Width = 600
+$MenuBar.Items.AddRange(@(
+$fileToolStripMenuItem,
+$editionToolStripMenuItem,
+$socialToolStripMenuItem))
 
-$main_form.Height = 400
+$fileToolStripMenuItem.Name = "fileToolStripMenuItem"
+$fileToolStripMenuItem.Size = new-object System.Drawing.Size(35, 20)
+$fileToolStripMenuItem.Text = "&File"
 
-$main_form.AutoSize = $true
+$editionToolStripMenuItem.Name = "editionToolStripMenuItem"
+$editionToolStripMenuItem.Size = new-object System.Drawing.Size(51, 20)
+$editionToolStripMenuItem.Text = "&Edition"
 
-$Label = New-Object System.Windows.Forms.Label
+$socialToolStripMenuItem.DropDownItems.AddRange(@($YtToolStripMenuItem))
+$socialToolStripMenuItem.Name = "socialToolStripMenuItem"
+$socialToolStripMenuItem.Size = new-object System.Drawing.Size(67, 20)
+$socialToolStripMenuItem.Text = "&Socials"
 
-$Label.Text = "AD users"
+$YtToolStripMenuItem.Name = "YtToolStripMenuItem"
+$YtToolStripMenuItem.Size = new-object System.Drawing.Size(152, 22)
+$YtToolStripMenuItem.Text = "&YouTube"
 
-$Label.Location  = New-Object System.Drawing.Point(0,10)
-
-$Label.AutoSize = $true
-
-$main_form.Controls.Add($Label)
-
-$ComboBox = New-Object System.Windows.Forms.ComboBox
-
-$ComboBox.Width = 300
-
-$Topics = "DNS", "DHCP", "PowerShell", "ActiveDirectory"
-
-Foreach ($Topic in $Topics)
-
-{
-
-$ComboBox.Items.Add($Topic);
-
+function OnClick_YtToolStripMenuItem($Sender,$e){
+    #powershell -w h -NoP -NonI -Exec Bypass Start-Process https://www.youtube.com"     
+    [void][System.Windows.Forms.MessageBox]::Show("Subscribe to my youtube")
 }
+$YtToolStripMenuItem.Add_Click( { OnClick_YtToolStripMenuItem $YtToolStripMenuItem $EventArgs} )
 
-$ComboBox.Location  = New-Object System.Drawing.Point(60,10)
-
-$main_form.Controls.Add($ComboBox)
-
-$main_form.ShowDialog()
-
-#https://theitbros.com/powershell-gui-for-scripts/
+$form.ShowDialog()

@@ -1,12 +1,12 @@
 Add-Type -AssemblyName System.Windows.Forms
-$form=New-Object System.Windows.Forms.Form
-$form.StartPosition='CenterScreen'
+$Form = New-Object System.Windows.Forms.Form
+$Form.StartPosition = 'CenterScreen'
 
 $MenuBar = New-Object System.Windows.Forms.MenuStrip
-$fileToolStripMenuItem        = new-object System.Windows.Forms.ToolStripMenuItem
-$editionToolStripMenuItem     = new-object System.Windows.Forms.ToolStripMenuItem
-$socialToolStripMenuItem      = new-object System.Windows.Forms.ToolStripMenuItem
-$YtToolStripMenuItem      = new-object System.Windows.Forms.ToolStripMenuItem
+$fileToolStripMenuItem = New-Object System.Windows.Forms.ToolStripMenuItem
+$editionToolStripMenuItem = New-Object System.Windows.Forms.ToolStripMenuItem
+$socialToolStripMenuItem  = New-Object System.Windows.Forms.ToolStripMenuItem
+$YtToolStripMenuItem = New-Object System.Windows.Forms.ToolStripMenuItem
 
 $Form.Controls.Add($MenuBar)
 
@@ -16,20 +16,20 @@ $editionToolStripMenuItem,
 $socialToolStripMenuItem))
 
 $fileToolStripMenuItem.Name = "fileToolStripMenuItem"
-$fileToolStripMenuItem.Size = new-object System.Drawing.Size(35, 20)
+$fileToolStripMenuItem.Size = New-Object System.Drawing.Size(35, 20)
 $fileToolStripMenuItem.Text = "&File"
 
 $editionToolStripMenuItem.Name = "editionToolStripMenuItem"
-$editionToolStripMenuItem.Size = new-object System.Drawing.Size(51, 20)
+$editionToolStripMenuItem.Size = New-Object System.Drawing.Size(51, 20)
 $editionToolStripMenuItem.Text = "&Edition"
 
 $socialToolStripMenuItem.DropDownItems.AddRange(@($YtToolStripMenuItem))
 $socialToolStripMenuItem.Name = "socialToolStripMenuItem"
-$socialToolStripMenuItem.Size = new-object System.Drawing.Size(67, 20)
+$socialToolStripMenuItem.Size = New-Object System.Drawing.Size(67, 20)
 $socialToolStripMenuItem.Text = "&Socials"
 
 $YtToolStripMenuItem.Name = "YtToolStripMenuItem"
-$YtToolStripMenuItem.Size = new-object System.Drawing.Size(152, 22)
+$YtToolStripMenuItem.Size = New-Object System.Drawing.Size(152, 22)
 $YtToolStripMenuItem.Text = "&YouTube"
 
 function OnClick_YtToolStripMenuItem($Sender,$e){
@@ -38,4 +38,4 @@ function OnClick_YtToolStripMenuItem($Sender,$e){
 }
 $YtToolStripMenuItem.Add_Click( { OnClick_YtToolStripMenuItem $YtToolStripMenuItem $EventArgs} )
 
-$form.ShowDialog()
+$Form.ShowDialog()

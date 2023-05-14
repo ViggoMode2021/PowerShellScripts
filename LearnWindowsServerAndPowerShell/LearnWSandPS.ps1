@@ -34,6 +34,10 @@ $Body.Font = 'Verdana,11,style=Bold'
 
 $Body.Location = New-Object System.Drawing.Point(320,80)
 
+$Input_Box = New-Object System.Windows.Forms.TextBox
+$Input_Box.Location = New-Object System.Drawing.Point(380,250)
+$Input_Box.Size = New-Object System.Drawing.Size(380,250)
+
 $Menu_Bar.Items.AddRange(@(
 $Windows_General_Strip_Menu_Item,
 $DHCP_DNS_Strip_Menu_Item,
@@ -80,12 +84,18 @@ $Boot_Process_Strip_Menu_Item_Practice.Add_Click( { On_Click_Boot_Process_Strip_
 function On_Click_Boot_Process_Strip_Menu_Item_Learn($Sender,$e){     
     $Title.Text= "Learn Windows boot process"
 	$Body.Text = "Find the last time that your Windows machine booted. Use PowerShell."
+	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
 }
 
 function Selected_Practice_Problem{
 	
 if ($Body.Text = "Find the last time that your Windows machine booted. Use PowerShell."){
-	Write-Host "Clear to see"
+	if($Input_Box.Text -eq "Test"){
+	Write-Host "Success" }
+	else{
+		Write-Host "Fail"
+	}
+}
 }
 
 }

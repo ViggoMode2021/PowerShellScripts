@@ -1,4 +1,4 @@
-Import-Module ActiveDirectory
+#Import-Module ActiveDirectory
 
 Add-Type -AssemblyName System.Windows.Forms
 $Form = New-Object System.Windows.Forms.Form
@@ -89,25 +89,18 @@ function On_Click_Boot_Process_Strip_Menu_Item_Learn($Sender,$e){
 
 function Selected_Practice_Problem{
 
-$ArgumentLst = @($Input_Box.Text)
+$Answer = @($Input_Box.Text)
 
-Write-Host $ArgumentLst
- 
-Start-Process PowerShell -Wait -ArgumentList $ArgumentLst #-Wait -WindowStyle Maximized
+Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb runAs
 
-Start-Process powershell -ArgumentList "-noexit -command ""& {Set-Location D:\YourPath}""" -Verb runAs
-exit
-
-if ($Body.Text = "Find the last time that your Windows machine booted. Use PowerShell."){
-	if($Input_Box.Text -eq "Test"){
-	Write-Host "Success" }
+if ($Body.Text = "Find the computer name (hostname) of your Windows machine. Use PowerShell."){
+	if($Input_Box.Text -eq "hostname"){
+	Write-Host "Success"
+    $Body.Text = "Find the last time that your Windows machine booted. Use PowerShell. Correct, your answer was $Answer." }
 	else{
-		Write-Host "Fail"
+		$Body.Text = "Find the last time that your Windows machine booted. Use PowerShell. Incorrect, your answer was $Answer." }
 	}
 }
-}
-
-
 
 $Boot_Process_Strip_Menu_Item_Learn.Add_Click( { On_Click_Boot_Process_Strip_Menu_Item_Learn $Boot_Process_Strip_Menu_Item_Learn $EventArgs} )
 

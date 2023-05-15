@@ -1,16 +1,37 @@
 #Import-Module ActiveDirectory
 
 Add-Type -AssemblyName System.Windows.Forms
+
+Add-Type -AssemblyName PresentationCore,PresentationFramework
+
+$Domain="@domain"
+
+$Logged_In_User = whoami /upn
+
+$Logged_In_Username = $Logged_In_User.Replace('@domain', '')
+
+Write-Host $Logged_In_Username
+
 $Form = New-Object System.Windows.Forms.Form
 $Form.StartPosition = 'CenterScreen'
 
 $Menu_Bar = New-Object System.Windows.Forms.MenuStrip
+$File_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
+$New_Game_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $Windows_General_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $DHCP_DNS_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $Boot_Process_Strip_Menu_Item_Learn= New-Object System.Windows.Forms.ToolStripMenuItem
 $Boot_Process_Strip_Menu_Item_Practice= New-Object System.Windows.Forms.ToolStripMenuItem
 $DHCP_DNS_Strip_Menu_Item_Practice= New-Object System.Windows.Forms.ToolStripMenuItem
 $DHCP_DNS_Strip_Menu_Item_Practice_2= New-Object System.Windows.Forms.ToolStripMenuItem
+
+$ButtonTypeOk = [System.Windows.MessageBoxButton]::Ok
+
+$ButtonTypeYesNoCancel = [System.Windows.MessageBoxButton]::YesNoCancel 
+
+$MessageIconWarning = [System.Windows.MessageBoxImage]::Warning
+
+$MessageIconError = [System.Windows.MessageBoxImage]::Error
 
 $Label_Object = [System.Windows.Forms.Label]
 
@@ -39,14 +60,66 @@ $Input_Box.Location = New-Object System.Drawing.Point(380,250)
 $Input_Box.Size = New-Object System.Drawing.Size(380,250)
 
 $Menu_Bar.Items.AddRange(@(
+$File_Menu_Item,
 $Windows_General_Strip_Menu_Item,
 $DHCP_DNS_Strip_Menu_Item,
 $Boot_Process_Strip_Menu_Item_Learn,
 $Boot_Process_Strip_Menu_Item_Practice))
 
+## start File menu item ##
+
+$File_Menu_Item.Name = "File_Menu_Item"
+$File_Menu_Item.Size = New-Object System.Drawing.Size(35, 20)
+$File_Menu_Item.Text = "File"
+
+$New_Game_Strip_Menu_Item.Name = "New_Game_Strip_Menu_Item"
+$New_Game_Strip_Menu_Item.Size = New-Object System.Drawing.Size(152, 22)
+$New_Game_Strip_Menu_Item.Text = "New Game"
+
+$File_Menu_Item.DropDownItems.AddRange(@($New_Game_Strip_Menu_Item))
+
+function On_Click_New_Game_Strip_Menu_Item($Sender,$e){     
+    $MessageBoxTitle = "New game file creation"
+
+    $MessageBoxBody = "By starting a new game, a new csv file will be created on your desktop to track your score. Continue?"
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeYesNoCancel,$MessageIconWarning)
+	
+	if($Confirmation -eq 'Yes'){
+		
+	[void][System.Reflection.Assembly]::LoadWithPartialName('Microsoft.VisualBasic') 
+	$New_Game_Filename = [Microsoft.VisualBasic.Interaction]::InputBox('Enter the file name', 'Enter the filename')
+	
+	<#
+	
+	$Logged_In_User = whoami /upn
+
+	$Logged_In_Username = $Logged_In_User.Replace('@domain', '')
+	
+	ADD THIS AFTER
+	
+	#>
+		
+	New-Item C:\Users\Administrator\desktop\$New_Game_Filename.csv -ItemType File
+	
+	}
+}
+
+$New_Game_Strip_Menu_Item.Add_Click( { On_Click_New_Game_Strip_Menu_Item $New_Game_Strip_Menu_Item $EventArgs} )
+
+## end File menu item ##
+
+## start Windows General menu item ##
+
 $Windows_General_Strip_Menu_Item.Name = "Windows_General_Strip_Menu_Item"
 $Windows_General_Strip_Menu_Item.Size = New-Object System.Drawing.Size(35, 20)
 $Windows_General_Strip_Menu_Item.Text = "Windows General"
+
+$Boot_Process_Strip_Menu_Item_Learn.Name = "Boot_Process_Strip_Menu_Item_Learn"
+$Boot_Process_Strip_Menu_Item_Learn.Size = New-Object System.Drawing.Size(152, 22)
+$Boot_Process_Strip_Menu_Item_Learn.Text = "Boot Process #1"
+
+## end Windows General menu item ##
 
 $DHCP_DNS_Strip_Menu_Item.Name = "DHCP_DNS_Strip_Menu_Item"
 $DHCP_DNS_Strip_Menu_Item.Size = New-Object System.Drawing.Size(51, 20)
@@ -68,22 +141,18 @@ $The_Submit_Button.Add_Click({Selected_Practice_Problem})
 
 ## Windows Boot Process ##
 
-$Boot_Process_Strip_Menu_Item_Learn.Name = "Boot_Process_Strip_Menu_Item_Learn"
-$Boot_Process_Strip_Menu_Item_Learn.Size = New-Object System.Drawing.Size(152, 22)
-$Boot_Process_Strip_Menu_Item_Learn.Text = "Boot Process #1"
-
 $Windows_General_Strip_Menu_Item.DropDownItems.AddRange(@($Boot_Process_Strip_Menu_Item_Learn))
 
 function On_Click_Boot_Process_Strip_Menu_Item_Practice($Sender,$e){     
-    $Title.Text= "Practice PowerShell for Windows boot process"
+    $Title.Text= "Practice PowerShell for Windows environment"
 	$Body.Text = ""
 }
 
 $Boot_Process_Strip_Menu_Item_Practice.Add_Click( { On_Click_Boot_Process_Strip_Menu_Item_Practice $Boot_Process_Strip_Menu_Item_Practice $EventArgs} )
 
 function On_Click_Boot_Process_Strip_Menu_Item_Learn($Sender,$e){     
-    $Title.Text= "Learn Windows boot process"
-	$Body.Text = "Find the last time that your Windows machine booted. Use PowerShell."
+    $Title.Text= "Learn Windows environment"
+	$Body.Text = "Using PowerShell, find the computer name (hostname) of this device."
 	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
 }
 

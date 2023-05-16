@@ -228,10 +228,28 @@ Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb ru
 
 if ($Body.Text = "Find the computer name (hostname) of your Windows machine. Use PowerShell."){
 	if($Input_Box.Text -eq "hostname"){
-	Write-Host "Success"
-    $Body.Text = "Find the last time that your Windows machine booted. Use PowerShell. Correct, your answer was $Answer." }
+    $Body.Text = "Find the last time that your Windows machine booted. Use PowerShell. Correct, your answer was $Answer."
+
+    $Views = "fRE"
+
+    $Likes = "JS"
+
+    $Comments = "paper"
+    
+    $New_Row = "$Date,$Views,$Likes,$Comments"
+
+    $New_Row | Add-Content -Path $Game_Score_File 
+
+    $New_Row = New-Object PsObject -Property @{Problem = $Date ; Result = "$Views" ; Date = $Likes ; Comments = $Comments }
+    
+    $New_Results += $New_Row
+
+    $New_Results | Export-csv -append $video_analytics
+
+    }
+
 	else{
-		$Body.Text = "Find the last time that your Windows machine booted. Use PowerShell. Incorrect, your answer was $Answer." }
+		$Body.Text = "Find the last time that your Windows machine booted. Use PowerShell. Incorrect, your answer was $Answer."}
 	}
 }
 

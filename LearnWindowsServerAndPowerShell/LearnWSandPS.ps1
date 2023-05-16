@@ -126,7 +126,7 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
 
-    $global:Game_Score_File = Import-CSV -Path C:\Users\rviglione\desktop\$New_Game_Filename$Date.csv
+    $global:Game_Score_File = "C:\Users\rviglione\desktop\$New_Game_Filename_Csv"
 
     $Form.Text = "EleetShell - Current score file: $New_Game_Filename_Csv"
 
@@ -160,7 +160,7 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconSuccess)
 
-    $global:Game_Score_File = Import-CSV -Path C:\Users\rviglione\desktop\$New_Game_Filename_Csv
+    $global:Game_Score_File = "C:\Users\rviglione\desktop\$New_Game_Filename_Csv"
 
     $Form.Text = "EleetShell - Current score file: $New_Game_Filename_Csv"
 
@@ -228,6 +228,8 @@ Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb ru
 
 if ($Body.Text = "Find the computer name (hostname) of your Windows machine. Use PowerShell."){
 	if($Input_Box.Text -eq "hostname"){
+
+    Write-Host 
     $Body.Text = "Find the last time that your Windows machine booted. Use PowerShell. Correct, your answer was $Answer."
 
     $Views = "fRE"
@@ -238,13 +240,13 @@ if ($Body.Text = "Find the computer name (hostname) of your Windows machine. Use
     
     $New_Row = "$Date,$Views,$Likes,$Comments"
 
-    $New_Row | Add-Content -Path $Game_Score_File 
+    $New_Row | Add-Content -Path $Game_Score_File
 
     $New_Row = New-Object PsObject -Property @{Problem = $Date ; Result = "$Views" ; Date = $Likes ; Comments = $Comments }
     
     $New_Results += $New_Row
 
-    $New_Results | Export-csv -append $video_analytics
+    $New_Results | Export-csv -append $Game_Score_File
 
     }
 

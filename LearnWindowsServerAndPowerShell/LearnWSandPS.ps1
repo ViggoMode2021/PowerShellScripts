@@ -15,6 +15,8 @@ $Logged_In_Username = $Logged_In_User.Replace('@domain', '')
 $Form = New-Object System.Windows.Forms.Form
 $Form.StartPosition = 'CenterScreen'
 
+$Form.Text = "EleetShell - Practice Windows Server and PowerShell!"
+
 $Menu_Bar = New-Object System.Windows.Forms.MenuStrip
 $File_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $New_Game_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
@@ -32,6 +34,8 @@ $ButtonTypeYesNoCancel = [System.Windows.MessageBoxButton]::YesNoCancel
 $MessageIconWarning = [System.Windows.MessageBoxImage]::Warning
 
 $MessageIconError = [System.Windows.MessageBoxImage]::Error
+
+$MessageIconSuccess = [System.Windows.MessageBoxImage]::Information
 
 $Label_Object = [System.Windows.Forms.Label]
 
@@ -90,7 +94,7 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 	[void][System.Reflection.Assembly]::LoadWithPartialName('Microsoft.VisualBasic') 
 	$New_Game_Filename = [Microsoft.VisualBasic.Interaction]::InputBox('Enter the file name', 'Enter the filename')
 
-    $New_Game_Filename = "$New_Game_Filename.csv"
+    $New_Game_Filename_Csv = "$New_Game_Filename.csv"
 	
 	<#
 	
@@ -106,7 +110,7 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 
     $New_Game_File_CheckSum = Get-ChildItem "C:\Users\rviglione\desktop" -recurse | where {$_.name -match "food.csv"} | select-object -ExpandProperty name
 
-    if($New_Game_Filename -eq $New_Game_File_CheckSum){
+    if($New_Game_Filename_Csv -eq $New_Game_File_CheckSum){
 
     $MessageBoxTitle = "File creation error."
 
@@ -122,11 +126,27 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
 
+    $global:Game_Score_File = Import-CSV -Path C:\Users\rviglione\desktop\$New_Game_Filename$Date.csv
+
+    $Form.Text = "EleetShell - Current score file: $New_Game_Filename_Csv"
+
+    }
+
+    if($New_Game_Filename.IndexOfAny([System.IO.Path]::GetInvalidFileNameChars()) -ne -1)
+
+    {
+
+    $MessageBoxTitle = "File name contains invalid characters"
+
+    $MessageBoxBody = "$New_Game_Filename contains invalid characters. Please try again."
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+    
     }
 
     else{
 
-    $New_Game_File = New-Item C:\Users\rviglione\desktop\$New_Game_Filename.csv -ItemType File
+    $New_Game_File = New-Item C:\Users\rviglione\desktop\$New_Game_Filename_Csv -ItemType File
 
     $File = "$New_Game_File"
     $Data = Get-Content -Path $File
@@ -134,11 +154,15 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
     Set-Content $File -Value $Header
     Add-Content -Path $File -Value $Data
 
-    $MessageBoxTitle = "New game created with the scorecard filename $New_Game_Filename.csv"
+    $MessageBoxTitle = "New game created with the scorecard filename $New_Game_Filename_Csv"
 
-    $MessageBoxBody = "New game created with the scorecard filename $New_Game_Filename.csv"
+    $MessageBoxBody = "New game created with the scorecard filename $New_Game_Filename_Csv"
 
-    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconSuccess)
+
+    $global:Game_Score_File = Import-CSV -Path C:\Users\rviglione\desktop\$New_Game_Filename_Csv
+
+    $Form.Text = "EleetShell - Current score file: $New_Game_Filename_Csv"
 
     }
 

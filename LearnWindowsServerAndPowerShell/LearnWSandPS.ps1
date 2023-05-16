@@ -4,13 +4,13 @@ Add-Type -AssemblyName System.Windows.Forms
 
 Add-Type -AssemblyName PresentationCore,PresentationFramework
 
+$Date = Get-Date -format "MMddyyyy"
+
 $Domain="@domain"
 
 $Logged_In_User = whoami /upn
 
 $Logged_In_Username = $Logged_In_User.Replace('@domain', '')
-
-Write-Host $Logged_In_Username
 
 $Form = New-Object System.Windows.Forms.Form
 $Form.StartPosition = 'CenterScreen'
@@ -89,6 +89,8 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 		
 	[void][System.Reflection.Assembly]::LoadWithPartialName('Microsoft.VisualBasic') 
 	$New_Game_Filename = [Microsoft.VisualBasic.Interaction]::InputBox('Enter the file name', 'Enter the filename')
+
+    $New_Game_Filename = "$New_Game_Filename.csv"
 	
 	<#
 	
@@ -100,8 +102,46 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 	
 	#>
 		
-	New-Item C:\Users\Administrator\desktop\$New_Game_Filename.csv -ItemType File
-	
+	#New-Item C:\Users\Administrator\desktop\$New_Game_Filename.csv -ItemType File
+
+    $New_Game_File_CheckSum = Get-ChildItem "C:\Users\rviglione\desktop" -recurse | where {$_.name -match "food.csv"} | select-object -ExpandProperty name
+
+    if($New_Game_Filename -eq $New_Game_File_CheckSum){
+
+    $MessageBoxTitle = "File creation error."
+
+    $MessageBoxBody = "$New_Game_File_CheckSum already exists. Creating a file with the name $New_Game_Filename$Date.csv"
+
+    $New_Game_File = New-Item C:\Users\rviglione\desktop\$New_Game_Filename$Date.csv -ItemType File
+
+    $File = "$New_Game_File"
+    $Data = Get-Content -Path $File
+    $Header = "Problem,Result,Date,Points"
+    Set-Content $File -Value $Header
+    Add-Content -Path $File -Value $Data
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+    }
+
+    else{
+
+    $New_Game_File = New-Item C:\Users\rviglione\desktop\$New_Game_Filename.csv -ItemType File
+
+    $File = "$New_Game_File"
+    $Data = Get-Content -Path $File
+    $Header = "Problem,Result,Date,Points"
+    Set-Content $File -Value $Header
+    Add-Content -Path $File -Value $Data
+
+    $MessageBoxTitle = "New game created with the scorecard filename $New_Game_Filename.csv"
+
+    $MessageBoxBody = "New game created with the scorecard filename $New_Game_Filename.csv"
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+    }
+
 	}
 }
 

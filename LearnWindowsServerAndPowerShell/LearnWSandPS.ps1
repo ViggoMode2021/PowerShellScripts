@@ -190,6 +190,20 @@ $OpenFileDialog.filter = "(*.csv)|*.csv|SpreadSheet (*.xlsx)|*.xlsx'"
 # Out-Null supresses the "OK" after selecting the file.
 $OpenFileDialog.ShowDialog() | Out-Null
 
+$CSV_Header_Check = (Get-Content $OpenFileDialog.FileName | Select-Object -First 1).Split($csvdelimiter)
+
+if($CSV_Header_Check -ne "Problem,Result,Date,Points"){
+
+$MessageBoxTitle = "Incompatible csv file"
+
+$MessageBoxBody = "Selected CSV file is incompatible with EleetShell due to header mismatch. Please select appropriate."
+
+$Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconSuccess)
+
+}
+
+else{
+
 $Global:Game_Score_File = $OpenFileDialog.FileName
 
 $CSV_Filename = Split-Path $Game_Score_File -Leaf
@@ -197,6 +211,8 @@ $CSV_Filename = Split-Path $Game_Score_File -Leaf
 $Form.Text = "EleetShell - Current score file: $CSV_Filename"
 
 $CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
+
+}
 
 }
 

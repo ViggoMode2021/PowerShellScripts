@@ -20,6 +20,7 @@ $Form.Text = "EleetShell - Practice Windows Server and PowerShell!"
 $Menu_Bar = New-Object System.Windows.Forms.MenuStrip
 $File_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $New_Game_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
+$Load_Game_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $Windows_General_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $DHCP_DNS_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $Boot_Process_Strip_Menu_Item_Learn= New-Object System.Windows.Forms.ToolStripMenuItem
@@ -80,7 +81,11 @@ $New_Game_Strip_Menu_Item.Name = "New_Game_Strip_Menu_Item"
 $New_Game_Strip_Menu_Item.Size = New-Object System.Drawing.Size(152, 22)
 $New_Game_Strip_Menu_Item.Text = "New Game"
 
-$File_Menu_Item.DropDownItems.AddRange(@($New_Game_Strip_Menu_Item))
+$Load_Game_Strip_Menu_Item.Name = "Load_Game_Strip_Menu_Item"
+$Load_Game_Strip_Menu_Item.Size = New-Object System.Drawing.Size(152, 22)
+$Load_Game_Strip_Menu_Item.Text = "Load Game"
+
+$File_Menu_Item.DropDownItems.AddRange(@($New_Game_Strip_Menu_Item, $Load_Game_Strip_Menu_Item))
 
 function On_Click_New_Game_Strip_Menu_Item($Sender,$e){     
     $MessageBoxTitle = "New game file creation"
@@ -92,7 +97,7 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 	if($Confirmation -eq 'Yes'){
 		
 	[void][System.Reflection.Assembly]::LoadWithPartialName('Microsoft.VisualBasic') 
-	$New_Game_Filename = [Microsoft.VisualBasic.Interaction]::InputBox('Enter the file name', 'Enter the filename')
+	$New_Game_Filename = [Microsoft.VisualBasic.Interaction]::InputBox('Enter the filename', 'Enter the filename')
 
     $New_Game_Filename_Csv = "$New_Game_Filename.csv"
 	
@@ -108,15 +113,19 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 		
 	#New-Item C:\Users\Administrator\desktop\$New_Game_Filename.csv -ItemType File
 
-    $New_Game_File_CheckSum = Get-ChildItem "C:\Users\rviglione\desktop" -recurse | where {$_.name -match "food.csv"} | select-object -ExpandProperty name
+    $New_Game_File_CheckSum = Get-ChildItem "C:\Users\administrator\desktop" -recurse | where {$_.name -match $New_Game_Filename_Csv} | select-object -ExpandProperty name
 
     if($New_Game_Filename_Csv -eq $New_Game_File_CheckSum){
+		
+		## Fix This PArt!
 
     $MessageBoxTitle = "File creation error."
 
     $MessageBoxBody = "$New_Game_File_CheckSum already exists. Creating a file with the name $New_Game_Filename$Date.csv"
 
-    $New_Game_File = New-Item C:\Users\rviglione\desktop\$New_Game_Filename$Date.csv -ItemType File
+    $New_Game_File = New-Item C:\Users\administrator\desktop\$New_Game_Filename$Date.csv -ItemType File
+	
+	$New_Game_Filename_Csv_Rename = "$New_Game_Filename$Date.csv"
 
     $File = "$New_Game_File"
     $Data = Get-Content -Path $File
@@ -126,9 +135,9 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
 
-    $global:Game_Score_File = "C:\Users\rviglione\desktop\$New_Game_Filename_Csv"
+    $global:Game_Score_File = "C:\Users\administrator\desktop\$New_Game_Filename_Csv_Rename"
 
-    $Form.Text = "EleetShell - Current score file: $New_Game_Filename_Csv"
+    $Form.Text = "EleetShell - Current score file: $New_Game_Filename_Csv_Rename"
 
     }
 
@@ -141,12 +150,14 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
     $MessageBoxBody = "$New_Game_Filename contains invalid characters. Please try again."
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+	
+	Invoke-Expression On_Click_New_Game_Strip_Menu_Item
     
     }
 
     else{
 
-    $New_Game_File = New-Item C:\Users\rviglione\desktop\$New_Game_Filename_Csv -ItemType File
+    $New_Game_File = New-Item C:\Users\administrator\desktop\$New_Game_Filename_Csv -ItemType File
 
     $File = "$New_Game_File"
     $Data = Get-Content -Path $File
@@ -160,7 +171,7 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconSuccess)
 
-    $global:Game_Score_File = "C:\Users\rviglione\desktop\$New_Game_Filename_Csv"
+    $global:Game_Score_File = "C:\Users\administrator\desktop\$New_Game_Filename_Csv"
 
     $Form.Text = "EleetShell - Current score file: $New_Game_Filename_Csv"
 
@@ -169,7 +180,29 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 	}
 }
 
+function On_Click_Load_Game_Strip_Menu_Item($Sender,$e){ 
+
+Add-Type -AssemblyName System.Windows.Forms
+$OpenFileDialog = New-Object System.Windows.Forms.OpenFileDialog
+$OpenFileDialog.Title = "Please Select File"
+$OpenFileDialog.InitialDirectory = $initialDirectory
+$OpenFileDialog.filter = "(*.csv)|*.csv|SpreadSheet (*.xlsx)|*.xlsx'"
+# Out-Null supresses the "OK" after selecting the file.
+$OpenFileDialog.ShowDialog() | Out-Null
+
+$Global:Game_Score_File = $OpenFileDialog.FileName
+
+$CSV_Filename = Split-Path $Game_Score_File -Leaf
+
+$Form.Text = "EleetShell - Current score file: $CSV_Filename"
+
+$CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
+
+}
+
 $New_Game_Strip_Menu_Item.Add_Click( { On_Click_New_Game_Strip_Menu_Item $New_Game_Strip_Menu_Item $EventArgs} )
+
+$Load_Game_Strip_Menu_Item.Add_Click( { On_Click_Load_Game_Strip_Menu_Item $Load_Game_Strip_Menu_Item $EventArgs} )
 
 ## end File menu item ##
 
@@ -232,17 +265,9 @@ if ($Body.Text = "Find the computer name (hostname) of your Windows machine. Use
     Write-Host 
     $Body.Text = "Find the last time that your Windows machine booted. Use PowerShell. Correct, your answer was $Answer."
 
-    $Views = "fRE"
-
-    $Likes = "JS"
-
-    $Comments = "paper"
-    
-    $New_Row = "$Date,$Views,$Likes,$Comments"
-
     $New_Row | Add-Content -Path $Game_Score_File
 
-    $New_Row = New-Object PsObject -Property @{Problem = $Date ; Result = "$Views" ; Date = $Likes ; Comments = $Comments }
+    $New_Row = New-Object PsObject -Property @{Problem = "Boot Process #1" ; Result = "hostname" ; Date = $Date ; Points = "1" }
     
     $New_Results += $New_Row
 

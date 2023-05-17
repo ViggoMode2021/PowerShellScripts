@@ -1,16 +1,20 @@
-#Import-Module ActiveDirectory
+Import-Module ActiveDirectory
 
 Add-Type -AssemblyName System.Windows.Forms
 
 Add-Type -AssemblyName PresentationCore,PresentationFramework
 
-$Date = Get-Date -format "MMddyyyy"
+$Date = Get-Date -format "MM/dd/yyyy"
 
-$Domain="@domain"
+$Forest = Get-ADDomain -Current LocalComputer | Select-Object -expand Forest
 
 $Logged_In_User = whoami /upn
 
-$Logged_In_Username = $Logged_In_User.Replace('@domain', '')
+$Logged_In_User = $Logged_In_User.Replace($Forest, '')
+
+$Logged_In_User = 
+
+Write-Host $Logged_In_Username
 
 $Form = New-Object System.Windows.Forms.Form
 $Form.StartPosition = 'CenterScreen'
@@ -21,12 +25,13 @@ $Menu_Bar = New-Object System.Windows.Forms.MenuStrip
 $File_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $New_Game_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $Load_Game_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
+$View_Score_And_Stats_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $Windows_General_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $DHCP_DNS_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
-$Boot_Process_Strip_Menu_Item_Learn= New-Object System.Windows.Forms.ToolStripMenuItem
-$Boot_Process_Strip_Menu_Item_Practice= New-Object System.Windows.Forms.ToolStripMenuItem
-$DHCP_DNS_Strip_Menu_Item_Practice= New-Object System.Windows.Forms.ToolStripMenuItem
-$DHCP_DNS_Strip_Menu_Item_Practice_2= New-Object System.Windows.Forms.ToolStripMenuItem
+$Windows_General_Strip_Menu_Item_Learn = New-Object System.Windows.Forms.ToolStripMenuItem
+$Windows_General_Strip_Menu_Item_Practice = New-Object System.Windows.Forms.ToolStripMenuItem
+$DHCP_DNS_Strip_Menu_Item_Practice = New-Object System.Windows.Forms.ToolStripMenuItem
+$DHCP_DNS_Strip_Menu_Item_Practice_2 = New-Object System.Windows.Forms.ToolStripMenuItem
 
 $ButtonTypeOk = [System.Windows.MessageBoxButton]::Ok
 
@@ -61,6 +66,7 @@ $Body.Font = 'Verdana,11,style=Bold'
 $Body.Location = New-Object System.Drawing.Point(320,80)
 
 $Input_Box = New-Object System.Windows.Forms.TextBox
+$Input_Box.Name = "Input_Box"
 $Input_Box.Location = New-Object System.Drawing.Point(380,250)
 $Input_Box.Size = New-Object System.Drawing.Size(380,250)
 
@@ -68,8 +74,8 @@ $Menu_Bar.Items.AddRange(@(
 $File_Menu_Item,
 $Windows_General_Strip_Menu_Item,
 $DHCP_DNS_Strip_Menu_Item,
-$Boot_Process_Strip_Menu_Item_Learn,
-$Boot_Process_Strip_Menu_Item_Practice))
+$Windows_General_Strip_Menu_Item_Learn,
+$Windows_General_Strip_Menu_Item_Practice))
 
 ## start File menu item ##
 
@@ -85,9 +91,16 @@ $Load_Game_Strip_Menu_Item.Name = "Load_Game_Strip_Menu_Item"
 $Load_Game_Strip_Menu_Item.Size = New-Object System.Drawing.Size(152, 22)
 $Load_Game_Strip_Menu_Item.Text = "Load Game"
 
+$View_Score_And_Stats_Strip_Menu_Item.Name= "View_Score_And_Stats_Strip_Menu_Item"
+$View_Score_And_Stats_Strip_Menu_Item.Size = New-Object System.Drawing.Size(152, 22)
+$View_Score_And_Stats_Strip_Menu_Item.Text = "View Score + Stats"
+
 $File_Menu_Item.DropDownItems.AddRange(@($New_Game_Strip_Menu_Item, $Load_Game_Strip_Menu_Item))
 
-function On_Click_New_Game_Strip_Menu_Item($Sender,$e){     
+function On_Click_New_Game_Strip_Menu_Item($Sender,$e){  
+
+	$Form.Controls.RemoveByKey("The_Submit_Button")
+	
     $MessageBoxTitle = "New game file creation"
 
     $MessageBoxBody = "By starting a new game, a new csv file will be created on your desktop to track your score. Continue?"
@@ -117,6 +130,8 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 
     if($New_Game_Filename_Csv -eq $New_Game_File_CheckSum){
 		
+	$Form.Controls.AddRange(@($Menu_Bar))
+	
 		## Fix This PArt!
 
     $MessageBoxTitle = "File creation error."
@@ -138,12 +153,16 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
     $global:Game_Score_File = "C:\Users\administrator\desktop\$New_Game_Filename_Csv_Rename"
 
     $Form.Text = "EleetShell - Current score file: $New_Game_Filename_Csv_Rename"
+	
+	$File_Menu_Item.DropDownItems.AddRange(@($New_Game_Strip_Menu_Item, $Load_Game_Strip_Menu_Item, $View_Score_And_Stats_Strip_Menu_Item))
 
     }
 
     if($New_Game_Filename.IndexOfAny([System.IO.Path]::GetInvalidFileNameChars()) -ne -1)
 
     {
+		
+	$Form.Controls.AddRange(@($Menu_Bar))
 
     $MessageBoxTitle = "File name contains invalid characters"
 
@@ -156,6 +175,8 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
     }
 
     else{
+		
+	$Form.Controls.AddRange(@($Menu_Bar))
 
     $New_Game_File = New-Item C:\Users\administrator\desktop\$New_Game_Filename_Csv -ItemType File
 
@@ -174,6 +195,8 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
     $global:Game_Score_File = "C:\Users\administrator\desktop\$New_Game_Filename_Csv"
 
     $Form.Text = "EleetShell - Current score file: $New_Game_Filename_Csv"
+	
+	$File_Menu_Item.DropDownItems.AddRange(@($New_Game_Strip_Menu_Item, $Load_Game_Strip_Menu_Item, $View_Score_And_Stats_Strip_Menu_Item))
 
     }
 
@@ -181,6 +204,8 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 }
 
 function On_Click_Load_Game_Strip_Menu_Item($Sender,$e){ 
+
+$Form.Controls.AddRange(@($Menu_Bar))
 
 Add-Type -AssemblyName System.Windows.Forms
 $OpenFileDialog = New-Object System.Windows.Forms.OpenFileDialog
@@ -196,7 +221,7 @@ if($CSV_Header_Check -ne "Problem,Result,Date,Points"){
 
 $MessageBoxTitle = "Incompatible csv file"
 
-$MessageBoxBody = "Selected CSV file is incompatible with EleetShell due to header mismatch. Please select appropriate."
+$MessageBoxBody = "Selected CSV file is incompatible with EleetShell due to header mismatch. Please select appropriate CSV."
 
 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconSuccess)
 
@@ -212,13 +237,29 @@ $Form.Text = "EleetShell - Current score file: $CSV_Filename"
 
 $CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
 
+$File_Menu_Item.DropDownItems.AddRange(@($New_Game_Strip_Menu_Item, $Load_Game_Strip_Menu_Item, $View_Score_And_Stats_Strip_Menu_Item))
+
 }
 
+}
+
+function On_Click_View_Score_And_Stats_Strip_Menu_Item{
+	
+$Form.Controls.RemoveByKey("The_Submit_Button")
+
+$Form.Controls.RemoveByKey("Input_Box")
+
+$Table_Data = Get-Content -Path $Game_Score_File | Format-Table | Out-String
+
+$Body.Text = $Table_Data
+	
 }
 
 $New_Game_Strip_Menu_Item.Add_Click( { On_Click_New_Game_Strip_Menu_Item $New_Game_Strip_Menu_Item $EventArgs} )
 
 $Load_Game_Strip_Menu_Item.Add_Click( { On_Click_Load_Game_Strip_Menu_Item $Load_Game_Strip_Menu_Item $EventArgs} )
+
+$View_Score_And_Stats_Strip_Menu_Item.Add_Click( { On_Click_View_Score_And_Stats_Strip_Menu_Item $View_Score_And_Stats_Strip_Menu_Item $EventArgs} )
 
 ## end File menu item ##
 
@@ -228,9 +269,9 @@ $Windows_General_Strip_Menu_Item.Name = "Windows_General_Strip_Menu_Item"
 $Windows_General_Strip_Menu_Item.Size = New-Object System.Drawing.Size(35, 20)
 $Windows_General_Strip_Menu_Item.Text = "Windows General"
 
-$Boot_Process_Strip_Menu_Item_Learn.Name = "Boot_Process_Strip_Menu_Item_Learn"
-$Boot_Process_Strip_Menu_Item_Learn.Size = New-Object System.Drawing.Size(152, 22)
-$Boot_Process_Strip_Menu_Item_Learn.Text = "Boot Process #1"
+$Windows_General_Strip_Menu_Item_Learn.Name = "Windows_General_Strip_Menu_Item_Learn"
+$Windows_General_Strip_Menu_Item_Learn.Size = New-Object System.Drawing.Size(152, 22)
+$Windows_General_Strip_Menu_Item_Learn.Text = "Windows General #1"
 
 ## end Windows General menu item ##
 
@@ -238,35 +279,49 @@ $DHCP_DNS_Strip_Menu_Item.Name = "DHCP_DNS_Strip_Menu_Item"
 $DHCP_DNS_Strip_Menu_Item.Size = New-Object System.Drawing.Size(51, 20)
 $DHCP_DNS_Strip_Menu_Item.Text = "DHCP + DNS"
 
-$The_Submit_Button = New-Object System.Windows.Forms.Button
+## Windows General #1 ##
 
-$The_Submit_Button.Text= "Submit"
-
-$The_Submit_Button.AutoSize = $True
-
-$The_Submit_Button.Font = 'Verdana,12,style=Bold'
-
-$The_Submit_Button.ForeColor = 'Blue'
-
-$The_Submit_Button.Location = New-Object System.Drawing.Point(420,300)
-
-$The_Submit_Button.Add_Click({Selected_Practice_Problem})
-
-## Windows Boot Process ##
-
-$Windows_General_Strip_Menu_Item.DropDownItems.AddRange(@($Boot_Process_Strip_Menu_Item_Learn))
+$Windows_General_Strip_Menu_Item.DropDownItems.AddRange(@($Windows_General_Strip_Menu_Item_Learn))
 
 function On_Click_Boot_Process_Strip_Menu_Item_Practice($Sender,$e){     
     $Title.Text= "Practice PowerShell for Windows environment"
 	$Body.Text = ""
 }
 
-$Boot_Process_Strip_Menu_Item_Practice.Add_Click( { On_Click_Boot_Process_Strip_Menu_Item_Practice $Boot_Process_Strip_Menu_Item_Practice $EventArgs} )
+$Windows_General_Strip_Menu_Item_Practice.Add_Click( { On_Click_Boot_Process_Strip_Menu_Item_Practice $Windows_General_Strip_Menu_Item_Practice $EventArgs} )
 
 function On_Click_Boot_Process_Strip_Menu_Item_Learn($Sender,$e){     
     $Title.Text= "Learn Windows environment"
 	$Body.Text = "Using PowerShell, find the computer name (hostname) of this device."
+	
+	$The_Submit_Button = New-Object System.Windows.Forms.Button
+	
+	$The_Submit_Button.Name = "The_Submit_Button"
+
+	$The_Submit_Button.Text = "Submit"
+
+	$The_Submit_Button.AutoSize = $True
+
+	$The_Submit_Button.Font = 'Verdana,12,style=Bold'
+
+	$The_Submit_Button.ForeColor = 'Blue'
+
+	$The_Submit_Button.Location = New-Object System.Drawing.Point(420,300)
+
+	$The_Submit_Button.Add_Click({Selected_Practice_Problem})
+	
 	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
+	
+	$Problem_Completed = "hostname"
+	
+	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
+	
+	if ($Problem_Completed_Check -ne $null) {
+	Write-Host "The specified text file contains the string '$Problem_Completed'." } 
+	
+	else {
+		Write-Host "The specified text file does not contain the string '$Problem_Completed'."
+	}
 }
 
 function Selected_Practice_Problem{
@@ -278,12 +333,11 @@ Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb ru
 if ($Body.Text = "Find the computer name (hostname) of your Windows machine. Use PowerShell."){
 	if($Input_Box.Text -eq "hostname"){
 
-    Write-Host 
     $Body.Text = "Find the last time that your Windows machine booted. Use PowerShell. Correct, your answer was $Answer."
 
     $New_Row | Add-Content -Path $Game_Score_File
 
-    $New_Row = New-Object PsObject -Property @{Problem = "Boot Process #1" ; Result = "hostname" ; Date = $Date ; Points = "1" }
+    $New_Row = New-Object PsObject -Property @{Problem = "Windows General #1" ; Result = "hostname" ; Date = $Date ; Points = "1" }
     
     $New_Results += $New_Row
 
@@ -296,7 +350,7 @@ if ($Body.Text = "Find the computer name (hostname) of your Windows machine. Use
 	}
 }
 
-$Boot_Process_Strip_Menu_Item_Learn.Add_Click( { On_Click_Boot_Process_Strip_Menu_Item_Learn $Boot_Process_Strip_Menu_Item_Learn $EventArgs} )
+$Windows_General_Strip_Menu_Item_Learn.Add_Click( { On_Click_Boot_Process_Strip_Menu_Item_Learn $Windows_General_Strip_Menu_Item_Learn $EventArgs} )
 
 ## DHCP & DNS ##
 

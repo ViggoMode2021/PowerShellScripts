@@ -202,7 +202,26 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 
 	}
 }
+<#
+function Dropdown_Problem_Completed_Check{
 
+$Problem_Completed_Hostname = "hostname"
+	
+$Problem_Completed_Hostname = Select-String $Game_Score_File -Pattern $Problem_Completed_Hostname
+
+if($Problem_Completed_Hostname -ne $null) {
+$Windows_General_Strip_Menu_Item_Learn.Text = "Windows General #1 ✓"
+$Windows_General_Strip_Menu_Item_Learn.ForeColor = "Green"
+
+} 
+
+else{
+	
+$Windows_General_Strip_Menu_Item_Learn.Text = "Windows General #1"
+}
+
+}
+#>
 function On_Click_Load_Game_Strip_Menu_Item($Sender,$e){ 
 
 $Form.Controls.AddRange(@($Menu_Bar))
@@ -239,10 +258,30 @@ $CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expa
 
 $File_Menu_Item.DropDownItems.AddRange(@($New_Game_Strip_Menu_Item, $Load_Game_Strip_Menu_Item, $View_Score_And_Stats_Strip_Menu_Item))
 
+Invoke-Expression Dropdown_Problem_Completed_Check
+
+}
+}
+<#
+function Dropdown_Problem_Completed_Check{
+
+$Problem_Completed_Hostname = "hostname"
+	
+$Problem_Completed_Hostname = Select-String $Game_Score_File -Pattern $Problem_Completed_Hostname
+
+if($Problem_Completed_Hostname -ne $null) {
+$Windows_General_Strip_Menu_Item_Learn.Text = "Windows General #1 ✓"
+$Windows_General_Strip_Menu_Item_Learn.ForeColor = 'Green'
+
+} 
+
+else {
+	
+$Windows_General_Strip_Menu_Item_Learn.Text = "Windows General #1"
 }
 
 }
-
+#>
 function On_Click_View_Score_And_Stats_Strip_Menu_Item{
 	
 $Form.Controls.RemoveByKey("The_Submit_Button")
@@ -316,11 +355,11 @@ function On_Click_Boot_Process_Strip_Menu_Item_Learn($Sender,$e){
 	
 	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
 	
-	if ($Problem_Completed_Check -ne $null) {
-	Write-Host "The specified text file contains the string '$Problem_Completed'." } 
+	if($Problem_Completed_Check -ne $null) {
+	$Title.Text= "Learn Windows environment (COMPLETED)" } 
 	
 	else {
-		Write-Host "The specified text file does not contain the string '$Problem_Completed'."
+	$Title.Text= "Learn Windows environment"
 	}
 }
 

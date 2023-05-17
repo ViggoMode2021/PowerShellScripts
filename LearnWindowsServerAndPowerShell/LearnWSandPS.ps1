@@ -1,4 +1,4 @@
-#Import-Module ActiveDirectory
+Import-Module ActiveDirectory
 
 Add-Type -AssemblyName System.Windows.Forms
 
@@ -6,20 +6,18 @@ Add-Type -AssemblyName PresentationCore,PresentationFramework
 
 $Date = Get-Date -format "MM/dd/yyyy"
 
-#$Forest = Get-ADDomain -Current LocalComputer | Select-Object -expand Forest
+$Forest = Get-ADDomain -Current LocalComputer | Select-Object -expand Forest
 
 $Logged_In_User = whoami /upn
 
-$Logged_In_User = 'rva' #$Logged_In_User.Replace($Forest, '')
+$Logged_In_User = $Logged_In_User.Replace($Forest, '')
 
-$Logged_In_User = 
-
-Write-Host $Logged_In_Username
+$Logged_In_User = $Logged_In_User.Replace("@", '')
 
 $Form = New-Object System.Windows.Forms.Form
 $Form.StartPosition = 'CenterScreen'
 
-$Form.Text = "EleetShell - Practice Windows Server and PowerShell!"
+$Form.Text = "EleetShell - Practice Windows Server and PowerShell! | No game score file currently selected"
 
 $Menu_Bar = New-Object System.Windows.Forms.MenuStrip
 $File_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
@@ -113,20 +111,10 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 	$New_Game_Filename = [Microsoft.VisualBasic.Interaction]::InputBox('Enter the filename', 'Enter the filename')
 
     $New_Game_Filename_Csv = "$New_Game_Filename.csv"
-	
-	<#
-	
-	$Logged_In_User = whoami /upn
-
-	$Logged_In_Username = $Logged_In_User.Replace('@domain', '')
-	
-	ADD THIS AFTER
-	
-	#>
 		
 	#New-Item C:\Users\Administrator\desktop\$New_Game_Filename.csv -ItemType File
 
-    $New_Game_File_CheckSum = Get-ChildItem "C:\Users\administrator\desktop" -recurse | where {$_.name -match $New_Game_Filename_Csv} | select-object -ExpandProperty name
+    $New_Game_File_CheckSum = Get-ChildItem "C:\Users\administrator\desktop" -recurse | Where {$_.name -match $New_Game_Filename_Csv} | select-object -ExpandProperty name
 
     if($New_Game_Filename_Csv -eq $New_Game_File_CheckSum){
 		
@@ -150,7 +138,7 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
 
-    $global:Game_Score_File = "C:\Users\rva\desktop\$New_Game_Filename_Csv_Rename"
+    $global:Game_Score_File = "C:\Users\$Logged_In_User\desktop\$New_Game_Filename_Csv_Rename"
 
     $Form.Text = "EleetShell - Current score file: $New_Game_Filename_Csv_Rename"
 	
@@ -178,7 +166,7 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 		
 	$Form.Controls.AddRange(@($Menu_Bar))
 
-    $New_Game_File = New-Item C:\Users\rva\desktop\$New_Game_Filename_Csv -ItemType File
+    $New_Game_File = New-Item C:\Users\$Logged_In_User\desktop\$New_Game_Filename_Csv -ItemType File
 
     $File = "$New_Game_File"
     $Data = Get-Content -Path $File
@@ -192,7 +180,7 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconSuccess)
 
-    $global:Game_Score_File = "C:\Users\rva\desktop\$New_Game_Filename_Csv"
+    $global:Game_Score_File = "C:\Users\$Logged_In_User\desktop\$New_Game_Filename_Csv"
 
     $Form.Text = "EleetShell - Current score file: $New_Game_Filename_Csv"
 	
@@ -209,15 +197,14 @@ $Problem_Completed_Hostname = "hostname"
 	
 $Problem_Completed_Hostname = Select-String $Game_Score_File -Pattern $Problem_Completed_Hostname
 
-if($Problem_Completed_Hostname -ne $null) {
-$Windows_General_Strip_Menu_Item_Learn.Text = "Windows General #1 ✓"
-$Windows_General_Strip_Menu_Item_Learn.ForeColor = "Green"
-
+if($Problem_Completed_Hostname -ne $null){
+$Windows_General_Strip_Menu_Item_Learn.Text = 'Windows General #1'
+$Windows_General_Strip_Menu_Item_Learn.ForeColor = 'Green'
 } 
 
 else{
 	
-$Windows_General_Strip_Menu_Item_Learn.Text = "Windows General #1"
+$Windows_General_Strip_Menu_Item_Learn.Text = 'Windows General #1'
 }
 
 }
@@ -262,26 +249,7 @@ Invoke-Expression Dropdown_Problem_Completed_Check
 
 }
 }
-<#
-function Dropdown_Problem_Completed_Check{
 
-$Problem_Completed_Hostname = "hostname"
-	
-$Problem_Completed_Hostname = Select-String $Game_Score_File -Pattern $Problem_Completed_Hostname
-
-if($Problem_Completed_Hostname -ne $null) {
-$Windows_General_Strip_Menu_Item_Learn.Text = "Windows General #1 ✓"
-$Windows_General_Strip_Menu_Item_Learn.ForeColor = 'Green'
-
-} 
-
-else {
-	
-$Windows_General_Strip_Menu_Item_Learn.Text = "Windows General #1"
-}
-
-}
-#>
 function On_Click_View_Score_And_Stats_Strip_Menu_Item{
 	
 $Form.Controls.RemoveByKey("The_Submit_Button")
@@ -387,7 +355,7 @@ if ($Body.Text = "Find the computer name (hostname) of your Windows machine. Use
     }
 
 	else{
-		$Body.Text = "Find the last time that your Windows machine booted. Use PowerShell. Incorrect, your answer was $Answer."}
+		$Body.Text = "Find the computer name (hostname) of your Windows machine. Use PowerShell. Incorrect, your answer was $Answer."}
 	}
 }
 

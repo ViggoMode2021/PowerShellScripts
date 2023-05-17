@@ -1,4 +1,4 @@
-Import-Module ActiveDirectory
+#Import-Module ActiveDirectory
 
 Add-Type -AssemblyName System.Windows.Forms
 
@@ -6,11 +6,11 @@ Add-Type -AssemblyName PresentationCore,PresentationFramework
 
 $Date = Get-Date -format "MM/dd/yyyy"
 
-$Forest = Get-ADDomain -Current LocalComputer | Select-Object -expand Forest
+#$Forest = Get-ADDomain -Current LocalComputer | Select-Object -expand Forest
 
 $Logged_In_User = whoami /upn
 
-$Logged_In_User = $Logged_In_User.Replace($Forest, '')
+$Logged_In_User = 'rva' #$Logged_In_User.Replace($Forest, '')
 
 $Logged_In_User = 
 
@@ -150,7 +150,7 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
 
-    $global:Game_Score_File = "C:\Users\administrator\desktop\$New_Game_Filename_Csv_Rename"
+    $global:Game_Score_File = "C:\Users\rva\desktop\$New_Game_Filename_Csv_Rename"
 
     $Form.Text = "EleetShell - Current score file: $New_Game_Filename_Csv_Rename"
 	
@@ -178,7 +178,7 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 		
 	$Form.Controls.AddRange(@($Menu_Bar))
 
-    $New_Game_File = New-Item C:\Users\administrator\desktop\$New_Game_Filename_Csv -ItemType File
+    $New_Game_File = New-Item C:\Users\rva\desktop\$New_Game_Filename_Csv -ItemType File
 
     $File = "$New_Game_File"
     $Data = Get-Content -Path $File
@@ -192,7 +192,7 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconSuccess)
 
-    $global:Game_Score_File = "C:\Users\administrator\desktop\$New_Game_Filename_Csv"
+    $global:Game_Score_File = "C:\Users\rva\desktop\$New_Game_Filename_Csv"
 
     $Form.Text = "EleetShell - Current score file: $New_Game_Filename_Csv"
 	
@@ -202,7 +202,7 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 
 	}
 }
-<#
+
 function Dropdown_Problem_Completed_Check{
 
 $Problem_Completed_Hostname = "hostname"
@@ -221,7 +221,7 @@ $Windows_General_Strip_Menu_Item_Learn.Text = "Windows General #1"
 }
 
 }
-#>
+
 function On_Click_Load_Game_Strip_Menu_Item($Sender,$e){ 
 
 $Form.Controls.AddRange(@($Menu_Bar))
@@ -372,11 +372,13 @@ Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb ru
 if ($Body.Text = "Find the computer name (hostname) of your Windows machine. Use PowerShell."){
 	if($Input_Box.Text -eq "hostname"){
 
+    Invoke-Expression Dropdown_Problem_Completed_Check
+
     $Body.Text = "Find the last time that your Windows machine booted. Use PowerShell. Correct, your answer was $Answer."
 
     $New_Row | Add-Content -Path $Game_Score_File
 
-    $New_Row = New-Object PsObject -Property @{Problem = "Windows General #1" ; Result = "hostname" ; Date = $Date ; Points = "1" }
+    $New_Row = New-Object PsObject -Property @{Problem = "Windows General #1" ; Result = "hostname" ; Date = $Date ; Points = "1"}
     
     $New_Results += $New_Row
 

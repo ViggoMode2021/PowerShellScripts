@@ -1,4 +1,4 @@
-Import-Module ActiveDirectory
+#Import-Module ActiveDirectory
 
 Add-Type -AssemblyName System.Windows.Forms
 
@@ -6,13 +6,13 @@ Add-Type -AssemblyName PresentationCore,PresentationFramework
 
 $Date = Get-Date -format "MM/dd/yyyy"
 
-$Forest = Get-ADDomain -Current LocalComputer | Select-Object -expand Forest
+#$Forest = Get-ADDomain -Current LocalComputer | Select-Object -expand Forest
 
-$Logged_In_User = whoami /upn
+#$Logged_In_User = whoami /upn
 
-$Logged_In_User = $Logged_In_User.Replace($Forest, '')
+#$Logged_In_User = $Logged_In_User.Replace($Forest, '')
 
-$Logged_In_User = $Logged_In_User.Replace("@", '')
+$Logged_In_User = 'rva' # $Logged_In_User.Replace("@", '')
 
 $Form = New-Object System.Windows.Forms.Form
 $Form.StartPosition = 'CenterScreen'
@@ -297,7 +297,10 @@ function On_Click_Boot_Process_Strip_Menu_Item_Practice($Sender,$e){
 
 $Windows_General_Strip_Menu_Item_Practice.Add_Click( { On_Click_Boot_Process_Strip_Menu_Item_Practice $Windows_General_Strip_Menu_Item_Practice $EventArgs} )
 
-function On_Click_Boot_Process_Strip_Menu_Item_Learn($Sender,$e){     
+function On_Click_Boot_Process_Strip_Menu_Item_Learn($Sender,$e){
+
+    $StopWatch = [system.diagnostics.stopwatch]::StartNew()
+         
     $Title.Text= "Learn Windows environment"
 	$Body.Text = "Using PowerShell, find the computer name (hostname) of this device."
 	
@@ -391,3 +394,16 @@ $Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button))
 
 ## Form dialogue
 $Form.ShowDialog()
+
+
+<#
+
+
+$Time = [System.Diagnostics.Stopwatch]::StartNew()
+    $CurrentTime = $Time.Elapsed
+    write-host $([string]::Format("`rTime: {0:d2}:{1:d2}:{2:d2}",
+                                  $CurrentTime.hours,
+                                  $CurrentTime.minutes,
+                                  $CurrentTime.seconds)) -nonewline
+
+                                  #>

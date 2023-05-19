@@ -1,18 +1,18 @@
-#Import-Module ActiveDirectory
+Import-Module ActiveDirectory
 
 Add-Type -AssemblyName System.Windows.Forms
 
 Add-Type -AssemblyName PresentationCore,PresentationFramework
 
-$Date = Get-Date -format "MM/dd/yyyy"
+$Date = Get-Date -format "MMddyy"
 
-#$Forest = Get-ADDomain -Current LocalComputer | Select-Object -expand Forest
+$Forest = Get-ADDomain -Current LocalComputer | Select-Object -expand Forest
 
-#$Logged_In_User = whoami /upn
+$Logged_In_User = whoami /upn
 
-#$Logged_In_User = $Logged_In_User.Replace($Forest, '')
+$Logged_In_User = $Logged_In_User.Replace($Forest, '')
 
-$Logged_In_User = 'rva' # $Logged_In_User.Replace("@", '')
+$Logged_In_User = $Logged_In_User.Replace("@", '')
 
 $Form = New-Object System.Windows.Forms.Form
 $Form.StartPosition = 'CenterScreen'
@@ -103,16 +103,28 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 
     $MessageBoxBody = "By starting a new game, a new csv file will be created on your desktop to track your score. Continue?"
 
-    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeYesNoCancel,$MessageIconWarning)
+	$Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeYesNoCancel,$MessageIconWarning)
 	
 	if($Confirmation -eq 'Yes'){
 		
 	[void][System.Reflection.Assembly]::LoadWithPartialName('Microsoft.VisualBasic') 
 	$New_Game_Filename = [Microsoft.VisualBasic.Interaction]::InputBox('Enter the filename', 'Enter the filename')
+	
+	if ($New_Game_Filename -eq ""){
+		
+	$MessageBoxTitle = "Please name your file."
+
+    $MessageBoxBody = "Filename cannot be null. Please name your score file."
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconWarning)
+	
+	Invoke-Expression On_Click_New_Game_Strip_Menu_Item
+	
+	}
+	
+	else{	
 
     $New_Game_Filename_Csv = "$New_Game_Filename.csv"
-		
-	#New-Item C:\Users\Administrator\desktop\$New_Game_Filename.csv -ItemType File
 
     $New_Game_File_CheckSum = Get-ChildItem "C:\Users\administrator\desktop" -recurse | Where {$_.name -match $New_Game_Filename_Csv} | select-object -ExpandProperty name
 
@@ -120,19 +132,19 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 		
 	$Form.Controls.AddRange(@($Menu_Bar))
 	
-		## Fix This PArt!
+		## Fix This Part!
 
     $MessageBoxTitle = "File creation error."
 
-    $MessageBoxBody = "$New_Game_File_CheckSum already exists. Creating a file with the name $New_Game_Filename$Date.csv"
-
+    $MessageBoxBody = "$New_Game_File_CheckSum already exists. Please try again."
+	
     $New_Game_File = New-Item C:\Users\administrator\desktop\$New_Game_Filename$Date.csv -ItemType File
 	
 	$New_Game_Filename_Csv_Rename = "$New_Game_Filename$Date.csv"
 
     $File = "$New_Game_File"
     $Data = Get-Content -Path $File
-    $Header = "Problem,Result,Date,Points"
+    $Header = "Problem,Result,Date,CompletionTime,Points"
     Set-Content $File -Value $Header
     Add-Content -Path $File -Value $Data
 
@@ -143,7 +155,7 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
     $Form.Text = "EleetShell - Current score file: $New_Game_Filename_Csv_Rename"
 	
 	$File_Menu_Item.DropDownItems.AddRange(@($New_Game_Strip_Menu_Item, $Load_Game_Strip_Menu_Item, $View_Score_And_Stats_Strip_Menu_Item))
-
+	
     }
 
     if($New_Game_Filename.IndexOfAny([System.IO.Path]::GetInvalidFileNameChars()) -ne -1)
@@ -170,7 +182,7 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 
     $File = "$New_Game_File"
     $Data = Get-Content -Path $File
-    $Header = "Problem,Result,Date,Points"
+    $Header = "Problem,Result,Date,CompletionTime,Points"
     Set-Content $File -Value $Header
     Add-Content -Path $File -Value $Data
 
@@ -187,11 +199,15 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 	$File_Menu_Item.DropDownItems.AddRange(@($New_Game_Strip_Menu_Item, $Load_Game_Strip_Menu_Item, $View_Score_And_Stats_Strip_Menu_Item))
 
     }
+	
+	}
 
 	}
 }
 
 function Dropdown_Problem_Completed_Check{
+	
+$Timer_Start_Time.Stop()
 
 $Problem_Completed_Hostname = "hostname"
 	
@@ -211,6 +227,8 @@ $Windows_General_Strip_Menu_Item_Learn.Text = 'Windows General #1'
 
 function On_Click_Load_Game_Strip_Menu_Item($Sender,$e){ 
 
+$Timer_Start_Time.Stop()
+
 $Form.Controls.AddRange(@($Menu_Bar))
 
 Add-Type -AssemblyName System.Windows.Forms
@@ -218,13 +236,13 @@ $OpenFileDialog = New-Object System.Windows.Forms.OpenFileDialog
 $OpenFileDialog.Title = "Please Select File"
 $OpenFileDialog.InitialDirectory = $initialDirectory
 $OpenFileDialog.filter = "(*.csv)|*.csv|SpreadSheet (*.xlsx)|*.xlsx'"
-# Out-Null supresses the "OK" after selecting the file.
+
 $OpenFileDialog.ShowDialog() | Out-Null
 
 $CSV_Header_Check = (Get-Content $OpenFileDialog.FileName | Select-Object -First 1).Split($csvdelimiter)
 
-if($CSV_Header_Check -ne "Problem,Result,Date,Points"){
-
+if($CSV_Header_Check -ne "Problem,Result,Date,CompletionTime,Points"){ 
+ 
 $MessageBoxTitle = "Incompatible csv file"
 
 $MessageBoxBody = "Selected CSV file is incompatible with EleetShell due to header mismatch. Please select appropriate CSV."
@@ -251,6 +269,8 @@ Invoke-Expression Dropdown_Problem_Completed_Check
 }
 
 function On_Click_View_Score_And_Stats_Strip_Menu_Item{
+	
+$Timer_Start_Time.Stop()
 	
 $Form.Controls.RemoveByKey("The_Submit_Button")
 
@@ -298,9 +318,13 @@ function On_Click_Boot_Process_Strip_Menu_Item_Practice($Sender,$e){
 $Windows_General_Strip_Menu_Item_Practice.Add_Click( { On_Click_Boot_Process_Strip_Menu_Item_Practice $Windows_General_Strip_Menu_Item_Practice $EventArgs} )
 
 function On_Click_Boot_Process_Strip_Menu_Item_Learn($Sender,$e){
+	
+	$Timer_Start_Time.Stop()
 
-    $StopWatch = [system.diagnostics.stopwatch]::StartNew()
-         
+    $Timer = [System.Diagnostics.Stopwatch]::StartNew()
+	
+	$global:Timer_Start_Time = $Timer
+	
     $Title.Text= "Learn Windows environment"
 	$Body.Text = "Using PowerShell, find the computer name (hostname) of this device."
 	
@@ -342,18 +366,27 @@ Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb ru
 
 if ($Body.Text = "Find the computer name (hostname) of your Windows machine. Use PowerShell."){
 	if($Input_Box.Text -eq "hostname"){
+		
+	$Time_Elapsed = $Timer_Start_Time.Elapsed
 
+	$Timer = $([string]::Format("`{0:d2}:{1:d2}:{2:d2}",
+	$Time_Elapsed.hours,
+	$Time_Elapsed.minutes,
+	$Time_Elapsed.seconds))
+	
+	$New_Row | Add-Content -Path $Game_Score_File
+
+    $New_Row = New-Object PsObject -Property @{Problem = "Windows General #1" ; Result = "hostname" ; CompletionTime = $Timer ; Date = $Date ; Points = "1"}
+	
+    $New_Results += $New_Row
+
+    $New_Results | Export-CSV -append $Game_Score_File
+	
+	$Timer.Stop
+	
     Invoke-Expression Dropdown_Problem_Completed_Check
 
     $Body.Text = "Find the last time that your Windows machine booted. Use PowerShell. Correct, your answer was $Answer."
-
-    $New_Row | Add-Content -Path $Game_Score_File
-
-    $New_Row = New-Object PsObject -Property @{Problem = "Windows General #1" ; Result = "hostname" ; Date = $Date ; Points = "1"}
-    
-    $New_Results += $New_Row
-
-    $New_Results | Export-csv -append $Game_Score_File
 
     }
 
@@ -370,7 +403,10 @@ $DHCP_DNS_Strip_Menu_Item_Practice.Name = "DHCP_DNS_Strip_Menu_Item_Practice"
 $DHCP_DNS_Strip_Menu_Item_Practice.Size = New-Object System.Drawing.Size(152, 22)
 $DHCP_DNS_Strip_Menu_Item_Practice.Text = "DHCP + DNS #1"
 
-function On_Click_DHCP_DNS_Strip_Menu_Item_Practice($Sender,$e){     
+function On_Click_DHCP_DNS_Strip_Menu_Item_Practice($Sender,$e){ 
+	
+	$Timer_Start_Time.Stop()
+	
     $Title.Text= "Practice PowerShell for DHCP + DNS"
 	$Body.Text = ""
 }
@@ -379,7 +415,10 @@ $DHCP_DNS_Strip_Menu_Item_Practice_2.Name = "DHCP_DNS_Strip_Menu_Item_Practice_2
 $DHCP_DNS_Strip_Menu_Item_Practice_2.Size = New-Object System.Drawing.Size(152, 22)
 $DHCP_DNS_Strip_Menu_Item_Practice_2.Text = "DHCP + DNS #2"
 
-function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_2($Sender,$e){     
+function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_2($Sender,$e){
+
+	$Timer_Start_Time.Stop()
+	
     $Title.Text= "Practice PowerShell for DHCP + DNS #2"
 	$Body.Text = ""
 }
@@ -394,16 +433,3 @@ $Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button))
 
 ## Form dialogue
 $Form.ShowDialog()
-
-
-<#
-
-
-$Time = [System.Diagnostics.Stopwatch]::StartNew()
-    $CurrentTime = $Time.Elapsed
-    write-host $([string]::Format("`rTime: {0:d2}:{1:d2}:{2:d2}",
-                                  $CurrentTime.hours,
-                                  $CurrentTime.minutes,
-                                  $CurrentTime.seconds)) -nonewline
-
-                                  #>

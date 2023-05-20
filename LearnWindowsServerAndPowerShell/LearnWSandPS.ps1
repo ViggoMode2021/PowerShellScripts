@@ -239,13 +239,13 @@ $DHCP_DNS_Strip_Menu_Item_Practice.Text = 'DHCP + DNS #1'
 
 }
 
-$Problem_Completed_DHCP_2 = "Create an active IPv4 DHCP scope named 'test' with a start range of 172.16.0.100, end range of 172.16.0.200 and subnet mask of 255.255.255.0"
+$Problem_Completed_DHCP_2 = "Add-DhcpServerV4Scope -name 'test' -StartRange 172.16.0.100 -Endrange 172.16.0.200 -SubnetMask 255.255.255.0 -State Active"
 	
-$Problem_Completed_DHCP_2 = Select-String $Game_Score_File -Pattern $Problem_Completed_DHCP
+$Problem_Completed_DHCP_2 = Select-String $Game_Score_File -Pattern $Problem_Completed_DHCP_2
 
 if($Problem_Completed_DHCP_2 -ne $null){
-$DHCP_DNS_Strip_Menu_Item_Practice.Text = 'DHCP + DNS #2'
-$DHCP_DNS_Strip_Menu_Item_Practice.ForeColor = 'Green'
+$DHCP_DNS_Strip_Menu_Item_Practice_2.Text = 'DHCP + DNS #2'
+$DHCP_DNS_Strip_Menu_Item_Practice_2.ForeColor = 'Green'
 } 
 
 else{
@@ -310,7 +310,11 @@ $Form.Controls.RemoveByKey("Input_Box")
 $Table_Data = Get-Content -Path $Game_Score_File | Format-Table | Out-String
 
 $Body.Text = $Table_Data
-	
+
+$All_Points = Get-Content -Path $Game_Score_File | Select-Object Points
+
+Write-Host $All_Points
+
 }
 
 $New_Game_Strip_Menu_Item.Add_Click( { On_Click_New_Game_Strip_Menu_Item $New_Game_Strip_Menu_Item $EventArgs} )

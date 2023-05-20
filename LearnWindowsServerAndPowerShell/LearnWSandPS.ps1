@@ -221,6 +221,37 @@ $Windows_General_Strip_Menu_Item_Learn.ForeColor = 'Green'
 else{
 	
 $Windows_General_Strip_Menu_Item_Learn.Text = 'Windows General #1'
+
+}
+
+$Problem_Completed_DHCP = "Add-DhcpServerInDC -DNSName dhcp-practice -IPAddress 172.16.0.50"
+	
+$Problem_Completed_DHCP = Select-String $Game_Score_File -Pattern $Problem_Completed_DHCP
+
+if($Problem_Completed_DHCP -ne $null){
+$DHCP_DNS_Strip_Menu_Item_Practice.Text = 'DHCP + DNS #1'
+$DHCP_DNS_Strip_Menu_Item_Practice.ForeColor = 'Green'
+} 
+
+else{
+	
+$DHCP_DNS_Strip_Menu_Item_Practice.Text = 'DHCP + DNS #1'
+
+}
+
+$Problem_Completed_DHCP_2 = "Create an active IPv4 DHCP scope named 'test' with a start range of 172.16.0.100, end range of 172.16.0.200 and subnet mask of 255.255.255.0"
+	
+$Problem_Completed_DHCP_2 = Select-String $Game_Score_File -Pattern $Problem_Completed_DHCP
+
+if($Problem_Completed_DHCP_2 -ne $null){
+$DHCP_DNS_Strip_Menu_Item_Practice.Text = 'DHCP + DNS #2'
+$DHCP_DNS_Strip_Menu_Item_Practice.ForeColor = 'Green'
+} 
+
+else{
+	
+$DHCP_DNS_Strip_Menu_Item_Practice.Text = 'DHCP + DNS #2'
+
 }
 
 }
@@ -325,7 +356,9 @@ function On_Click_Boot_Process_Strip_Menu_Item_Learn($Sender,$e){
 	
 	$global:Timer_Start_Time = $Timer
 	
-    $Title.Text= "Learn Windows environment"
+    $Title.Text = "Windows General #!"
+	$Title.ForeColor = 'Blue'
+	
 	$Body.Text = "Using PowerShell, find the computer name (hostname) of this device."
 	
 	$The_Submit_Button = New-Object System.Windows.Forms.Button
@@ -351,10 +384,13 @@ function On_Click_Boot_Process_Strip_Menu_Item_Learn($Sender,$e){
 	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
 	
 	if($Problem_Completed_Check -ne $null) {
-	$Title.Text= "Learn Windows environment (COMPLETED)" } 
+	$Title.Text = "Learn Windows environment (COMPLETED)"
+	$Title.ForeColor = 'Green'} 
 	
 	else {
-	$Title.Text= "Learn Windows environment"
+		
+	$Title.Text = "Windows General #1"
+	
 	}
 }
 
@@ -389,15 +425,25 @@ if ($Body.Text = "Find the computer name (hostname) of your Windows machine. Use
     $Body.Text = "Find the last time that your Windows machine booted. Use PowerShell. Correct, your answer was $Answer."
 
     }
+	
+	if($Input_Box.Text -eq ""){
+		
+		 $MessageBoxTitle = "Null input box"
+
+		 $MessageBoxBody = "Input box is null. Please type an answer to see if it is correct."
+		 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
 
 	else{
-		$Body.Text = "Find the computer name (hostname) of your Windows machine. Use PowerShell. Incorrect, your answer was $Answer."}
-	}
+		$Body.Text = "Find the computer name (hostname) of your Windows machine. Use PowerShell."}
+	} 
+}
+
 }
 
 $Windows_General_Strip_Menu_Item_Learn.Add_Click( { On_Click_Boot_Process_Strip_Menu_Item_Learn $Windows_General_Strip_Menu_Item_Learn $EventArgs} )
 
-## DHCP & DNS ##
+## DHCP & DNS #1 ##
 
 $DHCP_DNS_Strip_Menu_Item_Practice.Name = "DHCP_DNS_Strip_Menu_Item_Practice"
 $DHCP_DNS_Strip_Menu_Item_Practice.Size = New-Object System.Drawing.Size(152, 22)
@@ -406,10 +452,98 @@ $DHCP_DNS_Strip_Menu_Item_Practice.Text = "DHCP + DNS #1"
 function On_Click_DHCP_DNS_Strip_Menu_Item_Practice($Sender,$e){ 
 	
 	$Timer_Start_Time.Stop()
+
+    $Timer = [System.Diagnostics.Stopwatch]::StartNew()
 	
-    $Title.Text= "Practice PowerShell for DHCP + DNS"
-	$Body.Text = ""
+	$global:Timer_Start_Time = $Timer
+	
+    $Title.Text= "Learn DHCP + DNS #1"
+	
+	$Title.ForeColor = 'Blue'
+	
+	$Body.Text = "Create a DHCP server in the Domain controller named dhcp-practice with an IP address of 172.16.0.50"
+	
+	$The_Submit_Button = New-Object System.Windows.Forms.Button
+	
+	$The_Submit_Button.Name = "The_Submit_Button"
+
+	$The_Submit_Button.Text = "Submit"
+
+	$The_Submit_Button.AutoSize = $True
+
+	$The_Submit_Button.Font = 'Verdana,12,style=Bold'
+
+	$The_Submit_Button.ForeColor = 'Blue'
+
+	$The_Submit_Button.Location = New-Object System.Drawing.Point(420,300)
+
+	$The_Submit_Button.Add_Click({Selected_DHCP_DNS_Practice_Problem})
+	
+	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
+	
+	$Problem_Completed = "Add-DhcpServerInDC -DNSName dhcp-practice -IPAddress 172.16.0.50"
+	
+	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
+	
+	if($Problem_Completed_Check -ne $null) {
+	$Title.Text = "DHCP + DNS #1 (COMPLETED)"
+	$Title.ForeColor = 'Green'} 
+	
+	else {
+		
+	$Title.Text = "DHCP + DNS #1"
+	
+	}
 }
+
+function Selected_DHCP_DNS_Practice_Problem{
+
+$Answer = @($Input_Box.Text)
+
+Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb runAs
+
+if ($Body.Text = "Create a DHCP server in the Domain controller named dhcp-practice with an IP address of 172.16.0.50"){
+	if($Input_Box.Text -eq "Add-DhcpServerInDC -DNSName dhcp-practice -IPAddress 172.16.0.50"){
+		
+	$Time_Elapsed = $Timer_Start_Time.Elapsed
+
+	$Timer = $([string]::Format("`{0:d2}:{1:d2}:{2:d2}",
+	$Time_Elapsed.hours,
+	$Time_Elapsed.minutes,
+	$Time_Elapsed.seconds))
+	
+	$New_Row | Add-Content -Path $Game_Score_File
+
+    $New_Row = New-Object PsObject -Property @{Problem = "DHCP + DNS #1" ; Result = "Add-DhcpServerInDC -DNSName dhcp-practice -IPAddress 172.16.0.50" ; CompletionTime = $Timer ; Date = $Date ; Points = "1"}
+	
+    $New_Results += $New_Row
+
+    $New_Results | Export-CSV -append $Game_Score_File
+	
+	$Timer.Stop
+	
+    Invoke-Expression Dropdown_Problem_Completed_Check
+
+    $Body.Text = "Create a DHCP server in the Domain controller named dhcp-practice with an IP address of 172.16.0.50. Correct, your answer was $Answer."
+
+    }
+	
+	if($Input_Box.Text -eq ""){
+		
+		 $MessageBoxTitle = "Null input box"
+
+		 $MessageBoxBody = "Input box is null. Please type an answer to see if it is correct."
+		 
+		 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+	else{
+		$Body.Text = "Find the computer name (hostname) of your Windows machine. Use PowerShell. Incorrect, your answer was $Answer."}
+	}
+}
+
+}
+
+## DHCP & DNS #2 ##
 
 $DHCP_DNS_Strip_Menu_Item_Practice_2.Name = "DHCP_DNS_Strip_Menu_Item_Practice_2"
 $DHCP_DNS_Strip_Menu_Item_Practice_2.Size = New-Object System.Drawing.Size(152, 22)
@@ -419,8 +553,97 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_2($Sender,$e){
 
 	$Timer_Start_Time.Stop()
 	
+	$Timer = [System.Diagnostics.Stopwatch]::StartNew()
+	
+	$global:Timer_Start_Time = $Timer
+	
+    $Title.Text= "Learn DHCP + DNS #2"
+	
+	$Title.ForeColor = 'Blue'
+	
+	$Body.Text = "Create an active IPv4 DHCP scope named 'test' with a start range of 172.16.0.100, end range of 172.16.0.200 and subnet mask of 255.255.255.0"
+	
+	$The_Submit_Button = New-Object System.Windows.Forms.Button
+	
+	$The_Submit_Button.Name = "The_Submit_Button"
+
+	$The_Submit_Button.Text = "Submit"
+
+	$The_Submit_Button.AutoSize = $True
+
+	$The_Submit_Button.Font = 'Verdana,12,style=Bold'
+
+	$The_Submit_Button.ForeColor = 'Blue'
+
+	$The_Submit_Button.Location = New-Object System.Drawing.Point(420,300)
+
+	$The_Submit_Button.Add_Click({Selected_DHCP_DNS_Practice_Problem_2})
+	
+	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
+	
+	$Problem_Completed = "Add-DhcpServerV4Scope -name 'test' -StartRange 172.16.0.100 -Endrange 172.16.0.200 -SubnetMask 255.255.255.0 -State Active"
+	
+	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
+	
+	if($Problem_Completed_Check -ne $null) {
+	$Title.Text = "DHCP + DNS #2 (COMPLETED)"
+	$Title.ForeColor = 'Green'} 
+	
+	else {
+		
+	$Title.Text = "DHCP + DNS #2"
+	
+	}
+	
     $Title.Text= "Practice PowerShell for DHCP + DNS #2"
-	$Body.Text = ""
+	$Body.Text = "Create an active IPv4 DHCP scope named 'test' with a start range of 172.16.0.100, end range of 172.16.0.200 and subnet mask of 255.255.255.0"
+}
+
+function Selected_DHCP_DNS_Practice_Problem_2{
+
+$Answer = @($Input_Box.Text)
+
+Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb runAs
+
+if ($Body.Text = "Create an active IPv4 DHCP scope named 'test' with a start range of 172.16.0.100, end range of 172.16.0.200 and subnet mask of 255.255.255.0"){
+	if($Input_Box.Text -eq "Add-DhcpServerV4Scope -name 'test' -StartRange 172.16.0.100 -Endrange 172.16.0.200 -SubnetMask 255.255.255.0 -State Active"){
+		
+	$Time_Elapsed = $Timer_Start_Time.Elapsed
+
+	$Timer = $([string]::Format("`{0:d2}:{1:d2}:{2:d2}",
+	$Time_Elapsed.hours,
+	$Time_Elapsed.minutes,
+	$Time_Elapsed.seconds))
+	
+	$New_Row | Add-Content -Path $Game_Score_File
+
+    $New_Row = New-Object PsObject -Property @{Problem = "DHCP + DNS #2" ; Result = "Add-DhcpServerV4Scope -name 'test' -StartRange 172.16.0.100 -Endrange 172.16.0.200 -SubnetMask 255.255.255.0 -State Active" ; CompletionTime = $Timer ; Date = $Date ; Points = "1"}
+	
+    $New_Results += $New_Row
+
+    $New_Results | Export-CSV -append $Game_Score_File
+	
+	$Timer.Stop
+	
+    Invoke-Expression Dropdown_Problem_Completed_Check
+
+    $Body.Text = "Create a DHCP scope in the Domain controller named dhcp-practice with an IP address of 172.16.0.50. Correct, your answer was $Answer."
+
+    }
+	
+	if($Input_Box.Text -eq ""){
+		
+		 $MessageBoxTitle = "Null input box"
+
+		 $MessageBoxBody = "Input box is null. Please type an answer to see if it is correct."
+		 
+		 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+	else{
+		$Body.Text = "Create an active IPv4 DHCP scope named 'test' with a start range of 172.16.0.100, end range of 172.16.0.200 and subnet mask of 255.255.255.0Incorrect, your answer was $Answer."}
+	}
+}
+
 }
 
 $DHCP_DNS_Strip_Menu_Item_Practice.Add_Click( { On_Click_DHCP_DNS_Strip_Menu_Item_Practice $DHCP_DNS_Strip_Menu_Item_Practice $EventArgs} )

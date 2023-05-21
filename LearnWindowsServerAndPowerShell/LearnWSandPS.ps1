@@ -4,6 +4,8 @@ Add-Type -AssemblyName System.Windows.Forms
 
 Add-Type -AssemblyName PresentationCore,PresentationFramework
 
+#if($CSV_Header_Check -ne "Problem,Result,Date,CompletionTime,Points"){ 
+
 $Date = Get-Date -format "MMddyy"
 
 $Forest = Get-ADDomain -Current LocalComputer | Select-Object -expand Forest
@@ -13,6 +15,18 @@ $Logged_In_User = whoami /upn
 $Logged_In_User = $Logged_In_User.Replace($Forest, '')
 
 $Logged_In_User = $Logged_In_User.Replace("@", '')
+
+$global:Game_Score_File = $null
+
+<#
+$Recent_Score_File = Get-ChildItem C:\Users\$Logged_In_User\desktop\ -File | Sort-Object LastWriteTime -Descending| Select-Object -First 1
+
+Write-Host $Recent_Score_File
+
+$CSV_Header_Check = (Get-Content $Recent_Score_File | Select-Object -First 1).Split($csvdelimiter)
+
+Write-Host $CSV_Header_Check
+#>
 
 $Form = New-Object System.Windows.Forms.Form
 $Form.StartPosition = 'CenterScreen'
@@ -27,6 +41,7 @@ $View_Score_And_Stats_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStri
 $Windows_General_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $DHCP_DNS_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $Windows_General_Strip_Menu_Item_Learn = New-Object System.Windows.Forms.ToolStripMenuItem
+$Windows_General_Strip_Menu_Item_2 = New-Object System.Windows.Forms.ToolStripMenuItem
 $Windows_General_Strip_Menu_Item_Practice = New-Object System.Windows.Forms.ToolStripMenuItem
 $DHCP_DNS_Strip_Menu_Item_Practice = New-Object System.Windows.Forms.ToolStripMenuItem
 $DHCP_DNS_Strip_Menu_Item_Practice_2 = New-Object System.Windows.Forms.ToolStripMenuItem
@@ -51,7 +66,7 @@ $Title.AutoSize = $true
 
 $Title.Font = 'Verdana,11,style=Bold'
 
-$Title.Location = New-Object System.Drawing.Point(320,20)
+$Title.Location = New-Object System.Drawing.Point(30,40)
 
 $Body = New-Object $Label_Object
 
@@ -61,19 +76,20 @@ $Body.AutoSize = $true
 
 $Body.Font = 'Verdana,11,style=Bold'
 
-$Body.Location = New-Object System.Drawing.Point(320,80)
+$Body.Location = New-Object System.Drawing.Point(30,80)
 
 $Input_Box = New-Object System.Windows.Forms.TextBox
 $Input_Box.Name = "Input_Box"
-$Input_Box.Location = New-Object System.Drawing.Point(380,250)
-$Input_Box.Size = New-Object System.Drawing.Size(380,250)
+$Input_Box.Location = New-Object System.Drawing.Point(30,150)
+$Input_Box.Size = New-Object System.Drawing.Size(180,1000)
 
 $Menu_Bar.Items.AddRange(@(
 $File_Menu_Item,
 $Windows_General_Strip_Menu_Item,
 $DHCP_DNS_Strip_Menu_Item,
 $Windows_General_Strip_Menu_Item_Learn,
-$Windows_General_Strip_Menu_Item_Practice))
+$Windows_General_Strip_Menu_Item_Practice,
+$Windows_General_Strip_Menu_Item_2))
 
 ## start File menu item ##
 
@@ -224,6 +240,21 @@ $Windows_General_Strip_Menu_Item_Learn.Text = 'Windows General #1'
 
 }
 
+$Problem_Completed_Uptime = "systeminfo | find 'Boot Time'"
+	
+$Problem_Completed_Uptime = Select-String $Game_Score_File -Pattern $Problem_Completed_Uptime
+	
+if($Problem_Completed_Uptime -ne $null){
+$Windows_General_Strip_Menu_Item_2.Text = 'Windows General #2'
+$Windows_General_Strip_Menu_Item_2.ForeColor = 'Green'
+} 
+
+else{
+	
+$Windows_General_Strip_Menu_Item_Learn.Text = 'Windows General #1'
+
+}
+
 $Problem_Completed_DHCP = "Add-DhcpServerInDC -DNSName dhcp-practice -IPAddress 172.16.0.50"
 	
 $Problem_Completed_DHCP = Select-String $Game_Score_File -Pattern $Problem_Completed_DHCP
@@ -303,17 +334,7 @@ function On_Click_View_Score_And_Stats_Strip_Menu_Item{
 	
 $Timer_Start_Time.Stop()
 	
-$Form.Controls.RemoveByKey("The_Submit_Button")
-
-$Form.Controls.RemoveByKey("Input_Box")
-
-$Table_Data = Get-Content -Path $Game_Score_File | Format-Table | Out-String
-
-$Body.Text = $Table_Data
-
-$All_Points = Get-Content -Path $Game_Score_File | Select-Object Points
-
-Write-Host $All_Points
+$Table_Data = Import-CSV -Path $Game_Score_File | Out-GridView 
 
 }
 
@@ -335,15 +356,13 @@ $Windows_General_Strip_Menu_Item_Learn.Name = "Windows_General_Strip_Menu_Item_L
 $Windows_General_Strip_Menu_Item_Learn.Size = New-Object System.Drawing.Size(152, 22)
 $Windows_General_Strip_Menu_Item_Learn.Text = "Windows General #1"
 
+$Windows_General_Strip_Menu_Item_2.Name = "Windows_General_Strip_Menu_Item_2"
+$Windows_General_Strip_Menu_Item_2.Size = New-Object System.Drawing.Size(152, 22)
+$Windows_General_Strip_Menu_Item_2.Text = "Windows General #2"
+
 ## end Windows General menu item ##
 
-$DHCP_DNS_Strip_Menu_Item.Name = "DHCP_DNS_Strip_Menu_Item"
-$DHCP_DNS_Strip_Menu_Item.Size = New-Object System.Drawing.Size(51, 20)
-$DHCP_DNS_Strip_Menu_Item.Text = "DHCP + DNS"
-
 ## Windows General #1 ##
-
-$Windows_General_Strip_Menu_Item.DropDownItems.AddRange(@($Windows_General_Strip_Menu_Item_Learn))
 
 function On_Click_Boot_Process_Strip_Menu_Item_Practice($Sender,$e){     
     $Title.Text= "Practice PowerShell for Windows environment"
@@ -377,7 +396,7 @@ function On_Click_Boot_Process_Strip_Menu_Item_Learn($Sender,$e){
 
 	$The_Submit_Button.ForeColor = 'Blue'
 
-	$The_Submit_Button.Location = New-Object System.Drawing.Point(420,300)
+	$The_Submit_Button.Location = New-Object System.Drawing.Point(30,200)
 
 	$The_Submit_Button.Add_Click({Selected_Practice_Problem})
 	
@@ -388,7 +407,7 @@ function On_Click_Boot_Process_Strip_Menu_Item_Learn($Sender,$e){
 	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
 	
 	if($Problem_Completed_Check -ne $null) {
-	$Title.Text = "Learn Windows environment (COMPLETED)"
+	$Title.Text = "Windows General #1 (COMPLETED)"
 	$Title.ForeColor = 'Green'} 
 	
 	else {
@@ -445,9 +464,112 @@ if ($Body.Text = "Find the computer name (hostname) of your Windows machine. Use
 
 }
 
+## Windows General #2 ##
+
+function On_Click_Uptime_Strip_Menu_Item($Sender,$e){
+	
+	$Timer_Start_Time.Stop()
+
+    $Timer = [System.Diagnostics.Stopwatch]::StartNew()
+	
+	$global:Timer_Start_Time = $Timer
+	
+    $Title.Text = "Windows General #2"
+	$Title.ForeColor = 'Blue'
+	
+	$Body.Text = "Using PowerShell, find the uptime of this device. Note, use the 'systeminfo' command and a | (pipe)."
+	
+	$The_Submit_Button = New-Object System.Windows.Forms.Button
+	
+	$The_Submit_Button.Name = "The_Submit_Button"
+
+	$The_Submit_Button.Text = "Submit"
+
+	$The_Submit_Button.AutoSize = $True
+
+	$The_Submit_Button.Font = 'Verdana,12,style=Bold'
+
+	$The_Submit_Button.ForeColor = 'Blue'
+
+	$The_Submit_Button.Location = New-Object System.Drawing.Point(30,200)
+
+	$The_Submit_Button.Add_Click({Selected_Windows_General_Problem_2})
+	
+	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
+	
+	$Problem_Completed = "systeminfo | find 'Boot Time'"
+	
+	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
+	
+	if($Problem_Completed_Check -ne $null) {
+	$Title.Text = "Windows General #2 (COMPLETED)"
+	$Title.ForeColor = 'Green'} 
+	
+	else {
+		
+	$Title.Text = "Windows General #2"
+	
+	}
+}
+
+function Selected_Windows_General_Problem_2{
+
+$Answer = @($Input_Box.Text)
+
+Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb runAs
+
+if ($Body.Text = "Using PowerShell, find the uptime of this device. Note, use the 'systeminfo' command and a | (pipe). Make sure there is proper spacing on  both sides of |"){
+	if($Input_Box.Text -eq "systeminfo | find 'Boot Time'"){
+		
+	$Time_Elapsed = $Timer_Start_Time.Elapsed
+
+	$Timer = $([string]::Format("`{0:d2}:{1:d2}:{2:d2}",
+	$Time_Elapsed.hours,
+	$Time_Elapsed.minutes,
+	$Time_Elapsed.seconds))
+	
+	$New_Row | Add-Content -Path $Game_Score_File
+
+    $New_Row = New-Object PsObject -Property @{Problem = "Windows General #2" ; Result = "systeminfo | find 'Boot Time'" ; CompletionTime = $Timer ; Date = $Date ; Points = "2"}
+	
+    $New_Results += $New_Row
+
+    $New_Results | Export-CSV -append $Game_Score_File
+	
+	$Timer.Stop
+	
+    Invoke-Expression Dropdown_Problem_Completed_Check
+
+    $Body.Text = "Using PowerShell, find the uptime of this device. Note, use the 'systeminfo' command and a | (pipe). Correct, your answer was $Answer."
+
+    }
+	
+	if($Input_Box.Text -eq ""){
+		
+		 $MessageBoxTitle = "Null input box"
+
+		 $MessageBoxBody = "Input box is null. Please type an answer to see if it is correct."
+		 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+
+	else{
+		$Body.Text = "Using PowerShell, find the uptime of this device. Note, use the 'systeminfo' command and a | (pipe)."}
+	} 
+}
+
+}
+
 $Windows_General_Strip_Menu_Item_Learn.Add_Click( { On_Click_Boot_Process_Strip_Menu_Item_Learn $Windows_General_Strip_Menu_Item_Learn $EventArgs} )
 
+$Windows_General_Strip_Menu_Item_2.Add_Click( { On_Click_Uptime_Strip_Menu_Item $Windows_General_Strip_Menu_Item_2 $EventArgs} )
+
+$Windows_General_Strip_Menu_Item.DropDownItems.AddRange(@($Windows_General_Strip_Menu_Item_Learn, $Windows_General_Strip_Menu_Item_2))
+
 ## DHCP & DNS #1 ##
+
+$DHCP_DNS_Strip_Menu_Item.Name = "DHCP_DNS_Strip_Menu_Item"
+$DHCP_DNS_Strip_Menu_Item.Size = New-Object System.Drawing.Size(51, 20)
+$DHCP_DNS_Strip_Menu_Item.Text = "DHCP + DNS"
 
 $DHCP_DNS_Strip_Menu_Item_Practice.Name = "DHCP_DNS_Strip_Menu_Item_Practice"
 $DHCP_DNS_Strip_Menu_Item_Practice.Size = New-Object System.Drawing.Size(152, 22)
@@ -461,7 +583,7 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice($Sender,$e){
 	
 	$global:Timer_Start_Time = $Timer
 	
-    $Title.Text= "Learn DHCP + DNS #1"
+    $Title.Text= "DHCP + DNS #1"
 	
 	$Title.ForeColor = 'Blue'
 	
@@ -479,7 +601,7 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice($Sender,$e){
 
 	$The_Submit_Button.ForeColor = 'Blue'
 
-	$The_Submit_Button.Location = New-Object System.Drawing.Point(420,300)
+	$The_Submit_Button.Location = New-Object System.Drawing.Point(30,200)
 
 	$The_Submit_Button.Add_Click({Selected_DHCP_DNS_Practice_Problem})
 	
@@ -518,7 +640,7 @@ if ($Body.Text = "Create a DHCP server in the Domain controller named dhcp-pract
 	
 	$New_Row | Add-Content -Path $Game_Score_File
 
-    $New_Row = New-Object PsObject -Property @{Problem = "DHCP + DNS #1" ; Result = "Add-DhcpServerInDC -DNSName dhcp-practice -IPAddress 172.16.0.50" ; CompletionTime = $Timer ; Date = $Date ; Points = "1"}
+    $New_Row = New-Object PsObject -Property @{Problem = "DHCP + DNS #1" ; Result = "Add-DhcpServerInDC -DNSName dhcp-practice -IPAddress 172.16.0.50" ; CompletionTime = $Timer ; Date = $Date ; Points = "5"}
 	
     $New_Results += $New_Row
 
@@ -534,17 +656,15 @@ if ($Body.Text = "Create a DHCP server in the Domain controller named dhcp-pract
 	
 	if($Input_Box.Text -eq ""){
 		
-		 $MessageBoxTitle = "Null input box"
+	$MessageBoxTitle = "Null input box"
 
-		 $MessageBoxBody = "Input box is null. Please type an answer to see if it is correct."
+	$MessageBoxBody = "Input box is null. Please type an answer to see if it is correct."
 		 
-		 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+	$Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError) }
 
 	else{
-		$Body.Text = "Find the computer name (hostname) of your Windows machine. Use PowerShell. Incorrect, your answer was $Answer."}
+		$Body.Text = "Create a DHCP server in the Domain controller named dhcp-practice with an IP address of 172.16.0.50. Incorrect, your answer was $Answer."}
 	}
-}
-
 }
 
 ## DHCP & DNS #2 ##
@@ -561,11 +681,11 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_2($Sender,$e){
 	
 	$global:Timer_Start_Time = $Timer
 	
-    $Title.Text= "Learn DHCP + DNS #2"
+    $Title.Text= "DHCP + DNS #2"
 	
 	$Title.ForeColor = 'Blue'
 	
-	$Body.Text = "Create an active IPv4 DHCP scope named 'test' with a start range of 172.16.0.100, end range of 172.16.0.200 and subnet mask of 255.255.255.0"
+	$Body.Text = "Create an active IPv4 DHCP scope named 'test' with a start range of 172.16.0.100, `nend range of 172.16.0.200 and subnet mask of 255.255.255.0"
 	
 	$The_Submit_Button = New-Object System.Windows.Forms.Button
 	
@@ -579,7 +699,7 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_2($Sender,$e){
 
 	$The_Submit_Button.ForeColor = 'Blue'
 
-	$The_Submit_Button.Location = New-Object System.Drawing.Point(420,300)
+	$The_Submit_Button.Location = New-Object System.Drawing.Point(30,200)
 
 	$The_Submit_Button.Add_Click({Selected_DHCP_DNS_Practice_Problem_2})
 	
@@ -600,7 +720,7 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_2($Sender,$e){
 	}
 	
     $Title.Text= "Practice PowerShell for DHCP + DNS #2"
-	$Body.Text = "Create an active IPv4 DHCP scope named 'test' with a start range of 172.16.0.100, end range of 172.16.0.200 and subnet mask of 255.255.255.0"
+	$Body.Text = "Create an active IPv4 DHCP scope named 'test' with a start range of 172.16.0.100, `nend range of 172.16.0.200 and subnet mask of 255.255.255.0"
 }
 
 function Selected_DHCP_DNS_Practice_Problem_2{
@@ -609,7 +729,7 @@ $Answer = @($Input_Box.Text)
 
 Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb runAs
 
-if ($Body.Text = "Create an active IPv4 DHCP scope named 'test' with a start range of 172.16.0.100, end range of 172.16.0.200 and subnet mask of 255.255.255.0"){
+if ($Body.Text = "Create an active IPv4 DHCP scope named 'test' with a start range of 172.16.0.100, `nend range of 172.16.0.200 and subnet mask of 255.255.255.0"){
 	if($Input_Box.Text -eq "Add-DhcpServerV4Scope -name 'test' -StartRange 172.16.0.100 -Endrange 172.16.0.200 -SubnetMask 255.255.255.0 -State Active"){
 		
 	$Time_Elapsed = $Timer_Start_Time.Elapsed
@@ -621,7 +741,7 @@ if ($Body.Text = "Create an active IPv4 DHCP scope named 'test' with a start ran
 	
 	$New_Row | Add-Content -Path $Game_Score_File
 
-    $New_Row = New-Object PsObject -Property @{Problem = "DHCP + DNS #2" ; Result = "Add-DhcpServerV4Scope -name 'test' -StartRange 172.16.0.100 -Endrange 172.16.0.200 -SubnetMask 255.255.255.0 -State Active" ; CompletionTime = $Timer ; Date = $Date ; Points = "1"}
+    $New_Row = New-Object PsObject -Property @{Problem = "DHCP + DNS #2" ; Result = "Add-DhcpServerV4Scope -name 'test' -StartRange 172.16.0.100 -Endrange 172.16.0.200 -SubnetMask 255.255.255.0 -State Active" ; CompletionTime = $Timer ; Date = $Date ; Points = "5"}
 	
     $New_Results += $New_Row
 

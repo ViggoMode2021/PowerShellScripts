@@ -717,8 +717,7 @@ function On_Click_Cpu_Strip_Menu_Item($Sender,$e){
     $Title.Text = "Windows General #4"
 	$Title.ForeColor = 'Blue'
 	
-	$Body.Text = "Using PowerShell, find the processes on this machine where the cpu consumption is greater than 20%. 
-	`nNote: Use Get-Process and Where-Object separated by a |"
+	$Body.Text = "Using PowerShell, find the processes on this machine where the cpu consumption is greater than 20%. `nNote: Use Get-Process and Where-Object separated by a |"
 	
 	$The_Submit_Button = New-Object System.Windows.Forms.Button
 	
@@ -759,9 +758,13 @@ $Answer = @($Input_Box.Text)
 
 Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb runAs
 
-if ($Body.Text = "Using PowerShell, find the processes on this machine where the cpu consumption is greater than 20%. 
-	`nNote: Use Get-Process and Where-Object separated by a |"){
-	if($Input_Box.Text -eq "Get-Process | Where-Object { $_.CPU -gt 20 }"){
+if ($Body.Text = "Using PowerShell, find the processes on this machine where the cpu consumption is greater than 20%. `nNote: Use Get-Process and Where-Object separated by a |"){
+	
+	$CPU = 'Get-Process | Where-Object { $_.CPU -gt 20 }'
+	
+	if($Input_Box.Text -eq $CPU){
+		
+	Write-Host "AJSIDFJI"
 		
 	$Time_Elapsed = $Timer_Start_Time.Elapsed
 
@@ -782,8 +785,7 @@ if ($Body.Text = "Using PowerShell, find the processes on this machine where the
 	
     Invoke-Expression Dropdown_Problem_Completed_Check
 
-    $Body.Text = "Using PowerShell, find the processes on this machine where the cpu consumption is greater than 20%. 
-	`nNote: Use Get-Process and Where-Object separated by a | Correct, your answer was $Answer."
+    $Body.Text = "Using PowerShell, find the processes on this machine where the cpu consumption is greater than 20%. `nNote: Use Get-Process and Where-Object separated by a | Correct, your answer was $Answer."
 
     }
 	
@@ -796,8 +798,7 @@ if ($Body.Text = "Using PowerShell, find the processes on this machine where the
 
 
 	else{
-		$Body.Text = "Using PowerShell, find the processes on this machine where the cpu consumption is greater than 20%. 
-	`nNote: Use Get-Process and Where-Object separated by a |"}
+		$Body.Text = "Using PowerShell, find the processes on this machine where the cpu consumption is greater than 20%. `nNote: Use Get-Process and Where-Object separated by a |"}
 	} 
 }
 

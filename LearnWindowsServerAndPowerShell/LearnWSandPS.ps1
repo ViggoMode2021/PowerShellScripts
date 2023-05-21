@@ -83,7 +83,7 @@ $Body.Location = New-Object System.Drawing.Point(30,80)
 $Input_Box = New-Object System.Windows.Forms.TextBox
 $Input_Box.Name = "Input_Box"
 $Input_Box.Location = New-Object System.Drawing.Point(30,150)
-$Input_Box.Size = New-Object System.Drawing.Size(180,1000)
+$Input_Box.Size = New-Object System.Drawing.Size(380,1000)
 
 $Menu_Bar.Items.AddRange(@(
 $File_Menu_Item,
@@ -241,7 +241,7 @@ $Windows_General_Strip_Menu_Item_Learn.ForeColor = 'Green'
 else{
 	
 $Windows_General_Strip_Menu_Item_Learn.Text = 'Windows General #1 (hostname)'
-
+$Windows_General_Strip_Menu_Item_Learn.ForeColor = 'Blue'
 }
 
 $Problem_Completed_Uptime = "systeminfo | find 'Boot Time'"
@@ -251,11 +251,12 @@ $Problem_Completed_Uptime = Select-String $Game_Score_File -Pattern $Problem_Com
 if($Problem_Completed_Uptime -ne $null){
 $Windows_General_Strip_Menu_Item_2.Text = 'Windows General #2 (uptime)'
 $Windows_General_Strip_Menu_Item_2.ForeColor = 'Green'
-} 
+}
 
 else{
 	
-$Windows_General_Strip_Menu_Item_Learn.Text = 'Windows General #2'
+$Windows_General_Strip_Menu_Item_2.Text = 'Windows General #2 (uptime)'
+$Windows_General_Strip_Menu_Item_2.ForeColor = 'Blue'
 
 }
 
@@ -271,6 +272,23 @@ $Windows_General_Strip_Menu_Item_3.ForeColor = 'Green'
 else{
 	
 $Windows_General_Strip_Menu_Item_3.Text = 'Windows General #3 (env)'
+$Windows_General_Strip_Menu_Item_3.ForeColor = 'Blue'
+
+}
+
+$Problem_Completed_Cpu = "Get-Process | Where-Object { $_.CPU -gt 20 }"
+	
+$Problem_Completed_Cpu = Select-String $Game_Score_File -Pattern $Problem_Completed_Cpu
+
+if($Problem_Completed_Cpu -ne $null){
+$Windows_General_Strip_Menu_Item_4.Text = 'Windows General #4 (cpu)'
+$Windows_General_Strip_Menu_Item_4.ForeColor = 'Green'
+} 
+
+else{
+	
+$Windows_General_Strip_Menu_Item_4.Text = 'Windows General #4 (cpu)'
+$Windows_General_Strip_Menu_Item_4.ForeColor = 'Blue'
 
 }
 
@@ -286,6 +304,7 @@ $DHCP_DNS_Strip_Menu_Item_Practice.ForeColor = 'Green'
 else{
 	
 $DHCP_DNS_Strip_Menu_Item_Practice.Text = 'DHCP + DNS #1 (server)'
+$DHCP_DNS_Strip_Menu_Item_Practice.ForeColor = 'Blue'
 
 }
 
@@ -300,7 +319,8 @@ $DHCP_DNS_Strip_Menu_Item_Practice_2.ForeColor = 'Green'
 
 else{
 	
-$DHCP_DNS_Strip_Menu_Item_Practice.Text = 'DHCP + DNS #2 (scope)'
+$DHCP_DNS_Strip_Menu_Item_Practice_2.Text = 'DHCP + DNS #2 (scope)'
+$DHCP_DNS_Strip_Menu_Item_Practice_2.ForeColor = 'Blue'
 
 }
 
@@ -684,11 +704,112 @@ if ($Body.Text = "Using PowerShell, find the environment variables on this syste
 
 }
 
+## Windows General #4 ##
+
+function On_Click_Cpu_Strip_Menu_Item($Sender,$e){
+	
+	$Timer_Start_Time.Stop()
+
+    $Timer = [System.Diagnostics.Stopwatch]::StartNew()
+	
+	$global:Timer_Start_Time = $Timer
+	
+    $Title.Text = "Windows General #4"
+	$Title.ForeColor = 'Blue'
+	
+	$Body.Text = "Using PowerShell, find the processes on this machine where the cpu consumption is greater than 20%. 
+	`nNote: Use Get-Process and Where-Object separated by a |"
+	
+	$The_Submit_Button = New-Object System.Windows.Forms.Button
+	
+	$The_Submit_Button.Name = "The_Submit_Button"
+
+	$The_Submit_Button.Text = "Submit"
+
+	$The_Submit_Button.AutoSize = $True
+
+	$The_Submit_Button.Font = 'Verdana,12,style=Bold'
+
+	$The_Submit_Button.ForeColor = 'Blue'
+
+	$The_Submit_Button.Location = New-Object System.Drawing.Point(30,200)
+
+	$The_Submit_Button.Add_Click({Selected_Windows_General_Problem_4})
+	
+	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
+	
+	$Problem_Completed = "Get-Process | Where-Object { $_.CPU -gt 20 }"
+	
+	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
+	
+	if($Problem_Completed_Check -ne $null) {
+	$Title.Text = "Windows General #4 (COMPLETED)"
+	$Title.ForeColor = 'Green'} 
+	
+	else {
+		
+	$Title.Text = "Windows General #4"
+	
+	}
+}
+
+function Selected_Windows_General_Problem_4{
+
+$Answer = @($Input_Box.Text)
+
+Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb runAs
+
+if ($Body.Text = "Using PowerShell, find the processes on this machine where the cpu consumption is greater than 20%. 
+	`nNote: Use Get-Process and Where-Object separated by a |"){
+	if($Input_Box.Text -eq "Get-Process | Where-Object { $_.CPU -gt 20 }"){
+		
+	$Time_Elapsed = $Timer_Start_Time.Elapsed
+
+	$Timer = $([string]::Format("`{0:d2}:{1:d2}:{2:d2}",
+	$Time_Elapsed.hours,
+	$Time_Elapsed.minutes,
+	$Time_Elapsed.seconds))
+	
+	$New_Row | Add-Content -Path $Game_Score_File
+
+    $New_Row = New-Object PsObject -Property @{Problem = "Windows General #4" ; Result = "Get-Process | Where-Object { $_.CPU -gt 20 }" ; CompletionTime = $Timer ; Date = $Date ; Points = "3"}
+	
+    $New_Results += $New_Row
+
+    $New_Results | Export-CSV -append $Game_Score_File
+	
+	$Timer.Stop
+	
+    Invoke-Expression Dropdown_Problem_Completed_Check
+
+    $Body.Text = "Using PowerShell, find the processes on this machine where the cpu consumption is greater than 20%. 
+	`nNote: Use Get-Process and Where-Object separated by a | Correct, your answer was $Answer."
+
+    }
+	
+	if($Input_Box.Text -eq ""){
+		
+		 $MessageBoxTitle = "Null input box"
+
+		 $MessageBoxBody = "Input box is null. Please type an answer to see if it is correct."
+		 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+
+	else{
+		$Body.Text = "Using PowerShell, find the processes on this machine where the cpu consumption is greater than 20%. 
+	`nNote: Use Get-Process and Where-Object separated by a |"}
+	} 
+}
+
+}
+
 $Windows_General_Strip_Menu_Item_Learn.Add_Click( { On_Click_Boot_Process_Strip_Menu_Item_Learn $Windows_General_Strip_Menu_Item_Learn $EventArgs} )
 
 $Windows_General_Strip_Menu_Item_2.Add_Click( { On_Click_Uptime_Strip_Menu_Item $Windows_General_Strip_Menu_Item_2 $EventArgs} )
 
 $Windows_General_Strip_Menu_Item_3.Add_Click( { On_Click_Env_Strip_Menu_Item $Windows_General_Strip_Menu_Item_3 $EventArgs} )
+
+$Windows_General_Strip_Menu_Item_4.Add_Click( { On_Click_Cpu_Strip_Menu_Item $Windows_General_Strip_Menu_Item_4 $EventArgs} )
 
 
 ## DHCP & DNS #1 ##

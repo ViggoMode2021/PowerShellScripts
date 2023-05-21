@@ -41,8 +41,10 @@ $View_Score_And_Stats_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStri
 $Windows_General_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $DHCP_DNS_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $Windows_General_Strip_Menu_Item_Learn = New-Object System.Windows.Forms.ToolStripMenuItem
-$Windows_General_Strip_Menu_Item_2 = New-Object System.Windows.Forms.ToolStripMenuItem
 $Windows_General_Strip_Menu_Item_Practice = New-Object System.Windows.Forms.ToolStripMenuItem
+$Windows_General_Strip_Menu_Item_2 = New-Object System.Windows.Forms.ToolStripMenuItem
+$Windows_General_Strip_Menu_Item_3 = New-Object System.Windows.Forms.ToolStripMenuItem
+$Windows_General_Strip_Menu_Item_4 = New-Object System.Windows.Forms.ToolStripMenuItem
 $DHCP_DNS_Strip_Menu_Item_Practice = New-Object System.Windows.Forms.ToolStripMenuItem
 $DHCP_DNS_Strip_Menu_Item_Practice_2 = New-Object System.Windows.Forms.ToolStripMenuItem
 
@@ -89,7 +91,9 @@ $Windows_General_Strip_Menu_Item,
 $DHCP_DNS_Strip_Menu_Item,
 $Windows_General_Strip_Menu_Item_Learn,
 $Windows_General_Strip_Menu_Item_Practice,
-$Windows_General_Strip_Menu_Item_2))
+$Windows_General_Strip_Menu_Item_2,
+$Windows_General_Strip_Menu_Item_3,
+$Windows_General_Strip_Menu_Item_4))
 
 ## start File menu item ##
 
@@ -230,13 +234,13 @@ $Problem_Completed_Hostname = "hostname"
 $Problem_Completed_Hostname = Select-String $Game_Score_File -Pattern $Problem_Completed_Hostname
 
 if($Problem_Completed_Hostname -ne $null){
-$Windows_General_Strip_Menu_Item_Learn.Text = 'Windows General #1'
+$Windows_General_Strip_Menu_Item_Learn.Text = 'Windows General #1 (hostname)'
 $Windows_General_Strip_Menu_Item_Learn.ForeColor = 'Green'
 } 
 
 else{
 	
-$Windows_General_Strip_Menu_Item_Learn.Text = 'Windows General #1'
+$Windows_General_Strip_Menu_Item_Learn.Text = 'Windows General #1 (hostname)'
 
 }
 
@@ -245,13 +249,28 @@ $Problem_Completed_Uptime = "systeminfo | find 'Boot Time'"
 $Problem_Completed_Uptime = Select-String $Game_Score_File -Pattern $Problem_Completed_Uptime
 	
 if($Problem_Completed_Uptime -ne $null){
-$Windows_General_Strip_Menu_Item_2.Text = 'Windows General #2'
+$Windows_General_Strip_Menu_Item_2.Text = 'Windows General #2 (uptime)'
 $Windows_General_Strip_Menu_Item_2.ForeColor = 'Green'
 } 
 
 else{
 	
-$Windows_General_Strip_Menu_Item_Learn.Text = 'Windows General #1'
+$Windows_General_Strip_Menu_Item_Learn.Text = 'Windows General #2'
+
+}
+
+$Problem_Completed_Env = "dir env:"
+	
+$Problem_Completed_Env = Select-String $Game_Score_File -Pattern $Problem_Completed_Env
+	
+if($Problem_Completed_Env -ne $null){
+$Windows_General_Strip_Menu_Item_3.Text = 'Windows General #3 (env)'
+$Windows_General_Strip_Menu_Item_3.ForeColor = 'Green'
+} 
+
+else{
+	
+$Windows_General_Strip_Menu_Item_3.Text = 'Windows General #3 (env)'
 
 }
 
@@ -260,13 +279,13 @@ $Problem_Completed_DHCP = "Add-DhcpServerInDC -DNSName dhcp-practice -IPAddress 
 $Problem_Completed_DHCP = Select-String $Game_Score_File -Pattern $Problem_Completed_DHCP
 
 if($Problem_Completed_DHCP -ne $null){
-$DHCP_DNS_Strip_Menu_Item_Practice.Text = 'DHCP + DNS #1'
+$DHCP_DNS_Strip_Menu_Item_Practice.Text = 'DHCP + DNS #1 (server)'
 $DHCP_DNS_Strip_Menu_Item_Practice.ForeColor = 'Green'
 } 
 
 else{
 	
-$DHCP_DNS_Strip_Menu_Item_Practice.Text = 'DHCP + DNS #1'
+$DHCP_DNS_Strip_Menu_Item_Practice.Text = 'DHCP + DNS #1 (server)'
 
 }
 
@@ -275,13 +294,13 @@ $Problem_Completed_DHCP_2 = "Add-DhcpServerV4Scope -name 'test' -StartRange 172.
 $Problem_Completed_DHCP_2 = Select-String $Game_Score_File -Pattern $Problem_Completed_DHCP_2
 
 if($Problem_Completed_DHCP_2 -ne $null){
-$DHCP_DNS_Strip_Menu_Item_Practice_2.Text = 'DHCP + DNS #2'
+$DHCP_DNS_Strip_Menu_Item_Practice_2.Text = 'DHCP + DNS #2 (scope)'
 $DHCP_DNS_Strip_Menu_Item_Practice_2.ForeColor = 'Green'
 } 
 
 else{
 	
-$DHCP_DNS_Strip_Menu_Item_Practice.Text = 'DHCP + DNS #2'
+$DHCP_DNS_Strip_Menu_Item_Practice.Text = 'DHCP + DNS #2 (scope)'
 
 }
 
@@ -354,11 +373,22 @@ $Windows_General_Strip_Menu_Item.Text = "Windows General"
 
 $Windows_General_Strip_Menu_Item_Learn.Name = "Windows_General_Strip_Menu_Item_Learn"
 $Windows_General_Strip_Menu_Item_Learn.Size = New-Object System.Drawing.Size(152, 22)
-$Windows_General_Strip_Menu_Item_Learn.Text = "Windows General #1"
+$Windows_General_Strip_Menu_Item_Learn.Text = "Windows General #1 (hostname)"
 
 $Windows_General_Strip_Menu_Item_2.Name = "Windows_General_Strip_Menu_Item_2"
 $Windows_General_Strip_Menu_Item_2.Size = New-Object System.Drawing.Size(152, 22)
-$Windows_General_Strip_Menu_Item_2.Text = "Windows General #2"
+$Windows_General_Strip_Menu_Item_2.Text = "Windows General #2 (uptime)"
+
+$Windows_General_Strip_Menu_Item_3.Name = "Windows_General_Strip_Menu_Item_3"
+$Windows_General_Strip_Menu_Item_3.Size = New-Object System.Drawing.Size(152, 22) #dir env:
+$Windows_General_Strip_Menu_Item_3.Text = "Windows General #3 (env vars)"
+
+$Windows_General_Strip_Menu_Item_4.Name = "Windows_General_Strip_Menu_Item_4"
+$Windows_General_Strip_Menu_Item_4.Size = New-Object System.Drawing.Size(152, 22)
+$Windows_General_Strip_Menu_Item_4.Text = "Windows General #4 (cpu)"
+
+$Windows_General_Strip_Menu_Item.DropDownItems.AddRange(@($Windows_General_Strip_Menu_Item_Learn, $Windows_General_Strip_Menu_Item_2, $Windows_General_Strip_Menu_Item_3
+$Windows_General_Strip_Menu_Item_4))
 
 ## end Windows General menu item ##
 
@@ -559,11 +589,107 @@ if ($Body.Text = "Using PowerShell, find the uptime of this device. Note, use th
 
 }
 
+## Windows General #3 ##
+
+function On_Click_Env_Strip_Menu_Item($Sender,$e){
+	
+	$Timer_Start_Time.Stop()
+
+    $Timer = [System.Diagnostics.Stopwatch]::StartNew()
+	
+	$global:Timer_Start_Time = $Timer
+	
+    $Title.Text = "Windows General #3"
+	$Title.ForeColor = 'Blue'
+	
+	$Body.Text = "Using PowerShell, find the environment variables on this system using a command `nthat has two different three letter words and a :"
+	
+	$The_Submit_Button = New-Object System.Windows.Forms.Button
+	
+	$The_Submit_Button.Name = "The_Submit_Button"
+
+	$The_Submit_Button.Text = "Submit"
+
+	$The_Submit_Button.AutoSize = $True
+
+	$The_Submit_Button.Font = 'Verdana,12,style=Bold'
+
+	$The_Submit_Button.ForeColor = 'Blue'
+
+	$The_Submit_Button.Location = New-Object System.Drawing.Point(30,200)
+
+	$The_Submit_Button.Add_Click({Selected_Windows_General_Problem_3})
+	
+	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
+	
+	$Problem_Completed = "dir env:"
+	
+	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
+	
+	if($Problem_Completed_Check -ne $null) {
+	$Title.Text = "Windows General #3 (COMPLETED)"
+	$Title.ForeColor = 'Green'} 
+	
+	else {
+		
+	$Title.Text = "Windows General #3"
+	
+	}
+}
+
+function Selected_Windows_General_Problem_3{
+
+$Answer = @($Input_Box.Text)
+
+Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb runAs
+
+if ($Body.Text = "Using PowerShell, find the environment variables on this system using a command `nthat has two different three letter words and a :"){
+	if($Input_Box.Text -eq "dir env:"){
+		
+	$Time_Elapsed = $Timer_Start_Time.Elapsed
+
+	$Timer = $([string]::Format("`{0:d2}:{1:d2}:{2:d2}",
+	$Time_Elapsed.hours,
+	$Time_Elapsed.minutes,
+	$Time_Elapsed.seconds))
+	
+	$New_Row | Add-Content -Path $Game_Score_File
+
+    $New_Row = New-Object PsObject -Property @{Problem = "Windows General #3" ; Result = "dir env:" ; CompletionTime = $Timer ; Date = $Date ; Points = "2"}
+	
+    $New_Results += $New_Row
+
+    $New_Results | Export-CSV -append $Game_Score_File
+	
+	$Timer.Stop
+	
+    Invoke-Expression Dropdown_Problem_Completed_Check
+
+    $Body.Text = "Using PowerShell, find the environment variables on this system using a command `nthat has two different three letter words and a : Correct, your answer was $Answer."
+
+    }
+	
+	if($Input_Box.Text -eq ""){
+		
+		 $MessageBoxTitle = "Null input box"
+
+		 $MessageBoxBody = "Input box is null. Please type an answer to see if it is correct."
+		 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+
+	else{
+		$Body.Text = "Using PowerShell, find the environment variables on this system using a command `nthat has two different three letter words and a :."}
+	} 
+}
+
+}
+
 $Windows_General_Strip_Menu_Item_Learn.Add_Click( { On_Click_Boot_Process_Strip_Menu_Item_Learn $Windows_General_Strip_Menu_Item_Learn $EventArgs} )
 
 $Windows_General_Strip_Menu_Item_2.Add_Click( { On_Click_Uptime_Strip_Menu_Item $Windows_General_Strip_Menu_Item_2 $EventArgs} )
 
-$Windows_General_Strip_Menu_Item.DropDownItems.AddRange(@($Windows_General_Strip_Menu_Item_Learn, $Windows_General_Strip_Menu_Item_2))
+$Windows_General_Strip_Menu_Item_3.Add_Click( { On_Click_Env_Strip_Menu_Item $Windows_General_Strip_Menu_Item_3 $EventArgs} )
+
 
 ## DHCP & DNS #1 ##
 
@@ -573,7 +699,7 @@ $DHCP_DNS_Strip_Menu_Item.Text = "DHCP + DNS"
 
 $DHCP_DNS_Strip_Menu_Item_Practice.Name = "DHCP_DNS_Strip_Menu_Item_Practice"
 $DHCP_DNS_Strip_Menu_Item_Practice.Size = New-Object System.Drawing.Size(152, 22)
-$DHCP_DNS_Strip_Menu_Item_Practice.Text = "DHCP + DNS #1"
+$DHCP_DNS_Strip_Menu_Item_Practice.Text = "DHCP + DNS #1 (server)"
 
 function On_Click_DHCP_DNS_Strip_Menu_Item_Practice($Sender,$e){ 
 	
@@ -671,7 +797,7 @@ if ($Body.Text = "Create a DHCP server in the Domain controller named dhcp-pract
 
 $DHCP_DNS_Strip_Menu_Item_Practice_2.Name = "DHCP_DNS_Strip_Menu_Item_Practice_2"
 $DHCP_DNS_Strip_Menu_Item_Practice_2.Size = New-Object System.Drawing.Size(152, 22)
-$DHCP_DNS_Strip_Menu_Item_Practice_2.Text = "DHCP + DNS #2"
+$DHCP_DNS_Strip_Menu_Item_Practice_2.Text = "DHCP + DNS #2 (scope)"
 
 function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_2($Sender,$e){
 

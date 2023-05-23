@@ -55,6 +55,11 @@ $DHCP_DNS_Strip_Menu_Item_Practice_3 = New-Object System.Windows.Forms.ToolStrip
 $DHCP_DNS_Strip_Menu_Item_Practice_4 = New-Object System.Windows.Forms.ToolStripMenuItem
 $DHCP_DNS_Strip_Menu_Item_Practice_5 = New-Object System.Windows.Forms.ToolStripMenuItem
 
+$Group_Box = New-Object System.Windows.Forms.GroupBox
+$Group_Box.Location = New-Object System.Drawing.Size(800,500)
+$Group_Box.Size = New-Object System.Drawing.Size(200,200)
+$Group_Box.Text = "Current Stats:"
+
 $ButtonTypeOk = [System.Windows.MessageBoxButton]::Ok
 
 $ButtonTypeYesNoCancel = [System.Windows.MessageBoxButton]::YesNoCancel 
@@ -1026,18 +1031,7 @@ if ($Body.Text = "Create a DHCP server in the Domain controller named dhcp-pract
     $Body.Text = "Create a DHCP server in the Domain controller named dhcp-practice with an IP address of 172.16.0.50. Correct, your answer was $Answer."
 
     }
-	
-	if($Input_Box.Text -eq ""){
-		
-	$MessageBoxTitle = "Null input box"
-
-	$MessageBoxBody = "Input box is null. Please type an answer to see if it is correct."
-		 
-	$Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError) }
-
-	else{
-		$Body.Text = "Create a DHCP server in the Domain controller named dhcp-practice with an IP address of 172.16.0.50. Incorrect, your answer was $Answer."}
-	}
+}
 }
 
 ## DHCP & DNS #2 (install DNS) ##
@@ -1128,23 +1122,10 @@ if ($Body.Text = "Create an active IPv4 DHCP scope named 'test' with a start ran
 	
     Invoke-Expression Dropdown_Problem_Completed_Check
 
-    $Body.Text = "Create a DHCP scope in the Domain controller named dhcp-practice with an IP address of 172.16.0.50. Correct, your answer was $Answer."
+    $Body.Text = "Create a DHCP scope in the Domain controller named dhcp-practice with an IP address of 172.16.0.50. `nCorrect, your answer was $Answer."
 
     }
-	
-	if($Input_Box.Text -eq ""){
-		
-		 $MessageBoxTitle = "Null input box"
-
-		 $MessageBoxBody = "Input box is null. Please type an answer to see if it is correct."
-		 
-		 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
-
-	else{
-		$Body.Text = "Create an active IPv4 DHCP scope named 'test' with a start range of 172.16.0.100, end range of 172.16.0.200 and subnet mask of 255.255.255.0"}
-	}
 }
-
 }
 
 ## DHCP & DNS #3 (forward lookup zone) ##
@@ -1485,7 +1466,7 @@ $Windows_Server_Strip_Menu_Item.Name = "Windows_Server_Strip_Menu_Item"
 $Windows_Server_Strip_Menu_Item.Size = New-Object System.Drawing.Size(51, 20)
 $Windows_Server_Strip_Menu_Item.Text = "Windows Server"
 
-$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Total_Number_Of_Answers_Label))
+$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Total_Number_Of_Answers_Label, $Group_Box))
 
 ## Form dialogue
 $Form.ShowDialog()

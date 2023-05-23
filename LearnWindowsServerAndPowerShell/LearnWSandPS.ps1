@@ -3,7 +3,7 @@ Import-Module ActiveDirectory
 Add-Type -AssemblyName System.Windows.Forms
 
 Add-Type -AssemblyName PresentationCore,PresentationFramework
-
+`
 $Date = Get-Date -format "MMddyy"
 
 $Forest = Get-ADDomain -Current LocalComputer | Select-Object -expand Forest
@@ -31,6 +31,10 @@ $Form.StartPosition = 'CenterScreen'
 
 $Form.Text = "EleetShell - Practice Windows Server and PowerShell! | No game score file currently selected"
 
+$Form.ForeColor = "Black"
+
+$Form.Font = 'Verdana,11,style=Bold'
+
 $Menu_Bar = New-Object System.Windows.Forms.MenuStrip
 $File_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $New_Game_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
@@ -44,8 +48,12 @@ $Windows_General_Strip_Menu_Item_Practice = New-Object System.Windows.Forms.Tool
 $Windows_General_Strip_Menu_Item_2 = New-Object System.Windows.Forms.ToolStripMenuItem
 $Windows_General_Strip_Menu_Item_3 = New-Object System.Windows.Forms.ToolStripMenuItem
 $Windows_General_Strip_Menu_Item_4 = New-Object System.Windows.Forms.ToolStripMenuItem
+$Windows_General_Strip_Menu_Item_5 = New-Object System.Windows.Forms.ToolStripMenuItem
 $DHCP_DNS_Strip_Menu_Item_Practice = New-Object System.Windows.Forms.ToolStripMenuItem
 $DHCP_DNS_Strip_Menu_Item_Practice_2 = New-Object System.Windows.Forms.ToolStripMenuItem
+$DHCP_DNS_Strip_Menu_Item_Practice_3 = New-Object System.Windows.Forms.ToolStripMenuItem
+$DHCP_DNS_Strip_Menu_Item_Practice_4 = New-Object System.Windows.Forms.ToolStripMenuItem
+$DHCP_DNS_Strip_Menu_Item_Practice_5 = New-Object System.Windows.Forms.ToolStripMenuItem
 
 $ButtonTypeOk = [System.Windows.MessageBoxButton]::Ok
 
@@ -309,13 +317,13 @@ $Problem_Completed_DHCP = "Add-DhcpServerInDC -DNSName dhcp-practice -IPAddress 
 $Problem_Completed_DHCP = Select-String $Game_Score_File -Pattern $Problem_Completed_DHCP
 
 if($Problem_Completed_DHCP -ne $null){
-$DHCP_DNS_Strip_Menu_Item_Practice.Text = 'DHCP + DNS #1 (server)'
+$DHCP_DNS_Strip_Menu_Item_Practice.Text = 'DHCP #1 (server)'
 $DHCP_DNS_Strip_Menu_Item_Practice.ForeColor = 'Green'
 } 
 
 else{
 	
-$DHCP_DNS_Strip_Menu_Item_Practice.Text = 'DHCP + DNS #1 (server)'
+$DHCP_DNS_Strip_Menu_Item_Practice.Text = 'DHCP #1 (server)'
 $DHCP_DNS_Strip_Menu_Item_Practice.ForeColor = 'Blue'
 
 }
@@ -325,14 +333,63 @@ $Problem_Completed_DHCP_2 = "Add-DhcpServerV4Scope -name 'test' -StartRange 172.
 $Problem_Completed_DHCP_2 = Select-String $Game_Score_File -Pattern $Problem_Completed_DHCP_2
 
 if($Problem_Completed_DHCP_2 -ne $null){
-$DHCP_DNS_Strip_Menu_Item_Practice_2.Text = 'DHCP + DNS #2 (scope)'
+$DHCP_DNS_Strip_Menu_Item_Practice_2.Text = 'DHCP #2 (scope)'
 $DHCP_DNS_Strip_Menu_Item_Practice_2.ForeColor = 'Green'
 } 
 
 else{
 	
-$DHCP_DNS_Strip_Menu_Item_Practice_2.Text = 'DHCP + DNS #2 (scope)'
+$DHCP_DNS_Strip_Menu_Item_Practice_2.Text = 'DHCP #2 (scope)'
 $DHCP_DNS_Strip_Menu_Item_Practice_2.ForeColor = 'Blue'
+
+}
+
+$Problem_Completed_DNS_1 = "Get-WindowsFeature -Name"
+	
+$Problem_Completed_DNS_1 = Select-String $Game_Score_File -Pattern $Problem_Completed_DNS_1
+
+if($Problem_Completed_DNS_1 -ne $null){
+	
+$DHCP_DNS_Strip_Menu_Item_Practice_3.Text = 'DNS #1 (check install)'
+$DHCP_DNS_Strip_Menu_Item_Practice_3.ForeColor = 'Green'
+} 
+
+else{
+	
+$DHCP_DNS_Strip_Menu_Item_Practice_3.Text = 'DNS #1 (check install)'
+$DHCP_DNS_Strip_Menu_Item_Practice_3.ForeColor = 'Blue'
+
+}
+
+$Problem_Completed_DNS_2 = "Install-WindowsFeature -Name DNS -IncludeManagementTools"
+	
+$Problem_Completed_DNS_2 = Select-String $Game_Score_File -Pattern $Problem_Completed_DNS_2
+
+if($Problem_Completed_DNS_2 -ne $null){
+$DHCP_DNS_Strip_Menu_Item_Practice_4.Text = 'DNS #2 (install DNS)'
+$DHCP_DNS_Strip_Menu_Item_Practice_4.ForeColor = 'Green'
+} 
+
+else{
+	
+$DHCP_DNS_Strip_Menu_Item_Practice_4.Text = 'DNS #2 (install DNS)'
+$DHCP_DNS_Strip_Menu_Item_Practice_4.ForeColor = 'Blue'
+
+}
+
+$Problem_Completed_DNS_3 = "Add-DnsServerPrimaryZone -Name Eliteshell.org -Zonefile Eliteshell.org.DNS -DynamicUpdate NonsecureAndSecure"
+
+$Problem_Completed_DNS_3 = Select-String $Game_Score_File -Pattern $Problem_Completed_DNS_3
+
+if($Problem_Completed_DNS_3 -ne $null){
+$DHCP_DNS_Strip_Menu_Item_Practice_5.Text = 'DNS #3 (forward lookup zone)'
+$DHCP_DNS_Strip_Menu_Item_Practice_5.ForeColor = 'Green'
+} 
+
+else{
+	
+$DHCP_DNS_Strip_Menu_Item_Practice_5.Text = 'DNS #3 (forward lookup zone)'
+$DHCP_DNS_Strip_Menu_Item_Practice_5.ForeColor = 'Blue'
 
 }
 
@@ -376,6 +433,8 @@ $CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expa
 
 $global:Number_Of_Correct_Answers = $CSV_Length
 
+$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers correct answers"
+
 $File_Menu_Item.DropDownItems.AddRange(@($New_Game_Strip_Menu_Item, $Load_Game_Strip_Menu_Item, $View_Score_And_Stats_Strip_Menu_Item))
 
 Invoke-Expression Dropdown_Problem_Completed_Check
@@ -392,6 +451,8 @@ $Table_Data = Import-CSV -Path $Game_Score_File | Out-GridView
 $Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers correct answers"
 
 $CSV_Stuff = Import-CSV -Path $Game_Score_File
+
+$CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
 
 #$Points = $CSV_Stuff | Select -ExpandProperty Points
 
@@ -838,7 +899,7 @@ $Windows_General_Strip_Menu_Item_3.Add_Click( { On_Click_Env_Strip_Menu_Item $Wi
 
 $Windows_General_Strip_Menu_Item_4.Add_Click( { On_Click_Cpu_Strip_Menu_Item $Windows_General_Strip_Menu_Item_4 $EventArgs} )
 
-## DHCP & DNS #1 ##
+## DHCP & DNS #1 (check install) ##
 
 $DHCP_DNS_Strip_Menu_Item.Name = "DHCP_DNS_Strip_Menu_Item"
 $DHCP_DNS_Strip_Menu_Item.Size = New-Object System.Drawing.Size(51, 20)
@@ -846,7 +907,7 @@ $DHCP_DNS_Strip_Menu_Item.Text = "DHCP + DNS"
 
 $DHCP_DNS_Strip_Menu_Item_Practice.Name = "DHCP_DNS_Strip_Menu_Item_Practice"
 $DHCP_DNS_Strip_Menu_Item_Practice.Size = New-Object System.Drawing.Size(152, 22)
-$DHCP_DNS_Strip_Menu_Item_Practice.Text = "DHCP + DNS #1 (server)"
+$DHCP_DNS_Strip_Menu_Item_Practice.Text = "DHCP #1 (server)"
 
 function On_Click_DHCP_DNS_Strip_Menu_Item_Practice($Sender,$e){ 
 	
@@ -856,7 +917,7 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice($Sender,$e){
 	
 	$global:Timer_Start_Time = $Timer
 	
-    $Title.Text= "DHCP + DNS #1"
+    $Title.Text= "DHCP #1"
 	
 	$Title.ForeColor = 'Blue'
 	
@@ -885,12 +946,12 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice($Sender,$e){
 	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
 	
 	if($Problem_Completed_Check -ne $null) {
-	$Title.Text = "DHCP + DNS #1 (COMPLETED)"
+	$Title.Text = "DHCP #1 (COMPLETED)"
 	$Title.ForeColor = 'Green'} 
 	
 	else {
 		
-	$Title.Text = "DHCP + DNS #1"
+	$Title.Text = "DHCP #1"
 	
 	}
 }
@@ -913,7 +974,7 @@ if ($Body.Text = "Create a DHCP server in the Domain controller named dhcp-pract
 	
 	$New_Row | Add-Content -Path $Game_Score_File
 
-    $New_Row = New-Object PsObject -Property @{Problem = "DHCP + DNS #1" ; Result = "Add-DhcpServerInDC -DNSName dhcp-practice -IPAddress 172.16.0.50" ; CompletionTime = $Timer ; Date = $Date ; Points = "5"}
+    $New_Row = New-Object PsObject -Property @{Problem = "DHCP #1" ; Result = "Add-DhcpServerInDC -DNSName dhcp-practice -IPAddress 172.16.0.50" ; CompletionTime = $Timer ; Date = $Date ; Points = "5"}
 	
     $New_Results += $New_Row
 
@@ -940,11 +1001,11 @@ if ($Body.Text = "Create a DHCP server in the Domain controller named dhcp-pract
 	}
 }
 
-## DHCP & DNS #2 ##
+## DHCP & DNS #2 (install DNS) ##
 
 $DHCP_DNS_Strip_Menu_Item_Practice_2.Name = "DHCP_DNS_Strip_Menu_Item_Practice_2"
 $DHCP_DNS_Strip_Menu_Item_Practice_2.Size = New-Object System.Drawing.Size(152, 22)
-$DHCP_DNS_Strip_Menu_Item_Practice_2.Text = "DHCP + DNS #2 (scope)"
+$DHCP_DNS_Strip_Menu_Item_Practice_2.Text = "DHCP #2 (scope)"
 
 function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_2($Sender,$e){
 
@@ -954,7 +1015,7 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_2($Sender,$e){
 	
 	$global:Timer_Start_Time = $Timer
 	
-    $Title.Text= "DHCP + DNS #2"
+    $Title.Text= "DHCP #2"
 	
 	$Title.ForeColor = 'Blue'
 	
@@ -983,17 +1044,15 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_2($Sender,$e){
 	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
 	
 	if($Problem_Completed_Check -ne $null) {
-	$Title.Text = "DHCP + DNS #2 (COMPLETED)"
-	$Title.ForeColor = 'Green'} 
+	$Title.Text = "DHCP #2 (COMPLETED)" ## Fix this!
+	$Title.ForeColor = 'Green' } 
 	
 	else {
 		
-	$Title.Text = "DHCP + DNS #2"
+	$Title.Text = "DHCP #2"
 	
 	}
-	
-    $Title.Text= "DHCP + DNS #2"
-	$Body.Text = "Create an active IPv4 DHCP scope named 'test' with a start range of 172.16.0.100, `nend range of 172.16.0.200 and subnet mask of 255.255.255.0"
+
 }
 
 function Selected_DHCP_DNS_Practice_Problem_2{
@@ -1014,7 +1073,7 @@ if ($Body.Text = "Create an active IPv4 DHCP scope named 'test' with a start ran
 	
 	$New_Row | Add-Content -Path $Game_Score_File
 
-    $New_Row = New-Object PsObject -Property @{Problem = "DHCP + DNS #2" ; Result = "Add-DhcpServerV4Scope -name 'test' -StartRange 172.16.0.100 -Endrange 172.16.0.200 -SubnetMask 255.255.255.0 -State Active" ; CompletionTime = $Timer ; Date = $Date ; Points = "5"}
+    $New_Row = New-Object PsObject -Property @{Problem = "DHCP #2" ; Result = "Add-DhcpServerV4Scope -name 'test' -StartRange 172.16.0.100 -Endrange 172.16.0.200 -SubnetMask 255.255.255.0 -State Active" ; CompletionTime = $Timer ; Date = $Date ; Points = "5"}
 	
     $New_Results += $New_Row
 
@@ -1043,11 +1102,319 @@ if ($Body.Text = "Create an active IPv4 DHCP scope named 'test' with a start ran
 
 }
 
+## DHCP & DNS #3 (forward lookup zone) ##
+
+$DHCP_DNS_Strip_Menu_Item_Practice_3.Name = "DHCP_DNS_Strip_Menu_Item_Practice_3"
+$DHCP_DNS_Strip_Menu_Item_Practice_3.Size = New-Object System.Drawing.Size(152, 22)
+$DHCP_DNS_Strip_Menu_Item_Practice_3.Text = "DNS #1 (check install)"
+
+function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_3($Sender,$e){
+
+	$Timer_Start_Time.Stop()
+	
+	$Timer = [System.Diagnostics.Stopwatch]::StartNew()
+	
+	$global:Timer_Start_Time = $Timer
+	
+    $Title.Text = "DNS #1 (check install)"
+	
+	$Title.ForeColor = 'Blue'
+	
+	$Body.Text = "Check if DNS is installed on this system."
+	
+	$The_Submit_Button = New-Object System.Windows.Forms.Button
+	
+	$The_Submit_Button.Name = "The_Submit_Button"
+
+	$The_Submit_Button.Text = "Submit"
+
+	$The_Submit_Button.AutoSize = $True
+
+	$The_Submit_Button.Font = 'Verdana,12,style=Bold'
+
+	$The_Submit_Button.ForeColor = 'Blue'
+
+	$The_Submit_Button.Location = New-Object System.Drawing.Point(30,200)
+
+	$The_Submit_Button.Add_Click({Selected_DHCP_DNS_Practice_Problem_3})
+	
+	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
+	
+	$Problem_Completed = "Get-WindowsFeature -Name *DNS*"
+	
+	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
+	
+	if($Problem_Completed_Check -ne $null) {
+	$Title.Text = "DNS #1 (check install) (COMPLETED)"
+	$Title.ForeColor = 'Green'} ## Fix this!
+	
+	else {
+		
+	$Title.Text = "DNS #1 (check install)"
+	
+	}
+	
+}
+
+function Selected_DHCP_DNS_Practice_Problem_3{
+
+$Answer = @($Input_Box.Text)
+
+Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb runAs
+
+if ($Body.Text = "Check if DNS is installed on this system."){
+	if($Input_Box.Text -eq "Get-WindowsFeature -Name *DNS*"){
+		
+	$Time_Elapsed = $Timer_Start_Time.Elapsed
+
+	$Timer = $([string]::Format("`{0:d2}:{1:d2}:{2:d2}",
+	$Time_Elapsed.hours,
+	$Time_Elapsed.minutes,
+	$Time_Elapsed.seconds))
+	
+	$New_Row | Add-Content -Path $Game_Score_File
+
+    $New_Row = New-Object PsObject -Property @{Problem = "DNS #1 (check install)" ; Result = "Get-WindowsFeature -Name *DNS*" ; CompletionTime = $Timer ; Date = $Date ; Points = "1"}
+	
+    $New_Results += $New_Row
+
+    $New_Results | Export-CSV -append $Game_Score_File
+	
+	$Timer.Stop
+	
+    Invoke-Expression Dropdown_Problem_Completed_Check
+
+    $Body.Text = "Check if DNS is installed on this system."
+
+    }
+	
+	if($Input_Box.Text -eq ""){
+		
+		 $MessageBoxTitle = "Null input box"
+
+		 $MessageBoxBody = "Input box is null. Please type an answer to see if it is correct."
+		 
+		 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+	else{
+		$Body.Text = "Check if DNS is installed on this system. Incorrect, your answer was $Answer."}
+	}
+}
+
+}
+
+## DHCP & DNS #4 ##
+
+$DHCP_DNS_Strip_Menu_Item_Practice_4.Name = "DHCP_DNS_Strip_Menu_Item_Practice_4"
+$DHCP_DNS_Strip_Menu_Item_Practice_4.Size = New-Object System.Drawing.Size(152, 22)
+$DHCP_DNS_Strip_Menu_Item_Practice_4.Text = "DNS #2 (install DNS)"
+
+function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_4($Sender,$e){
+
+	$Timer_Start_Time.Stop()
+	
+	$Timer = [System.Diagnostics.Stopwatch]::StartNew()
+	
+	$global:Timer_Start_Time = $Timer
+	
+    $Title.Text= "DNS #1 (check install)"
+	
+	$Title.ForeColor = 'Blue'
+	
+	$Body.Text = "Install DNS and management tools on this system"
+	
+	$The_Submit_Button = New-Object System.Windows.Forms.Button
+	
+	$The_Submit_Button.Name = "The_Submit_Button"
+
+	$The_Submit_Button.Text = "Submit"
+
+	$The_Submit_Button.AutoSize = $True
+
+	$The_Submit_Button.Font = 'Verdana,12,style=Bold'
+
+	$The_Submit_Button.ForeColor = 'Blue'
+
+	$The_Submit_Button.Location = New-Object System.Drawing.Point(30,200)
+
+	$The_Submit_Button.Add_Click({Selected_DHCP_DNS_Practice_Problem_4})
+	
+	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
+	
+	$Problem_Completed = "Install-WindowsFeature -Name DNS -IncludeManagementTools"
+	
+	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
+	
+	if($Problem_Completed_Check -ne $null) {
+	$Title.Text = "DNS #2 (install DNS) (COMPLETED)"
+	$Title.ForeColor = 'Green'} ## Fix this!
+	
+	else {
+		
+	$Title.Text = "DNS #2 (install DNS)"
+	
+	}
+}
+
+function Selected_DHCP_DNS_Practice_Problem_4{
+
+$Answer = @($Input_Box.Text)
+
+Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb runAs
+
+if ($Body.Text = "Install DNS and management tools on this system"){
+	if($Input_Box.Text -eq "Install-WindowsFeature -Name DNS -IncludeManagementTools"){
+		
+	$Time_Elapsed = $Timer_Start_Time.Elapsed
+
+	$Timer = $([string]::Format("`{0:d2}:{1:d2}:{2:d2}",
+	$Time_Elapsed.hours,
+	$Time_Elapsed.minutes,
+	$Time_Elapsed.seconds))
+	
+	$New_Row | Add-Content -Path $Game_Score_File
+
+    $New_Row = New-Object PsObject -Property @{Problem = "DNS #2 (install DNS)" ; Result = "Install-WindowsFeature -Name DNS -IncludeManagementTools" ; CompletionTime = $Timer ; Date = $Date ; Points = "1"}
+	
+    $New_Results += $New_Row
+
+    $New_Results | Export-CSV -append $Game_Score_File
+	
+	$Timer.Stop
+	
+    Invoke-Expression Dropdown_Problem_Completed_Check
+
+    $Body.Text = "Install-WindowsFeature -Name DNS -IncludeManagementTools"
+
+    }
+	
+	if($Input_Box.Text -eq ""){
+		
+		 $MessageBoxTitle = "Null input box"
+
+		 $MessageBoxBody = "Input box is null. Please type an answer to see if it is correct."
+		 
+		 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+	else{
+		$Body.Text = "Install-WindowsFeature -Name DNS -IncludeManagementTools Incorrect, your answer was $Answer."}
+	}
+}
+
+}
+
+## DHCP & DNS #5 ##
+
+$DHCP_DNS_Strip_Menu_Item_Practice_5.Name = "DHCP_DNS_Strip_Menu_Item_Practice_5"
+$DHCP_DNS_Strip_Menu_Item_Practice_5.Size = New-Object System.Drawing.Size(152, 22)
+$DHCP_DNS_Strip_Menu_Item_Practice_5.Text = "DNS #3 (forward lookup zone)"
+
+function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_5($Sender,$e){
+
+	$Timer_Start_Time.Stop()
+	
+	$Timer = [System.Diagnostics.Stopwatch]::StartNew()
+	
+	$global:Timer_Start_Time = $Timer
+	
+    $Title.Text= "DNS #3 (forward lookup zone)"
+	
+	$Title.ForeColor = 'Blue'
+	
+	$Body.Text = "Add a forward lookup zone with DynamicUpdate for Eliteshell.org `nwith secure and nonsecure dynamic updates"
+	
+	$The_Submit_Button = New-Object System.Windows.Forms.Button
+	
+	$The_Submit_Button.Name = "The_Submit_Button"
+
+	$The_Submit_Button.Text = "Submit"
+
+	$The_Submit_Button.AutoSize = $True
+
+	$The_Submit_Button.Font = 'Verdana,12,style=Bold'
+
+	$The_Submit_Button.ForeColor = 'Blue'
+
+	$The_Submit_Button.Location = New-Object System.Drawing.Point(30,200)
+
+	$The_Submit_Button.Add_Click({Selected_DHCP_DNS_Practice_Problem_5})
+	
+	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
+	
+	$Problem_Completed = "Add-DnsServerPrimaryZone -Name Eliteshell.org -Zonefile Eliteshell.org.DNS -DynamicUpdate NonsecureAndSecure"
+	
+	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
+	
+	if($Problem_Completed_Check -ne $null) {
+	$Title.Text = "DNS #3 (forward lookup zone) (COMPLETED)"
+	$Title.ForeColor = 'Green'} ## Fix this!
+	
+	else {
+		
+	$Title.Text = "DNS #3 (forward lookup zone)"
+	
+	}
+}
+
+function Selected_DHCP_DNS_Practice_Problem_5{
+
+$Answer = @($Input_Box.Text)
+
+Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb runAs
+
+if ($Body.Text = "Add a forward lookup zone with DynamicUpdate for Eliteshell.org `nwith secure and nonsecure dynamic updates"){
+
+	if($Input_Box.Text -eq "Add-DnsServerPrimaryZone -Name Eliteshell.org -Zonefile Eliteshell.org.DNS -DynamicUpdate NonsecureAndSecure"){
+	
+	$Time_Elapsed = $Timer_Start_Time.Elapsed
+
+	$Timer = $([string]::Format("`{0:d2}:{1:d2}:{2:d2}",
+	$Time_Elapsed.hours,
+	$Time_Elapsed.minutes,
+	$Time_Elapsed.seconds))
+	
+	$New_Row | Add-Content -Path $Game_Score_File
+
+    $New_Row = New-Object PsObject -Property @{Problem = "DNS #3 (forward lookup zone)" ; Result = "Add-DnsServerPrimaryZone -Name Eliteshell.org -Zonefile Eliteshell.org.DNS -DynamicUpdate NonsecureAndSecure" ; CompletionTime = $Timer ; Date = $Date ; Points = "4"}
+	
+    $New_Results += $New_Row
+
+    $New_Results | Export-CSV -append $Game_Score_File
+	
+	$Timer.Stop
+	
+    Invoke-Expression Dropdown_Problem_Completed_Check
+
+    $Body.Text = "Add a forward lookup zone with DynamicUpdate for Eliteshell.org `nwith secure and nonsecure dynamic updates"
+
+    }
+	
+	if($Input_Box.Text -eq ""){
+		
+		 $MessageBoxTitle = "Null input box"
+
+		 $MessageBoxBody = "Input box is null. Please type an answer to see if it is correct."
+		 
+		 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+	else{
+		$Body.Text = "Add a forward lookup zone with DynamicUpdate for Eliteshell.org `nwith secure and nonsecure dynamic updatesIncorrect, your answer was $Answer."}
+	}
+}
+
+}
+
 $DHCP_DNS_Strip_Menu_Item_Practice.Add_Click( { On_Click_DHCP_DNS_Strip_Menu_Item_Practice $DHCP_DNS_Strip_Menu_Item_Practice $EventArgs} )
 
 $DHCP_DNS_Strip_Menu_Item_Practice_2.Add_Click( { On_Click_DHCP_DNS_Strip_Menu_Item_Practice_2 $DHCP_DNS_Strip_Menu_Item_Practice_2 $EventArgs} )
 
-$DHCP_DNS_Strip_Menu_Item.DropDownItems.AddRange(@($DHCP_DNS_Strip_Menu_Item_Practice, $DHCP_DNS_Strip_Menu_Item_Practice_2))
+$DHCP_DNS_Strip_Menu_Item_Practice_3.Add_Click( { On_Click_DHCP_DNS_Strip_Menu_Item_Practice_3 $DHCP_DNS_Strip_Menu_Item_Practice_3 $EventArgs} )
+
+$DHCP_DNS_Strip_Menu_Item_Practice_4.Add_Click( { On_Click_DHCP_DNS_Strip_Menu_Item_Practice_4 $DHCP_DNS_Strip_Menu_Item_Practice_4 $EventArgs} )
+
+$DHCP_DNS_Strip_Menu_Item_Practice_5.Add_Click( { On_Click_DHCP_DNS_Strip_Menu_Item_Practice_5 $DHCP_DNS_Strip_Menu_Item_Practice_5 $EventArgs} )
+
+$DHCP_DNS_Strip_Menu_Item.DropDownItems.AddRange(@($DHCP_DNS_Strip_Menu_Item_Practice, $DHCP_DNS_Strip_Menu_Item_Practice_2, $DHCP_DNS_Strip_Menu_Item_Practice_3, $DHCP_DNS_Strip_Menu_Item_Practice_4, $DHCP_DNS_Strip_Menu_Item_Practice_5))
 
 ## Windows Server ##
 

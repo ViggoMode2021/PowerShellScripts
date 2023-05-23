@@ -4,8 +4,6 @@ Add-Type -AssemblyName System.Windows.Forms
 
 Add-Type -AssemblyName PresentationCore,PresentationFramework
 
-#if($CSV_Header_Check -ne "Problem,Result,Date,CompletionTime,Points"){ 
-
 $Date = Get-Date -format "MMddyy"
 
 $Forest = Get-ADDomain -Current LocalComputer | Select-Object -expand Forest
@@ -39,6 +37,7 @@ $New_Game_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $Load_Game_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $View_Score_And_Stats_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $Windows_General_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
+$Windows_Server_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $DHCP_DNS_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $Windows_General_Strip_Menu_Item_Learn = New-Object System.Windows.Forms.ToolStripMenuItem
 $Windows_General_Strip_Menu_Item_Practice = New-Object System.Windows.Forms.ToolStripMenuItem
@@ -80,6 +79,18 @@ $Body.Font = 'Verdana,11,style=Bold'
 
 $Body.Location = New-Object System.Drawing.Point(30,80)
 
+$Total_Number_Of_Answers_Label = New-Object $Label_Object
+
+$Total_Number_Of_Answers_Label.Text = ""
+
+$Total_Number_Of_Answers_Label.AutoSize = $true
+
+$Total_Number_Of_Answers_Label.Font = 'Calibri,12,style=Bold'
+
+$Total_Number_Of_Answers_Label.ForeColor = 'Blue'
+
+$Total_Number_Of_Answers_Label.Location = New-Object System.Drawing.Point(800,600)
+
 $Input_Box = New-Object System.Windows.Forms.TextBox
 $Input_Box.Name = "Input_Box"
 $Input_Box.Location = New-Object System.Drawing.Point(30,150)
@@ -88,6 +99,7 @@ $Input_Box.Size = New-Object System.Drawing.Size(380,1000)
 $Menu_Bar.Items.AddRange(@(
 $File_Menu_Item,
 $Windows_General_Strip_Menu_Item,
+$Windows_Server_Strip_Menu_Item,
 $DHCP_DNS_Strip_Menu_Item,
 $Windows_General_Strip_Menu_Item_Learn,
 $Windows_General_Strip_Menu_Item_Practice,
@@ -354,13 +366,15 @@ $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTit
 
 else{
 
-$Global:Game_Score_File = $OpenFileDialog.FileName
+$global:Game_Score_File = $OpenFileDialog.FileName
 
 $CSV_Filename = Split-Path $Game_Score_File -Leaf
 
 $Form.Text = "EleetShell - Current score file: $CSV_Filename"
 
 $CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
+
+$global:Number_Of_Correct_Answers = $CSV_Length
 
 $File_Menu_Item.DropDownItems.AddRange(@($New_Game_Strip_Menu_Item, $Load_Game_Strip_Menu_Item, $View_Score_And_Stats_Strip_Menu_Item))
 
@@ -374,6 +388,20 @@ function On_Click_View_Score_And_Stats_Strip_Menu_Item{
 $Timer_Start_Time.Stop()
 	
 $Table_Data = Import-CSV -Path $Game_Score_File | Out-GridView 
+
+$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers correct answers"
+
+$CSV_Stuff = Import-CSV -Path $Game_Score_File
+
+#$Points = $CSV_Stuff | Select -ExpandProperty Points
+
+foreach ($Points in $CSV_Stuff.Points) {
+	
+	$Total = $Points + $Points
+	
+	Write-Host $Total
+
+}
 
 }
 
@@ -400,7 +428,7 @@ $Windows_General_Strip_Menu_Item_2.Size = New-Object System.Drawing.Size(152, 22
 $Windows_General_Strip_Menu_Item_2.Text = "Windows General #2 (uptime)"
 
 $Windows_General_Strip_Menu_Item_3.Name = "Windows_General_Strip_Menu_Item_3"
-$Windows_General_Strip_Menu_Item_3.Size = New-Object System.Drawing.Size(152, 22) #dir env:
+$Windows_General_Strip_Menu_Item_3.Size = New-Object System.Drawing.Size(152, 22)
 $Windows_General_Strip_Menu_Item_3.Text = "Windows General #3 (env vars)"
 
 $Windows_General_Strip_Menu_Item_4.Name = "Windows_General_Strip_Menu_Item_4"
@@ -590,7 +618,7 @@ if ($Body.Text = "Using PowerShell, find the uptime of this device. Note, use th
 	
     Invoke-Expression Dropdown_Problem_Completed_Check
 
-    $Body.Text = "Using PowerShell, find the uptime of this device. Note, use the 'systeminfo' command and a | (pipe). Correct, your answer was $Answer."
+    $Body.Text = "Using PowerShell, find the uptime of this device. Note, use the 'systeminfo' command and a | (pipe). `nCorrect, your answer was $Answer."
 
     }
 	
@@ -685,7 +713,7 @@ if ($Body.Text = "Using PowerShell, find the environment variables on this syste
 	
     Invoke-Expression Dropdown_Problem_Completed_Check
 
-    $Body.Text = "Using PowerShell, find the environment variables on this system using a command `nthat has two different three letter words and a : Correct, your answer was $Answer."
+    $Body.Text = "Using PowerShell, find the environment variables on this system using a command `nthat has two different three letter words and a : `nCorrect, your answer was $Answer."
 
     }
 	
@@ -764,8 +792,6 @@ if ($Body.Text = "Using PowerShell, find the processes on this machine where the
 	
 	if($Input_Box.Text -eq $CPU){
 		
-	Write-Host "AJSIDFJI"
-		
 	$Time_Elapsed = $Timer_Start_Time.Elapsed
 
 	$Timer = $([string]::Format("`{0:d2}:{1:d2}:{2:d2}",
@@ -785,7 +811,7 @@ if ($Body.Text = "Using PowerShell, find the processes on this machine where the
 	
     Invoke-Expression Dropdown_Problem_Completed_Check
 
-    $Body.Text = "Using PowerShell, find the processes on this machine where the cpu consumption is greater than 20%. `nNote: Use Get-Process and Where-Object separated by a | Correct, your answer was $Answer."
+    $Body.Text = "Using PowerShell, find the processes on this machine where the cpu consumption is greater than 20%. `nNote: Use Get-Process and Where-Object separated by a | `n`n`n`n`nCorrect, your answer was $Answer."
 
     }
 	
@@ -811,7 +837,6 @@ $Windows_General_Strip_Menu_Item_2.Add_Click( { On_Click_Uptime_Strip_Menu_Item 
 $Windows_General_Strip_Menu_Item_3.Add_Click( { On_Click_Env_Strip_Menu_Item $Windows_General_Strip_Menu_Item_3 $EventArgs} )
 
 $Windows_General_Strip_Menu_Item_4.Add_Click( { On_Click_Cpu_Strip_Menu_Item $Windows_General_Strip_Menu_Item_4 $EventArgs} )
-
 
 ## DHCP & DNS #1 ##
 
@@ -967,7 +992,7 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_2($Sender,$e){
 	
 	}
 	
-    $Title.Text= "Practice PowerShell for DHCP + DNS #2"
+    $Title.Text= "DHCP + DNS #2"
 	$Body.Text = "Create an active IPv4 DHCP scope named 'test' with a start range of 172.16.0.100, `nend range of 172.16.0.200 and subnet mask of 255.255.255.0"
 }
 
@@ -1024,7 +1049,13 @@ $DHCP_DNS_Strip_Menu_Item_Practice_2.Add_Click( { On_Click_DHCP_DNS_Strip_Menu_I
 
 $DHCP_DNS_Strip_Menu_Item.DropDownItems.AddRange(@($DHCP_DNS_Strip_Menu_Item_Practice, $DHCP_DNS_Strip_Menu_Item_Practice_2))
 
-$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button))
+## Windows Server ##
+
+$Windows_Server_Strip_Menu_Item.Name = "Windows_Server_Strip_Menu_Item"
+$Windows_Server_Strip_Menu_Item.Size = New-Object System.Drawing.Size(51, 20)
+$Windows_Server_Strip_Menu_Item.Text = "Windows Server"
+
+$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Total_Number_Of_Answers_Label))
 
 ## Form dialogue
 $Form.ShowDialog()

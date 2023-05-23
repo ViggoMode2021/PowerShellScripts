@@ -184,7 +184,7 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 
     $File = "$New_Game_File"
     $Data = Get-Content -Path $File
-    $Header = "Problem,Result,Date,CompletionTime,Points"
+    $Header = "Problem,Description,Result,Date,CompletionTime,Points"
     Set-Content $File -Value $Header
     Add-Content -Path $File -Value $Data
 
@@ -195,6 +195,10 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
     $Form.Text = "EleetShell - Current score file: $New_Game_Filename_Csv_Rename"
 	
 	$File_Menu_Item.DropDownItems.AddRange(@($New_Game_Strip_Menu_Item, $Load_Game_Strip_Menu_Item, $View_Score_And_Stats_Strip_Menu_Item))
+	
+	$global:Number_Of_Correct_Answers = $CSV_Length
+
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers correct answers"
 	
     }
 
@@ -222,7 +226,7 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 
     $File = "$New_Game_File"
     $Data = Get-Content -Path $File
-    $Header = "Problem,Result,Date,CompletionTime,Points"
+    $Header = "Problem,Description,Result,Date,CompletionTime,Points"
     Set-Content $File -Value $Header
     Add-Content -Path $File -Value $Data
 
@@ -411,7 +415,7 @@ $OpenFileDialog.ShowDialog() | Out-Null
 
 $CSV_Header_Check = (Get-Content $OpenFileDialog.FileName | Select-Object -First 1).Split($csvdelimiter)
 
-if($CSV_Header_Check -ne "Problem,Result,Date,CompletionTime,Points"){ 
+if($CSV_Header_Check -ne "Problem,Description,Result,Date,CompletionTime,Points"){ 
  
 $MessageBoxTitle = "Incompatible csv file"
 
@@ -448,11 +452,13 @@ $Timer_Start_Time.Stop()
 	
 $Table_Data = Import-CSV -Path $Game_Score_File | Out-GridView 
 
-$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers correct answers"
-
 $CSV_Stuff = Import-CSV -Path $Game_Score_File
 
 $CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
+
+$global:Number_Of_Correct_Answers = $CSV_Length
+
+$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers correct answers"
 
 #$Points = $CSV_Stuff | Select -ExpandProperty Points
 
@@ -574,13 +580,19 @@ if ($Body.Text = "Find the computer name (hostname) of your Windows machine. Use
 	
 	$New_Row | Add-Content -Path $Game_Score_File
 
-    $New_Row = New-Object PsObject -Property @{Problem = "Windows General #1" ; Result = "hostname" ; CompletionTime = $Timer ; Date = $Date ; Points = "1"}
+    $New_Row = New-Object PsObject -Property @{Problem = "Windows General #1" ; Description = "Find the computer name (hostname) of your Windows machine. Use PowerShell." ;Result = "hostname" ; CompletionTime = $Timer ; Date = $Date ; Points = "1"}
 	
     $New_Results += $New_Row
 
     $New_Results | Export-CSV -append $Game_Score_File
 	
 	$Timer.Stop
+	
+	$CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
+
+	$global:Number_Of_Correct_Answers = $CSV_Length
+
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers correct answers"
 	
     Invoke-Expression Dropdown_Problem_Completed_Check
 
@@ -669,13 +681,19 @@ if ($Body.Text = "Using PowerShell, find the uptime of this device. Note, use th
 	
 	$New_Row | Add-Content -Path $Game_Score_File
 
-    $New_Row = New-Object PsObject -Property @{Problem = "Windows General #2" ; Result = "systeminfo | find 'Boot Time'" ; CompletionTime = $Timer ; Date = $Date ; Points = "2"}
+    $New_Row = New-Object PsObject -Property @{Problem = "Windows General #2" ; Description = "Using PowerShell, find the uptime of this device. Note, use the 'systeminfo' command and a | (pipe). Make sure there is proper spacing on  both sides of |" ; Result = "systeminfo | find 'Boot Time'" ; CompletionTime = $Timer ; Date = $Date ; Points = "2"}
 	
     $New_Results += $New_Row
 
     $New_Results | Export-CSV -append $Game_Score_File
 	
 	$Timer.Stop
+	
+	$CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
+
+	$global:Number_Of_Correct_Answers = $CSV_Length
+
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers correct answers"
 	
     Invoke-Expression Dropdown_Problem_Completed_Check
 
@@ -753,8 +771,11 @@ $Answer = @($Input_Box.Text)
 Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb runAs
 
 if ($Body.Text = "Using PowerShell, find the environment variables on this system using a command `nthat has two different three letter words and a :"){
+	
 	if($Input_Box.Text -eq "dir env:"){
-		
+	
+	Write-Host "drea"
+	
 	$Time_Elapsed = $Timer_Start_Time.Elapsed
 
 	$Timer = $([string]::Format("`{0:d2}:{1:d2}:{2:d2}",
@@ -764,13 +785,19 @@ if ($Body.Text = "Using PowerShell, find the environment variables on this syste
 	
 	$New_Row | Add-Content -Path $Game_Score_File
 
-    $New_Row = New-Object PsObject -Property @{Problem = "Windows General #3" ; Result = "dir env:" ; CompletionTime = $Timer ; Date = $Date ; Points = "2"}
+    $New_Row = New-Object PsObject -Property @{Problem = "Windows General #3" ; Description = "Using PowerShell, find the environment variables on this system using a command `nthat has two different three letter words and a :" ;Result = "dir env:" ; CompletionTime = $Timer ; Date = $Date ; Points = "2"}
 	
     $New_Results += $New_Row
 
     $New_Results | Export-CSV -append $Game_Score_File
 	
 	$Timer.Stop
+	
+	$CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
+
+	$global:Number_Of_Correct_Answers = $CSV_Length
+
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers correct answers"
 	
     Invoke-Expression Dropdown_Problem_Completed_Check
 
@@ -862,7 +889,7 @@ if ($Body.Text = "Using PowerShell, find the processes on this machine where the
 	
 	$New_Row | Add-Content -Path $Game_Score_File
 
-    $New_Row = New-Object PsObject -Property @{Problem = "Windows General #4" ; Result = "Get-Process | Where-Object { $_.CPU -gt 20 }" ; CompletionTime = $Timer ; Date = $Date ; Points = "3"}
+    $New_Row = New-Object PsObject -Property @{Problem = "Windows General #4" ; Description = "Using PowerShell, find the processes on this machine where the cpu consumption is greater than 20%. `nNote: Use Get-Process and Where-Object separated by a |" ; Result = "$CPU" ; CompletionTime = $Timer ; Date = $Date ; Points = "3"}
 	
     $New_Results += $New_Row
 
@@ -870,9 +897,15 @@ if ($Body.Text = "Using PowerShell, find the processes on this machine where the
 	
 	$Timer.Stop
 	
+	$CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
+
+	$global:Number_Of_Correct_Answers = $CSV_Length
+
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers correct answers"
+	
     Invoke-Expression Dropdown_Problem_Completed_Check
 
-    $Body.Text = "Using PowerShell, find the processes on this machine where the cpu consumption is greater than 20%. `nNote: Use Get-Process and Where-Object separated by a | `n`n`n`n`nCorrect, your answer was $Answer."
+    $Body.Text = "Using PowerShell, find the processes on this machine where the cpu consumption is greater than 20%. `nNote: Use Get-Process and Where-Object separated by a | `nCorrect, your answer was $Answer."
 
     }
 	
@@ -974,13 +1007,19 @@ if ($Body.Text = "Create a DHCP server in the Domain controller named dhcp-pract
 	
 	$New_Row | Add-Content -Path $Game_Score_File
 
-    $New_Row = New-Object PsObject -Property @{Problem = "DHCP #1" ; Result = "Add-DhcpServerInDC -DNSName dhcp-practice -IPAddress 172.16.0.50" ; CompletionTime = $Timer ; Date = $Date ; Points = "5"}
+    $New_Row = New-Object PsObject -Property @{Problem = "DHCP #1" ; Description = "Create a DHCP server in the Domain controller named dhcp-practice with an IP address of 172.16.0.50" ; Result = "Add-DhcpServerInDC -DNSName dhcp-practice -IPAddress 172.16.0.50" ; CompletionTime = $Timer ; Date = $Date ; Points = "5"}
 	
     $New_Results += $New_Row
 
     $New_Results | Export-CSV -append $Game_Score_File
 	
 	$Timer.Stop
+	
+	$CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
+
+	$global:Number_Of_Correct_Answers = $CSV_Length
+
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers correct answers"
 	
     Invoke-Expression Dropdown_Problem_Completed_Check
 
@@ -1073,13 +1112,19 @@ if ($Body.Text = "Create an active IPv4 DHCP scope named 'test' with a start ran
 	
 	$New_Row | Add-Content -Path $Game_Score_File
 
-    $New_Row = New-Object PsObject -Property @{Problem = "DHCP #2" ; Result = "Add-DhcpServerV4Scope -name 'test' -StartRange 172.16.0.100 -Endrange 172.16.0.200 -SubnetMask 255.255.255.0 -State Active" ; CompletionTime = $Timer ; Date = $Date ; Points = "5"}
+    $New_Row = New-Object PsObject -Property @{Problem = "DHCP #2" ; Description = "Create an active IPv4 DHCP scope named 'test' with a start range of 172.16.0.100, `nend range of 172.16.0.200 and subnet mask of 255.255.255.0" ; Result = "Add-DhcpServerV4Scope -name 'test' -StartRange 172.16.0.100 -Endrange 172.16.0.200 -SubnetMask 255.255.255.0 -State Active" ; CompletionTime = $Timer ; Date = $Date ; Points = "5"}
 	
     $New_Results += $New_Row
 
     $New_Results | Export-CSV -append $Game_Score_File
 	
 	$Timer.Stop
+	
+	$CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
+
+	$global:Number_Of_Correct_Answers = $CSV_Length
+
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers correct answers"
 	
     Invoke-Expression Dropdown_Problem_Completed_Check
 
@@ -1096,7 +1141,7 @@ if ($Body.Text = "Create an active IPv4 DHCP scope named 'test' with a start ran
 		 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
 
 	else{
-		$Body.Text = "Create an active IPv4 DHCP scope named 'test' with a start range of 172.16.0.100, end range of 172.16.0.200 and subnet mask of 255.255.255.0Incorrect, your answer was $Answer."}
+		$Body.Text = "Create an active IPv4 DHCP scope named 'test' with a start range of 172.16.0.100, end range of 172.16.0.200 and subnet mask of 255.255.255.0"}
 	}
 }
 
@@ -1174,13 +1219,19 @@ if ($Body.Text = "Check if DNS is installed on this system."){
 	
 	$New_Row | Add-Content -Path $Game_Score_File
 
-    $New_Row = New-Object PsObject -Property @{Problem = "DNS #1 (check install)" ; Result = "Get-WindowsFeature -Name *DNS*" ; CompletionTime = $Timer ; Date = $Date ; Points = "1"}
+    $New_Row = New-Object PsObject -Property @{Problem = "DNS #1 (check install)" ; Description = "Check if DNS is installed on this system" ; Result = "Get-WindowsFeature -Name *DNS*" ; CompletionTime = $Timer ; Date = $Date ; Points = "1"}
 	
     $New_Results += $New_Row
 
     $New_Results | Export-CSV -append $Game_Score_File
 	
 	$Timer.Stop
+	
+	$CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
+
+	$global:Number_Of_Correct_Answers = $CSV_Length
+
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers correct answers"
 	
     Invoke-Expression Dropdown_Problem_Completed_Check
 
@@ -1197,7 +1248,7 @@ if ($Body.Text = "Check if DNS is installed on this system."){
 		 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
 
 	else{
-		$Body.Text = "Check if DNS is installed on this system. Incorrect, your answer was $Answer."}
+		$Body.Text = "Check if DNS is installed on this system."}
 	}
 }
 
@@ -1274,7 +1325,7 @@ if ($Body.Text = "Install DNS and management tools on this system"){
 	
 	$New_Row | Add-Content -Path $Game_Score_File
 
-    $New_Row = New-Object PsObject -Property @{Problem = "DNS #2 (install DNS)" ; Result = "Install-WindowsFeature -Name DNS -IncludeManagementTools" ; CompletionTime = $Timer ; Date = $Date ; Points = "1"}
+    $New_Row = New-Object PsObject -Property @{Problem = "DNS #2 (install DNS)" ; Description = "Install DNS and management tools on this system" ; Result = "Install-WindowsFeature -Name DNS -IncludeManagementTools" ; CompletionTime = $Timer ; Date = $Date ; Points = "1"}
 	
     $New_Results += $New_Row
 
@@ -1282,9 +1333,15 @@ if ($Body.Text = "Install DNS and management tools on this system"){
 	
 	$Timer.Stop
 	
+	$CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
+
+	$global:Number_Of_Correct_Answers = $CSV_Length
+
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers correct answers"
+	
     Invoke-Expression Dropdown_Problem_Completed_Check
 
-    $Body.Text = "Install-WindowsFeature -Name DNS -IncludeManagementTools"
+    $Body.Text = "Install DNS and management tools on this system"
 
     }
 	
@@ -1297,7 +1354,7 @@ if ($Body.Text = "Install DNS and management tools on this system"){
 		 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
 
 	else{
-		$Body.Text = "Install-WindowsFeature -Name DNS -IncludeManagementTools Incorrect, your answer was $Answer."}
+		$Body.Text = "Install DNS and management tools on this system Incorrect, your answer was $Answer."}
 	}
 }
 
@@ -1375,13 +1432,19 @@ if ($Body.Text = "Add a forward lookup zone with DynamicUpdate for Eliteshell.or
 	
 	$New_Row | Add-Content -Path $Game_Score_File
 
-    $New_Row = New-Object PsObject -Property @{Problem = "DNS #3 (forward lookup zone)" ; Result = "Add-DnsServerPrimaryZone -Name Eliteshell.org -Zonefile Eliteshell.org.DNS -DynamicUpdate NonsecureAndSecure" ; CompletionTime = $Timer ; Date = $Date ; Points = "4"}
+    $New_Row = New-Object PsObject -Property @{Problem = "DNS #3 (forward lookup zone)" ; Description = "Add a forward lookup zone with DynamicUpdate for Eliteshell.org `nwith secure and nonsecure dynamic updates" ; Result = "Add-DnsServerPrimaryZone -Name Eliteshell.org -Zonefile Eliteshell.org.DNS -DynamicUpdate NonsecureAndSecure" ; CompletionTime = $Timer ; Date = $Date ; Points = "4"}
 	
     $New_Results += $New_Row
 
     $New_Results | Export-CSV -append $Game_Score_File
 	
 	$Timer.Stop
+	
+	$CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
+
+	$global:Number_Of_Correct_Answers = $CSV_Length
+
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers correct answers"
 	
     Invoke-Expression Dropdown_Problem_Completed_Check
 

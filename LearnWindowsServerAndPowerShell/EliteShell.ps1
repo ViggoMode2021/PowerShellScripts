@@ -36,7 +36,6 @@ $Active_Directory_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMen
 $DHCP_DNS_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem  # Main DHCP DNS General dropdown
 $Networking_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem # Main Networking dropdown
 
-
 $Menu_Bar = New-Object System.Windows.Forms.MenuStrip
 $New_Game_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $Load_Game_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
@@ -59,8 +58,8 @@ $Networking_Strip_Menu_Item_Practice_4 = New-Object System.Windows.Forms.ToolStr
 $Networking_Strip_Menu_Item_Practice_5 = New-Object System.Windows.Forms.ToolStripMenuItem
 
 $Score_Box = New-Object System.Windows.Forms.GroupBox
-$Score_Box.Location = New-Object System.Drawing.Size(800,500)
-$Score_Box.Size = New-Object System.Drawing.Size(200,200)
+$Score_Box.Location = New-Object System.Drawing.Size(1550,50)
+$Score_Box.Size = New-Object System.Drawing.Size(400,400)
 $Score_Box.Text = "Current Stats:"
 
 $ButtonTypeOk = [System.Windows.MessageBoxButton]::Ok
@@ -118,7 +117,7 @@ $Total_Number_Of_Answers_Label.Font = 'Calibri,12,style=Bold'
 
 $Total_Number_Of_Answers_Label.ForeColor = 'Blue'
 
-$Total_Number_Of_Answers_Label.Location = New-Object System.Drawing.Point(810,570)
+$Total_Number_Of_Answers_Label.Location = New-Object System.Drawing.Point(1600,100)
 
 $Total_Score_Label = New-Object $Label_Object
 
@@ -130,7 +129,7 @@ $Total_Score_Label.Font = 'Calibri,12,style=Bold'
 
 $Total_Score_Label.ForeColor = 'Blue'
 
-$Total_Score_Label.Location = New-Object System.Drawing.Point(810,600)
+$Total_Score_Label.Location = New-Object System.Drawing.Point(1600,150)
 
 $Input_Box = New-Object System.Windows.Forms.TextBox
 $Input_Box.Name = "Input_Box"
@@ -279,6 +278,12 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
     $Form.Text = "EleetShell - Current score file: $New_Game_Filename_Csv"
 	
 	$File_Menu_Item.DropDownItems.AddRange(@($New_Game_Strip_Menu_Item, $Load_Game_Strip_Menu_Item, $View_Score_And_Stats_Strip_Menu_Item))
+
+    Invoke-Expression Dropdown_Problem_Completed_Check
+
+    $Total_Number_Of_Answers_Label.Text = ""
+
+    $Total_Score_Label.Text = ""
 
     }
 	
@@ -662,7 +667,7 @@ $Windows_General_Strip_Menu_Item_4, $Windows_General_Strip_Menu_Item_5))
 
 function On_Click_Boot_Process_Strip_Menu_Item_Learn($Sender,$e){
 
-    $The_Submit_Button.Remove_Click({*})
+    $Correct_Incorrect.Text= ""
 	
 	$Timer_Start_Time.Stop()
 
@@ -673,7 +678,7 @@ function On_Click_Boot_Process_Strip_Menu_Item_Learn($Sender,$e){
     $Title.Text = "Windows General #!"
 	$Title.ForeColor = 'Blue'
 	
-	$Body.Text = "Using PowerShell, find the computer name (hostname) of this device."
+	$Body.Text = "Find the computer name (hostname) of this device."
 
     $Form.Controls.RemoveByKey("The_Submit_Button")
 	
@@ -767,6 +772,12 @@ if ($Body.Text = "Find the computer name (hostname) of your Windows machine. Use
     }
 
 	else{
+        
+     $Body.Text = "Find the computer name (hostname) of your Windows machine"
+
+     $Correct_Incorrect.Text = "Incorrect, your answer was $Answer."
+
+     $Correct_Incorrect.ForeColor = 'Red'
 
         }
 }}
@@ -775,7 +786,7 @@ if ($Body.Text = "Find the computer name (hostname) of your Windows machine. Use
 
 function On_Click_Uptime_Strip_Menu_Item($Sender,$e){
 
-    $The_Submit_Button.Remove_Click({*})
+    $Correct_Incorrect.Text= ""
 	
 	$Timer_Start_Time.Stop()
 
@@ -867,8 +878,6 @@ if ($Body.Text = $Description){
 
     $Correct_Incorrect.ForeColor = 'Green'
 
-    Invoke-Express
-
     }
 
 	else{
@@ -884,6 +893,8 @@ if ($Body.Text = $Description){
 ## Windows General #3 ##
 
 function On_Click_Env_Strip_Menu_Item($Sender,$e){
+
+    $Correct_Incorrect.Text= ""
 	
 	$Timer_Start_Time.Stop()
 
@@ -978,11 +989,19 @@ if ($Body.Text = "Find the environment variables on this system using a command 
 
     $Correct_Incorrect.ForeColor = 'Green'
 
+    $Correct_Incorrect.Text = "Correct, your answer was $Answer."
+
     }
 
 	else{
+
 		$Body.Text = "Find the environment variables on this system using a command `nthat has two different three letter words and a :"
-        $Correct_Incorrect.ForeColor = 'Red'}
+        
+        $Correct_Incorrect.ForeColor = 'Red'
+
+        $Correct_Incorrect.Text = "Incorrect, your answer was $Answer."
+        
+        }
 	}
 
 	$Input_Box.Clear()
@@ -991,6 +1010,8 @@ if ($Body.Text = "Find the environment variables on this system using a command 
 ## Windows General #4 ##
 
 function On_Click_Cpu_Strip_Menu_Item($Sender,$e){
+
+    $Correct_Incorrect.Text= ""
 	
 	$Timer_Start_Time.Stop()
 
@@ -1044,7 +1065,7 @@ $Answer = @($Input_Box.Text)
 
 Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb runAs
 
-if ($Body.Text = "Using PowerShell, find the processes on this machine where the cpu consumption is greater than 20%. `nNote: Use Get-Process and Where-Object separated by a |"){
+if ($Body.Text = "Find the processes on this machine where the cpu consumption is greater than 20%. `nNote: Use Get-Process and Where-Object separated by a |"){
 	
 	$CPU = 'Get-Process | Where-Object { $_.CPU -gt 20 }'
 	
@@ -1059,7 +1080,7 @@ if ($Body.Text = "Using PowerShell, find the processes on this machine where the
 	
 	$New_Row | Add-Content -Path $Game_Score_File
 
-    $New_Row = New-Object PsObject -Property @{Problem = "Windows General #4" ; Description = "Using PowerShell, find the processes on this machine where the cpu consumption is greater than 20%. `nNote: Use Get-Process and Where-Object separated by a |" ; Result = "$CPU" ; CompletionTime = $Timer ; Date = $Date ; Points = "3"}
+    $New_Row = New-Object PsObject -Property @{Problem = "Windows General #4" ; Description = "Find the processes on this machine where the cpu consumption is greater than 20%. `nNote: Use Get-Process and Where-Object separated by a |" ; Result = "$CPU" ; CompletionTime = $Timer ; Date = $Date ; Points = "3"}
 	
     $New_Results += $New_Row
 
@@ -1089,30 +1110,33 @@ if ($Body.Text = "Using PowerShell, find the processes on this machine where the
 		
     Invoke-Expression Dropdown_Problem_Completed_Check
 
-    $Body.Text = "Using PowerShell, find the processes on this machine where the cpu consumption is greater than 20%. `nNote: Use Get-Process and Where-Object separated by a | `nCorrect, your answer was $Answer."
+    $Body.Text = "Find the processes on this machine where the cpu consumption is greater than 20%. `nNote: Use Get-Process and Where-Object separated by a |"
+    
+    $Correct_Incorrect.ForeColor = 'Green'
+
+    $Correct_Incorrect.Text = "Correct, your answer was $Answer."
 
     }
-	
-	if($Input_Box.Text -eq ""){
-		
-		 $MessageBoxTitle = "Null input box"
-
-		 $MessageBoxBody = "Input box is null. Please type an answer to see if it is correct."
-		 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
-
 
 	else{
-		$Body.Text = "Find the processes on this machine where the cpu consumption is greater than 20%. `nNote: Use Get-Process and Where-Object separated by a |"}
+
+		$Body.Text = "Find the processes on this machine where the cpu consumption is greater than 20%. `nNote: Use Get-Process and Where-Object separated by a |"
+        
+        $Correct_Incorrect.ForeColor = 'Red'
+
+        $Correct_Incorrect.Text = "Incorrect, your answer was $Answer."
+        
+        }
 	}
 
 	$Input_Box.Clear()
 }
 
-}
-
 ## Windows General #5 ##
 
 function On_Click_Disk_Space_Strip_Menu_Item($Sender,$e){
+
+    $Correct_Incorrect.Text= ""
 	
 	$Timer_Start_Time.Stop()
 
@@ -1209,25 +1233,26 @@ if ($Body.Text = "Find the disk space of the current machine's C drive"){
 		
     Invoke-Expression Dropdown_Problem_Completed_Check
 
-    $Body.Text = "Find the disk space of the current machine's C drive `nCorrect, your answer was $Answer."
+    $Body.Text = "Find the disk space of the current machine's C drive"
+
+    $Correct_Incorrect.ForeColor = 'Green'
+
+    $Correct_Incorrect.Text = "Correct, your answer was $Answer."
 
     }
-	
-	if($Input_Box.Text -eq ""){
-		
-		 $MessageBoxTitle = "Null input box"
-
-		 $MessageBoxBody = "Input box is null. Please type an answer to see if it is correct."
-		 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
-
 
 	else{
-		$Body.Text = "Find the disk space of the current machine's C drive"}
+
+		$Body.Text = "Find the disk space of the current machine's C drive"
+        
+        $Correct_Incorrect.ForeColor = 'Red'
+
+        $Correct_Incorrect.Text = "Incorrect, your answer was $Answer."
+        
+        }
 	}
 
 	$Input_Box.Clear()
-}
-
 }
 
 $Windows_General_Strip_Menu_Item_Learn.Add_Click( { On_Click_Boot_Process_Strip_Menu_Item_Learn $Windows_General_Strip_Menu_Item_Learn $EventArgs} )
@@ -1251,6 +1276,8 @@ $DHCP_DNS_Strip_Menu_Item_Practice.Size = New-Object System.Drawing.Size(152, 22
 $DHCP_DNS_Strip_Menu_Item_Practice.Text = "DHCP #1 (server)"
 
 function On_Click_DHCP_DNS_Strip_Menu_Item_Practice($Sender,$e){ 
+
+    $Correct_Incorrect.Text= ""
 	
 	$Timer_Start_Time.Stop()
 
@@ -1335,10 +1362,24 @@ if ($Body.Text = "Create a DHCP server in the Domain controller named dhcp-pract
 
     $Body.Text = "Create a DHCP server in the Domain controller named dhcp-practice with an IP address of 172.16.0.50"
 
-	$Input_Box.Clear()
-	
+    $Correct_Incorrect.ForeColor = 'Green'
+
+    $Correct_Incorrect.Text = "Correct, your answer was $Answer."
+
     }
-}
+
+	else{
+
+		$Body.Text =  "Create a DHCP server in the Domain controller named dhcp-practice with an IP address of 172.16.0.50"
+        
+        $Correct_Incorrect.ForeColor = 'Red'
+
+        $Correct_Incorrect.Text = "Incorrect, your answer was $Answer."
+        
+        }
+	}
+
+	$Input_Box.Clear()
 }
 
 ## DHCP & DNS #2 (install DNS) ##
@@ -1348,6 +1389,8 @@ $DHCP_DNS_Strip_Menu_Item_Practice_2.Size = New-Object System.Drawing.Size(152, 
 $DHCP_DNS_Strip_Menu_Item_Practice_2.Text = "DHCP #2 (scope)"
 
 function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_2($Sender,$e){
+
+    $Correct_Incorrect.Text= ""
 
 	$Timer_Start_Time.Stop()
 	
@@ -1446,12 +1489,22 @@ if ($Body.Text = "Create an active IPv4 DHCP scope named 'test' with a start ran
 	
     Invoke-Expression Dropdown_Problem_Completed_Check
 
-    $Body.Text = "Create a DHCP scope in the Domain controller named dhcp-practice with an IP address of 172.16.0.50"
+    $Body.Text = "Create an active IPv4 DHCP scope named 'test' with a start range of 172.16.0.100, `nend range of 172.16.0.200 and subnet mask of 255.255.255.0"
 	
-	$Input_Box.Clear()
-	
+    $Correct_Incorrect.Text = "Correct, your answer was $Answer."
+
+    $Correct_Incorrect.ForeColor = 'Green'
+
     }
-}
+
+	else{
+		$Body.Text = "Create an active IPv4 DHCP scope named 'test' with a start range of 172.16.0.100, `nend range of 172.16.0.200 and subnet mask of 255.255.255.0"
+        $Correct_Incorrect.Text = "Incorrect, your answer was $Answer."
+        $Correct_Incorrect.ForeColor = 'Red'
+        }
+	}
+
+	$Input_Box.Clear()
 }
 
 ## DHCP & DNS #3 (forward lookup zone) ##
@@ -1461,6 +1514,8 @@ $DHCP_DNS_Strip_Menu_Item_Practice_3.Size = New-Object System.Drawing.Size(152, 
 $DHCP_DNS_Strip_Menu_Item_Practice_3.Text = "DNS #1 (check install)"
 
 function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_3($Sender,$e){
+
+    $Correct_Incorrect.Text= ""
 
 	$Timer_Start_Time.Stop()
 	
@@ -1560,13 +1615,19 @@ if ($Body.Text = "Check if DNS is installed on this system."){
 
     $Body.Text = "Check if DNS is installed on this system."
 
+    $Correct_Incorrect.Text = "Correct, your answer was $Answer."
+
+    $Correct_Incorrect.ForeColor = 'Green'
+
     }
 
 	else{
-        $Title.Text = "DNS #1 (check install)"
-		$Body.Text = "Check if DNS is installed on this system."}
+		$Body.Text = "Check if DNS is installed on this system."
+        $Correct_Incorrect.Text = "Incorrect, your answer was $Answer."
+        $Correct_Incorrect.ForeColor = 'Red'
+        }
 	}
-	
+
 	$Input_Box.Clear()
 }
 
@@ -1577,6 +1638,8 @@ $DHCP_DNS_Strip_Menu_Item_Practice_4.Size = New-Object System.Drawing.Size(152, 
 $DHCP_DNS_Strip_Menu_Item_Practice_4.Text = "DNS #2 (install DNS)"
 
 function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_4($Sender,$e){
+
+    $Correct_Incorrect.Text= ""
 
 	$Timer_Start_Time.Stop()
 	
@@ -1677,13 +1740,19 @@ if ($Body.Text = "Install DNS and management tools on this system"){
 
     $Body.Text = "Install DNS and management tools on this system"
 
+    $Correct_Incorrect.Text = "Correct, your answer was $Answer."
+
+    $Correct_Incorrect.ForeColor = 'Green'
+
     }
 
 	else{
-        $Title.Text = "DNS #2 (install DNS)"
-		$Body.Text = "Install DNS and management tools on this system Incorrect, your answer was $Answer."}
+		$Body.Text = $Description
+        $Correct_Incorrect.Text = "Incorrect, your answer was $Answer."
+        $Correct_Incorrect.ForeColor = 'Red'
+        }
 	}
-	
+
 	$Input_Box.Clear()
 }
 
@@ -1694,6 +1763,8 @@ $DHCP_DNS_Strip_Menu_Item_Practice_5.Size = New-Object System.Drawing.Size(152, 
 $DHCP_DNS_Strip_Menu_Item_Practice_5.Text = "DNS #3 (forward lookup zone)"
 
 function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_5($Sender,$e){
+
+    $Correct_Incorrect.Text= ""
 
 	$Timer_Start_Time.Stop()
 	
@@ -1793,24 +1864,20 @@ if ($Body.Text = "Add a forward lookup zone with DynamicUpdate for Eliteshell.or
 
     $Body.Text = "Add a forward lookup zone with DynamicUpdate for Eliteshell.org `nwith secure and nonsecure dynamic updates"
 
-    }
-	
-	if($Input_Box.Text -eq ""){
-		
-		 $MessageBoxTitle = "Null input box"
+    $Correct_Incorrect.Text = "Correct, your answer was $Answer."
 
-		 $MessageBoxBody = "Input box is null. Please type an answer to see if it is correct."
-		 
-		 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+    $Correct_Incorrect.ForeColor = 'Green'
+
+    }
 
 	else{
-		$Body.Text = "Add a forward lookup zone with DynamicUpdate for Eliteshell.org `nwith secure and nonsecure dynamic updatesIncorrect, your answer was $Answer."}
+		$Body.Text = "Add a forward lookup zone with DynamicUpdate for Eliteshell.org `nwith secure and nonsecure dynamic updates"
+        $Correct_Incorrect.Text = "Incorrect, your answer was $Answer."
+        $Correct_Incorrect.ForeColor = 'Red'
+        }
 	}
-	
-	$Input_Box.Clear()
-	
-}
 
+	$Input_Box.Clear()
 }
 
 $DHCP_DNS_Strip_Menu_Item_Practice.Add_Click( { On_Click_DHCP_DNS_Strip_Menu_Item_Practice $DHCP_DNS_Strip_Menu_Item_Practice $EventArgs} )
@@ -1836,6 +1903,8 @@ $Networking_Strip_Menu_Item_Practice.Size = New-Object System.Drawing.Size(35, 2
 $Networking_Strip_Menu_Item_Practice.Text = "Networking #1 (ip address)"
 
 function On_Click_Networking_Strip_Menu_Item($Sender,$e){ 
+
+    $Correct_Incorrect.Text= ""
 	
 	$Timer_Start_Time.Stop()
 
@@ -1902,7 +1971,7 @@ if ($Body.Text = "Find the IP address of this machine and all corresponding info
 	
 	$New_Row | Add-Content -Path $Game_Score_File
 
-    $New_Row = New-Object PsObject -Property @{Problem = "Networking #1" ; Description = "ipconfig /all" ; Result = "Add-DhcpServerInDC -DNSName dhcp-practice -IPAddress 172.16.0.50" ; CompletionTime = $Timer ; Date = $Date ; Points = "5"}
+    $New_Row = New-Object PsObject -Property @{Problem = "Networking #1" ; Description = "Find the IP address of this machine and all corresponding information" ; Result = "ipconfig /all" ; CompletionTime = $Timer ; Date = $Date ; Points = "5"}
 	
     $New_Results += $New_Row
 
@@ -1932,13 +2001,22 @@ if ($Body.Text = "Find the IP address of this machine and all corresponding info
 	
     Invoke-Expression Dropdown_Problem_Completed_Check
 
-    $Body.Text = "Find the IP address of this machine and all corresponding information. Correct, your answer was $Answer."
+    $Body.Text = "Find the IP address of this machine and all corresponding information"
 	
-	$Input_Box.Clear()
-	
-    }
-}
+    $Correct_Incorrect.Text = "Correct, your answer was $Answer."
 
+    $Correct_Incorrect.ForeColor = 'Green'
+
+    }
+
+	else{
+		$Body.Text = "Find the IP address of this machine and all corresponding information"
+        $Correct_Incorrect.Text = "Incorrect, your answer was $Answer."
+        $Correct_Incorrect.ForeColor = 'Red'
+        }
+	}
+
+	$Input_Box.Clear()
 }
 
 
@@ -1948,7 +2026,9 @@ $Networking_Strip_Menu_Item_Practice_2.Name = "Networking_Strip_Menu_Item_Practi
 $Networking_Strip_Menu_Item_Practice_2.Size = New-Object System.Drawing.Size(35, 20)
 $Networking_Strip_Menu_Item_Practice_2.Text = "Networking #2 (ip / dns)"
 
-function On_Click_Networking_Strip_Menu_Item_2($Sender,$e){ 
+function On_Click_Networking_Strip_Menu_Item_2($Sender,$e){
+
+    $Correct_Incorrect.Text= "" 
 	
 	$Timer_Start_Time.Stop()
 
@@ -2045,22 +2125,33 @@ if ($Body.Text = "View the DNS cache on this system"){
 	
     Invoke-Expression Dropdown_Problem_Completed_Check
 
-    $Body.Text = "View the DNS cache on this system. Correct, your answer was $Answer."
+    $Body.Text = "View the DNS cache on this system"
 	
-	$Input_Box.Clear()
-	
+    $Correct_Incorrect.Text = "Correct, your answer was $Answer."
+
+    $Correct_Incorrect.ForeColor = 'Green'
+
     }
+
+	else{
+		$Body.Text = "View the DNS cache on this system"
+        $Correct_Incorrect.Text = "Incorrect, your answer was $Answer."
+        $Correct_Incorrect.ForeColor = 'Red'
+        }
+	}
+
+	$Input_Box.Clear()
 }
 
-}
-
-## Networking 3##
+## Networking 3 ##
 
 $Networking_Strip_Menu_Item_Practice_3.Name = "Networking_Strip_Menu_Item_Practice_3"
 $Networking_Strip_Menu_Item_Practice_3.Size = New-Object System.Drawing.Size(35, 20)
 $Networking_Strip_Menu_Item_Practice_3.Text = "Networking #3 (ip / dns)"
 
 function On_Click_Networking_Strip_Menu_Item_3($Sender,$e){ 
+
+    $Correct_Incorrect.Text= ""
 	
 	$Timer_Start_Time.Stop()
 
@@ -2157,13 +2248,22 @@ if ($Body.Text = "Flush the DNS cache on this system"){
 	
     Invoke-Expression Dropdown_Problem_Completed_Check
 
-    $Body.Text = "Flush the DNS cache on this system. Correct, your answer was $Answer."
+    $Body.Text = "Flush the DNS cache on this system"
 	
-	$Input_Box.Clear()
-	
-    }
-}
+    $Correct_Incorrect.Text = "Correct, your answer was $Answer."
 
+    $Correct_Incorrect.ForeColor = 'Green'
+
+    }
+
+	else{
+		$Body.Text = "Flush the DNS cache on this system"
+        $Correct_Incorrect.Text = "Incorrect, your answer was $Answer."
+        $Correct_Incorrect.ForeColor = 'Red'
+        }
+	}
+
+	$Input_Box.Clear()
 }
 
 ## Networking 4##
@@ -2173,6 +2273,8 @@ $Networking_Strip_Menu_Item_Practice_4.Size = New-Object System.Drawing.Size(35,
 $Networking_Strip_Menu_Item_Practice_4.Text = "Networking #4 (ip)"
 
 function On_Click_Networking_Strip_Menu_Item_4($Sender,$e){ 
+
+    $Correct_Incorrect.Text= ""
 	
 	$Timer_Start_Time.Stop()
 
@@ -2269,11 +2371,22 @@ if ($Body.Text = "Change the ip address of this machine"){
 	
     Invoke-Expression Dropdown_Problem_Completed_Check
 
-    $Body.Text = "Change the ip address of this machine. Correct, your answer was $Answer."
+    $Body.Text = "Change the ip address of this machine"
+
+    $Correct_Incorrect.Text = "Correct, your answer was $Answer."
+
+    $Correct_Incorrect.ForeColor = 'Green'
 
     }
-}
 
+	else{
+		$Body.Text = "Change the ip address of this machine"
+        $Correct_Incorrect.Text = "Incorrect, your answer was $Answer."
+        $Correct_Incorrect.ForeColor = 'Red'
+        }
+	}
+
+	$Input_Box.Clear()
 }
 
 ## Networking 5##
@@ -2282,7 +2395,9 @@ $Networking_Strip_Menu_Item_Practice_5.Name = "Networking_Strip_Menu_Item_Practi
 $Networking_Strip_Menu_Item_Practice_5.Size = New-Object System.Drawing.Size(35, 20)
 $Networking_Strip_Menu_Item_Practice_5.Text = "Networking #5 (dhcp / dns)"
 
-function On_Click_Networking_Strip_Menu_Item_5($Sender,$e){ 
+function On_Click_Networking_Strip_Menu_Item_5($Sender,$e){
+
+    $Correct_Incorrect.Text= "" 
 	
 	$Timer_Start_Time.Stop()
 
@@ -2373,11 +2488,22 @@ if ($Body.Text = "Register (refresh) DHCP leases and DNS names for system networ
 	
     Invoke-Expression Dropdown_Problem_Completed_Check
 
-    $Body.Text = "Register (refresh) DHCP leases and DNS names for system network adapters. `nCorrect, your answer was $Answer."
+    $Body.Text = "Register (refresh) DHCP leases and DNS names for system network adapters"
+
+    $Correct_Incorrect.Text = "Correct, your answer was $Answer."
+
+    $Correct_Incorrect.ForeColor = 'Green'
 
     }
-}
 
+	else{
+		$Body.Text = "Register (refresh) DHCP leases and DNS names for system network adapters"
+        $Correct_Incorrect.Text = "Incorrect, your answer was $Answer."
+        $Correct_Incorrect.ForeColor = 'Red'
+        }
+	}
+
+	$Input_Box.Clear()
 }
 
 $Networking_Strip_Menu_Item_Practice.Add_Click( { On_Click_Networking_Strip_Menu_Item $Networking_Strip_Menu_Item_Practice $EventArgs} )

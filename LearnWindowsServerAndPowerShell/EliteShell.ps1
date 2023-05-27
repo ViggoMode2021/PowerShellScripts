@@ -763,7 +763,7 @@ if ($Body.Text = "Find the computer name (hostname) of your Windows machine. Use
     }
 
 	else{
-		$Body.Text = "Find the computer name (hostname) of your Windows machine. Use PowerShell."
+		$Body.Text = "Find the computer name (hostname) of your Windows machine."
         $Correct_Incorrect.Text = "Incorrect, your answer was $Answer."
         $Correct_Incorrect.ForeColor = 'Red'
         }
@@ -785,7 +785,7 @@ function On_Click_Uptime_Strip_Menu_Item($Sender,$e){
     $Title.Text = "Windows General #2"
 	$Title.ForeColor = 'Blue'
 	
-	$Description = "Using PowerShell, find the uptime of this device. Note, use the 'systeminfo' command and a | (pipe). `nMake sure there is proper spacing on both sides of |"
+	$Description = "Find the uptime of this device. Note, use the 'systeminfo' command and a | (pipe). `nMake sure there is proper spacing on both sides of |"
 	
 	$Body.Text = $Description
 	
@@ -842,7 +842,7 @@ if ($Body.Text = $Description){
 	
 	$New_Row | Add-Content -Path $Game_Score_File
 
-    $New_Row = New-Object PsObject -Property @{Problem = "Windows General #2" ; Description = "Using PowerShell, find the uptime of this device. Note, use the 'systeminfo' command and a | (pipe). Make sure there is proper spacing on both sides of |" ; Result = "systeminfo | find 'Boot Time'" ; CompletionTime = $Timer ; Date = $Date ; Points = "2"}
+    $New_Row = New-Object PsObject -Property @{Problem = "Windows General #2" ; Description = "Find the uptime of this device. Note, use the 'systeminfo' command and a | (pipe). Make sure there is proper spacing on both sides of |" ; Result = "systeminfo | find 'Boot Time'" ; CompletionTime = $Timer ; Date = $Date ; Points = "2"}
 	
     $New_Results += $New_Row
 
@@ -858,20 +858,22 @@ if ($Body.Text = $Description){
 	
     Invoke-Expression Dropdown_Problem_Completed_Check
 
-    $Body.Text = "$Description `nCorrect, your answer was $Answer."
+    $Body.Text = "$Description"
 
-    $Correct_Incorrect.Text = "Correct, your answer was $Answer!"
+    $Correct_Incorrect.Text = "Correct, your answer was $Answer."
 
-    $Correct_Incorrect.ForeColor = "Green"
+    $Correct_Incorrect.ForeColor = 'Green'
 
     }
 
 	else{
 		$Body.Text = $Description
         $Correct_Incorrect.Text = "Incorrect, your answer was $Answer."
-        $Correct_Incorrect.ForeColor = "Red"}
+        $Correct_Incorrect.ForeColor = 'Red'
+        }
 	}
 
+	$Input_Box.Clear()
 }
 
 ## Windows General #3 ##
@@ -2264,7 +2266,6 @@ if ($Body.Text = "Change the ip address of this machine"){
 }
 
 }
-
 
 ## Networking 5##
 

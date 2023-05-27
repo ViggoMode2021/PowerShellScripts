@@ -661,6 +661,8 @@ $Windows_General_Strip_Menu_Item_4, $Windows_General_Strip_Menu_Item_5))
 ## Windows General #1 ##
 
 function On_Click_Boot_Process_Strip_Menu_Item_Learn($Sender,$e){
+
+    $The_Submit_Button.Remove_Click({*})
 	
 	$Timer_Start_Time.Stop()
 
@@ -672,6 +674,8 @@ function On_Click_Boot_Process_Strip_Menu_Item_Learn($Sender,$e){
 	$Title.ForeColor = 'Blue'
 	
 	$Body.Text = "Using PowerShell, find the computer name (hostname) of this device."
+
+    $Form.Controls.RemoveByKey("The_Submit_Button")
 	
 	$The_Submit_Button = New-Object System.Windows.Forms.Button
 	
@@ -713,7 +717,7 @@ $Answer = @($Input_Box.Text)
 Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb runAs
 
 if ($Body.Text = "Find the computer name (hostname) of your Windows machine. Use PowerShell."){
-	if($Input_Box.Text -eq "hostname"){
+	if($Answer -eq "hostname"){
 		
 	$Time_Elapsed = $Timer_Start_Time.Elapsed
 
@@ -724,7 +728,7 @@ if ($Body.Text = "Find the computer name (hostname) of your Windows machine. Use
 	
 	$New_Row | Add-Content -Path $Game_Score_File
 
-    $New_Row = New-Object PsObject -Property @{Problem = "Windows General #1" ; Description = "Find the computer name (hostname) of your Windows machine. Use PowerShell." ;Result = "hostname" ; CompletionTime = $Timer ; Date = $Date ; Points = "1"}
+    $New_Row = New-Object PsObject -Property @{Problem = "Windows General #1" ; Description = "Find the computer name (hostname) of your Windows machine" ;Result = "hostname" ; CompletionTime = $Timer ; Date = $Date ; Points = "1"}
 	
     $New_Results += $New_Row
 
@@ -763,18 +767,15 @@ if ($Body.Text = "Find the computer name (hostname) of your Windows machine. Use
     }
 
 	else{
-		$Body.Text = "Find the computer name (hostname) of your Windows machine."
-        $Correct_Incorrect.Text = "Incorrect, your answer was $Answer."
-        $Correct_Incorrect.ForeColor = 'Red'
-        }
-	}
 
-	$Input_Box.Clear()
-}
+        }
+}}
 
 ## Windows General #2 ##
 
 function On_Click_Uptime_Strip_Menu_Item($Sender,$e){
+
+    $The_Submit_Button.Remove_Click({*})
 	
 	$Timer_Start_Time.Stop()
 
@@ -790,6 +791,8 @@ function On_Click_Uptime_Strip_Menu_Item($Sender,$e){
 	$Body.Text = $Description
 	
 	$global:Description = $Description
+
+    $Form.Controls.RemoveByKey("The_Submit_Button")
 	
 	$The_Submit_Button = New-Object System.Windows.Forms.Button
 	
@@ -864,6 +867,8 @@ if ($Body.Text = $Description){
 
     $Correct_Incorrect.ForeColor = 'Green'
 
+    Invoke-Express
+
     }
 
 	else{
@@ -890,6 +895,8 @@ function On_Click_Env_Strip_Menu_Item($Sender,$e){
 	$Title.ForeColor = 'Blue'
 	
 	$Body.Text = "Find the environment variables on this system using a command `nthat has two different three letter words and a :"
+    
+    $Form.Controls.RemoveByKey("The_Submit_Button")
 	
 	$The_Submit_Button = New-Object System.Windows.Forms.Button
 	
@@ -973,15 +980,12 @@ if ($Body.Text = "Find the environment variables on this system using a command 
 
     }
 
-
 	else{
-		$Body.Text = "Using PowerShell, find the environment variables on this system using a command `nthat has two different three letter words and a :"
+		$Body.Text = "Find the environment variables on this system using a command `nthat has two different three letter words and a :"
         $Correct_Incorrect.ForeColor = 'Red'}
 	}
 
 	$Input_Box.Clear()
-}
-
 }
 
 ## Windows General #4 ##
@@ -997,7 +1001,9 @@ function On_Click_Cpu_Strip_Menu_Item($Sender,$e){
     $Title.Text = "Windows General #4"
 	$Title.ForeColor = 'Blue'
 	
-	$Body.Text = "Using PowerShell, find the processes on this machine where the cpu consumption is greater than 20%. `nNote: Use Get-Process and Where-Object separated by a |"
+	$Body.Text = "Find the processes on this machine where the cpu consumption is greater than 20%. `nNote: Use Get-Process and Where-Object separated by a |"
+    
+    $Form.Controls.RemoveByKey("The_Submit_Button")
 	
 	$The_Submit_Button = New-Object System.Windows.Forms.Button
 	
@@ -1096,7 +1102,7 @@ if ($Body.Text = "Using PowerShell, find the processes on this machine where the
 
 
 	else{
-		$Body.Text = "Using PowerShell, find the processes on this machine where the cpu consumption is greater than 20%. `nNote: Use Get-Process and Where-Object separated by a |"}
+		$Body.Text = "Find the processes on this machine where the cpu consumption is greater than 20%. `nNote: Use Get-Process and Where-Object separated by a |"}
 	}
 
 	$Input_Box.Clear()
@@ -1118,6 +1124,8 @@ function On_Click_Disk_Space_Strip_Menu_Item($Sender,$e){
 	$Title.ForeColor = 'Blue'
 	
 	$Body.Text = "Find the disk space of the current machine's C drive"
+
+    $Form.Controls.RemoveByKey("The_Submit_Button")
 	
 	$The_Submit_Button = New-Object System.Windows.Forms.Button
 	
@@ -1255,6 +1263,8 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice($Sender,$e){
 	$Title.ForeColor = 'Blue'
 	
 	$Body.Text = "Create a DHCP server in the Domain controller named dhcp-practice with an IP address of 172.16.0.50"
+
+    $Form.Controls.RemoveByKey("The_Submit_Button")
 	
 	$The_Submit_Button = New-Object System.Windows.Forms.Button
 	
@@ -1323,7 +1333,7 @@ if ($Body.Text = "Create a DHCP server in the Domain controller named dhcp-pract
 	
     Invoke-Expression Dropdown_Problem_Completed_Check
 
-    $Body.Text = "Create a DHCP server in the Domain controller named dhcp-practice with an IP address of 172.16.0.50. Correct, your answer was $Answer."
+    $Body.Text = "Create a DHCP server in the Domain controller named dhcp-practice with an IP address of 172.16.0.50"
 
 	$Input_Box.Clear()
 	
@@ -1350,6 +1360,8 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_2($Sender,$e){
 	$Title.ForeColor = 'Blue'
 	
 	$Body.Text = "Create an active IPv4 DHCP scope named 'test' with a start range of 172.16.0.100, `nend range of 172.16.0.200 and subnet mask of 255.255.255.0"
+
+    $Form.Controls.RemoveByKey("The_Submit_Button")
 	
 	$The_Submit_Button = New-Object System.Windows.Forms.Button
 	
@@ -1374,12 +1386,13 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_2($Sender,$e){
 	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
 	
 	if($Problem_Completed_Check -ne $null) {
-	$Title.Text = "DHCP #2 (COMPLETED)" ## Fix this!
+	$Title.Text = "DHCP #2 (scope) (COMPLETED)" ## Fix this!
 	$Title.ForeColor = 'Green' } 
 	
 	else {
 		
-	$Title.Text = "DHCP #2"
+	$Title.Text = "DHCP #2 (scope)"
+    $Body.Text = "Create an active IPv4 DHCP scope named 'test' with a start range of 172.16.0.100, `nend range of 172.16.0.200 and subnet mask of 255.255.255.0"
 	
 	}
 
@@ -1433,7 +1446,7 @@ if ($Body.Text = "Create an active IPv4 DHCP scope named 'test' with a start ran
 	
     Invoke-Expression Dropdown_Problem_Completed_Check
 
-    $Body.Text = "Create a DHCP scope in the Domain controller named dhcp-practice with an IP address of 172.16.0.50. `nCorrect, your answer was $Answer."
+    $Body.Text = "Create a DHCP scope in the Domain controller named dhcp-practice with an IP address of 172.16.0.50"
 	
 	$Input_Box.Clear()
 	
@@ -1460,6 +1473,8 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_3($Sender,$e){
 	$Title.ForeColor = 'Blue'
 	
 	$Body.Text = "Check if DNS is installed on this system."
+
+    $Form.Controls.RemoveByKey("The_Submit_Button")
 	
 	$The_Submit_Button = New-Object System.Windows.Forms.Button
 	
@@ -1546,22 +1561,13 @@ if ($Body.Text = "Check if DNS is installed on this system."){
     $Body.Text = "Check if DNS is installed on this system."
 
     }
-	
-	if($Input_Box.Text -eq ""){
-		
-		 $MessageBoxTitle = "Null input box"
-
-		 $MessageBoxBody = "Input box is null. Please type an answer to see if it is correct."
-		 
-		 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
 
 	else{
+        $Title.Text = "DNS #1 (check install)"
 		$Body.Text = "Check if DNS is installed on this system."}
 	}
 	
 	$Input_Box.Clear()
-}
-
 }
 
 ## DHCP & DNS #4 ##
@@ -1583,6 +1589,8 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_4($Sender,$e){
 	$Title.ForeColor = 'Blue'
 	
 	$Body.Text = "Install DNS and management tools on this system"
+
+    $Form.Controls.RemoveByKey("The_Submit_Button")
 	
 	$The_Submit_Button = New-Object System.Windows.Forms.Button
 	
@@ -1670,22 +1678,13 @@ if ($Body.Text = "Install DNS and management tools on this system"){
     $Body.Text = "Install DNS and management tools on this system"
 
     }
-	
-	if($Input_Box.Text -eq ""){
-		
-		 $MessageBoxTitle = "Null input box"
-
-		 $MessageBoxBody = "Input box is null. Please type an answer to see if it is correct."
-		 
-		 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
 
 	else{
+        $Title.Text = "DNS #2 (install DNS)"
 		$Body.Text = "Install DNS and management tools on this system Incorrect, your answer was $Answer."}
 	}
 	
 	$Input_Box.Clear()
-}
-
 }
 
 ## DHCP & DNS #5 ##
@@ -1707,6 +1706,8 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_5($Sender,$e){
 	$Title.ForeColor = 'Blue'
 	
 	$Body.Text = "Add a forward lookup zone with DynamicUpdate for Eliteshell.org `nwith secure and nonsecure dynamic updates"
+
+    $Form.Controls.RemoveByKey("The_Submit_Button")
 	
 	$The_Submit_Button = New-Object System.Windows.Forms.Button
 	
@@ -1847,6 +1848,8 @@ function On_Click_Networking_Strip_Menu_Item($Sender,$e){
 	$Title.ForeColor = 'Blue'
 	
 	$Body.Text = "Find the IP address of this machine and all corresponding information"
+
+    $Form.Controls.RemoveByKey("The_Submit_Button")
 	
 	$The_Submit_Button = New-Object System.Windows.Forms.Button
 	
@@ -1958,6 +1961,8 @@ function On_Click_Networking_Strip_Menu_Item_2($Sender,$e){
 	$Title.ForeColor = 'Blue'
 	
 	$Body.Text = "View the DNS cache on this system"
+
+    $Form.Controls.RemoveByKey("The_Submit_Button")
 	
 	$The_Submit_Button = New-Object System.Windows.Forms.Button
 	
@@ -2068,6 +2073,8 @@ function On_Click_Networking_Strip_Menu_Item_3($Sender,$e){
 	$Title.ForeColor = 'Blue'
 	
 	$Body.Text = "Flush the DNS cache on this system"
+
+    $Form.Controls.RemoveByKey("The_Submit_Button")
 	
 	$The_Submit_Button = New-Object System.Windows.Forms.Button
 	
@@ -2178,6 +2185,8 @@ function On_Click_Networking_Strip_Menu_Item_4($Sender,$e){
 	$Title.ForeColor = 'Blue'
 	
 	$Body.Text = "Change the ip address of this machine"
+
+    $Form.Controls.RemoveByKey("The_Submit_Button")
 	
 	$The_Submit_Button = New-Object System.Windows.Forms.Button
 	
@@ -2286,6 +2295,8 @@ function On_Click_Networking_Strip_Menu_Item_5($Sender,$e){
 	$Title.ForeColor = 'Blue'
 	
 	$Body.Text = "Register (refresh) DHCP leases and DNS names for system network adapters"
+
+    $Form.Controls.RemoveByKey("The_Submit_Button")
 	
 	$The_Submit_Button = New-Object System.Windows.Forms.Button
 	

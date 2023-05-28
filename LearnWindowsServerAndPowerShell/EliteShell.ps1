@@ -6,7 +6,7 @@ Add-Type -AssemblyName PresentationCore,PresentationFramework
 `
 $Date = Get-Date -format "MM-dd-yy"
 
-$OS = (Get-WMIObject win32_operatingsystem) | Select Name | Out-String
+$OS = (Get-WMIObject win32_operatingsystem) |  Select-Object -expand Name | Out-String
 
 <#
 
@@ -42,6 +42,7 @@ $Menu_Bar = New-Object System.Windows.Forms.MenuStrip
 $New_Game_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $Load_Game_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $View_Score_And_Stats_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
+$View_System_Information_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $Windows_General_Strip_Menu_Item_Learn = New-Object System.Windows.Forms.ToolStripMenuItem
 
 $Windows_General_Strip_Menu_Item_2 = New-Object System.Windows.Forms.ToolStripMenuItem
@@ -183,7 +184,11 @@ $View_Score_And_Stats_Strip_Menu_Item.Name= "View_Score_And_Stats_Strip_Menu_Ite
 $View_Score_And_Stats_Strip_Menu_Item.Size = New-Object System.Drawing.Size(152, 22)
 $View_Score_And_Stats_Strip_Menu_Item.Text = "View Score + Stats"
 
-$File_Menu_Item.DropDownItems.AddRange(@($New_Game_Strip_Menu_Item, $Load_Game_Strip_Menu_Item))
+$View_System_Information_Strip_Menu_Item.Name= "View_System_Information_Strip_Menu_Item"
+$View_System_Information_Strip_Menu_Item.Size = New-Object System.Drawing.Size(152, 22)
+$View_System_Information_Strip_Menu_Item.Text = "View System Information"
+
+$File_Menu_Item.DropDownItems.AddRange(@($New_Game_Strip_Menu_Item, $Load_Game_Strip_Menu_Item, $View_System_Information_Strip_Menu_Item))
 
 function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 
@@ -643,11 +648,19 @@ $global:Average_Time = $Average_Time
 #>
 }
 
+function On_Click_View_System_Information_Strip_Menu_Item {
+
+$Title.Text = $OS
+
+}
+
 $New_Game_Strip_Menu_Item.Add_Click( { On_Click_New_Game_Strip_Menu_Item $New_Game_Strip_Menu_Item $EventArgs} )
 
 $Load_Game_Strip_Menu_Item.Add_Click( { On_Click_Load_Game_Strip_Menu_Item $Load_Game_Strip_Menu_Item $EventArgs} )
 
 $View_Score_And_Stats_Strip_Menu_Item.Add_Click( { On_Click_View_Score_And_Stats_Strip_Menu_Item $View_Score_And_Stats_Strip_Menu_Item $EventArgs} )
+
+$View_System_Information_Strip_Menu_Item.Add_Click( { On_Click_View_System_Information_Strip_Menu_Item View_System_Information_Strip_Menu_Item $EventArgs} )
 
 ## end File menu item ##
 
@@ -1374,15 +1387,7 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice($Sender,$e){
 
     }
 
-    if ($OS -notmatch "Windows Server"){
 
-    $MessageBoxTitle = "Incorrect Operating System."
-
-    $MessageBoxBody = "This system is not running Windows Server. You can still practice these problems, but you will not receive proper PowerShell results."
-
-    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
-
-    }
    
     $Completed_In.Text= ""
 

@@ -46,7 +46,7 @@ $Windows_General_Strip_Menu_Item_2 = New-Object System.Windows.Forms.ToolStripMe
 $Windows_General_Strip_Menu_Item_3 = New-Object System.Windows.Forms.ToolStripMenuItem
 $Windows_General_Strip_Menu_Item_4 = New-Object System.Windows.Forms.ToolStripMenuItem
 $Windows_General_Strip_Menu_Item_5 = New-Object System.Windows.Forms.ToolStripMenuItem
-$DHCP_DNS_Strip_Menu_Item_Practice = New-Object System.Windows.Forms.ToolStripMenuItem 
+$DHCP_DNS_Strip_Menu_Item_Practice = New-Object System.Windows.Forms.ToolStripMenuItem
 $DHCP_DNS_Strip_Menu_Item_Practice_2 = New-Object System.Windows.Forms.ToolStripMenuItem
 $DHCP_DNS_Strip_Menu_Item_Practice_3 = New-Object System.Windows.Forms.ToolStripMenuItem
 $DHCP_DNS_Strip_Menu_Item_Practice_4 = New-Object System.Windows.Forms.ToolStripMenuItem
@@ -64,7 +64,7 @@ $Score_Box.Text = "Current Stats:"
 
 $ButtonTypeOk = [System.Windows.MessageBoxButton]::Ok
 
-$ButtonTypeYesNoCancel = [System.Windows.MessageBoxButton]::YesNoCancel 
+$ButtonTypeYesNoCancel = [System.Windows.MessageBoxButton]::YesNoCancel
 
 $MessageIconWarning = [System.Windows.MessageBoxImage]::Warning
 
@@ -183,54 +183,54 @@ $View_Score_And_Stats_Strip_Menu_Item.Text = "View Score + Stats"
 $File_Menu_Item.DropDownItems.AddRange(@($New_Game_Strip_Menu_Item, $Load_Game_Strip_Menu_Item))
 
 function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
-    
-    $Completed_In = ""   
+
+    $Completed_In.Text= ""
 
 	$Form.Controls.RemoveByKey("The_Submit_Button")
-	
+
     $MessageBoxTitle = "New game file creation"
 
     $MessageBoxBody = "By starting a new game, a new csv file will be created on your desktop to track your score. Continue?"
 
 	$Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeYesNoCancel,$MessageIconWarning)
-	
+
 	if($Confirmation -eq 'Yes'){
-		
-	[void][System.Reflection.Assembly]::LoadWithPartialName('Microsoft.VisualBasic') 
+
+	[void][System.Reflection.Assembly]::LoadWithPartialName('Microsoft.VisualBasic')
 	$New_Game_Filename = [Microsoft.VisualBasic.Interaction]::InputBox('Enter the filename', 'Enter the filename')
-	
+
 	if ($New_Game_Filename -eq ""){
-		
+
 	$MessageBoxTitle = "Please name your file."
 
     $MessageBoxBody = "Filename cannot be null. Please name your score file."
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconWarning)
-	
+
 	Invoke-Expression On_Click_New_Game_Strip_Menu_Item
-	
+
 	}
-	
-	else{	
+
+	else{
 
     $New_Game_Filename_Csv = "$New_Game_Filename.csv"
 
     $New_Game_File_CheckSum = Get-ChildItem $Desktop_Path -recurse | Where {$_.name -match $New_Game_Filename_Csv} | select-object -ExpandProperty name
 
     if($New_Game_Filename_Csv -eq $New_Game_File_CheckSum){
-		
+
 	$Form.Controls.AddRange(@($Menu_Bar))
-	
+
 		## Fix This Part!
 
     $MessageBoxTitle = "File creation error."
 
     $MessageBoxBody = "$New_Game_File_CheckSum already exists. Please try again."
-	
+
     $New_Game_File = New-Item $Desktop_Path\$New_Game_Filename$Date.csv -ItemType File
 
     Write-Host $New_Game_File
-	
+
 	$New_Game_Filename_Csv_Rename = "$New_Game_Filename$Date.csv"
 
     $File = "$New_Game_File"
@@ -244,19 +244,19 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
     $global:Game_Score_File = "$Desktop_Path\$New_Game_Filename_Csv_Rename"
 
     $Form.Text = "EleetShell - Current score file: $New_Game_Filename_Csv_Rename"
-	
+
 	$File_Menu_Item.DropDownItems.AddRange(@($New_Game_Strip_Menu_Item, $Load_Game_Strip_Menu_Item, $View_Score_And_Stats_Strip_Menu_Item))
-	
+
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
 	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
-	
+
     }
 
     if($New_Game_Filename.IndexOfAny([System.IO.Path]::GetInvalidFileNameChars()) -ne -1)
 
     {
-		
+
 	$Form.Controls.AddRange(@($Menu_Bar))
 
     $MessageBoxTitle = "File name contains invalid characters"
@@ -264,13 +264,13 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
     $MessageBoxBody = "$New_Game_Filename contains invalid characters. Please try again."
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
-	
+
 	Invoke-Expression On_Click_New_Game_Strip_Menu_Item
-    
+
     }
 
     else{
-		
+
 	$Form.Controls.AddRange(@($Menu_Bar))
 
     $New_Game_File = New-Item $Desktop_Path\$New_Game_Filename_Csv -ItemType File
@@ -290,7 +290,7 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
     $global:Game_Score_File = "$Desktop_Path\$New_Game_Filename_Csv"
 
     $Form.Text = "EleetShell - Current score file: $New_Game_Filename_Csv"
-	
+
 	$File_Menu_Item.DropDownItems.AddRange(@($New_Game_Strip_Menu_Item, $Load_Game_Strip_Menu_Item, $View_Score_And_Stats_Strip_Menu_Item))
 
     Invoke-Expression Dropdown_Problem_Completed_Check
@@ -300,90 +300,90 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
     $Total_Score_Label.Text = ""
 
     }
-	
+
 	}
 
 	}
 }
 
 function Dropdown_Problem_Completed_Check{
-	
+
 $Timer_Start_Time.Stop()
 
 $Problem_Completed_Hostname = "hostname"
-	
+
 $Problem_Completed_Hostname = Select-String $Game_Score_File -Pattern $Problem_Completed_Hostname
 
 if($Problem_Completed_Hostname -ne $null -and $Game_Score_File -ne $null){
 $Windows_General_Strip_Menu_Item_Learn.Text = 'Windows General #1 (hostname)'
 $Windows_General_Strip_Menu_Item_Learn.ForeColor = 'Green'
-} 
+}
 
 else{
-	
+
 $Windows_General_Strip_Menu_Item_Learn.Text = 'Windows General #1 (hostname)'
 $Windows_General_Strip_Menu_Item_Learn.ForeColor = 'Blue'
 }
 
 $Problem_Completed_Uptime = "systeminfo | find 'Boot Time'"
-	
+
 $Problem_Completed_Uptime = Select-String $Game_Score_File -Pattern $Problem_Completed_Uptime
-	
+
 if($Problem_Completed_Uptime -ne $null -and $Game_Score_File -ne $null){
 $Windows_General_Strip_Menu_Item_2.Text = 'Windows General #2 (uptime)'
 $Windows_General_Strip_Menu_Item_2.ForeColor = 'Green'
 }
 
 else{
-	
+
 $Windows_General_Strip_Menu_Item_2.Text = 'Windows General #2 (uptime)'
 $Windows_General_Strip_Menu_Item_2.ForeColor = 'Blue'
 
 }
 
 $Problem_Completed_Env = "dir env:"
-	
+
 $Problem_Completed_Env = Select-String $Game_Score_File -Pattern $Problem_Completed_Env
-	
+
 if($Problem_Completed_Env -ne $null -and $Game_Score_File -ne $null){
 $Windows_General_Strip_Menu_Item_3.Text = 'Windows General #3 (env)'
 $Windows_General_Strip_Menu_Item_3.ForeColor = 'Green'
-} 
+}
 
 else{
-	
+
 $Windows_General_Strip_Menu_Item_3.Text = 'Windows General #3 (env)'
 $Windows_General_Strip_Menu_Item_3.ForeColor = 'Blue'
 
 }
 
 $Problem_Completed_Cpu = "Get-Process | Where-Object { $_.CPU -gt 20 }"
-	
+
 $Problem_Completed_Cpu = Select-String $Game_Score_File -Pattern $Problem_Completed_Cpu
 
 if($Problem_Completed_Cpu -ne $null -and $Game_Score_File -ne $null){
 $Windows_General_Strip_Menu_Item_4.Text = 'Windows General #4 (cpu)'
 $Windows_General_Strip_Menu_Item_4.ForeColor = 'Green'
-} 
+}
 
 else{
-	
+
 $Windows_General_Strip_Menu_Item_4.Text = 'Windows General #4 (cpu)'
 $Windows_General_Strip_Menu_Item_4.ForeColor = 'Blue'
 
 }
 
 $Problem_Completed_Disk_Space = "Get-PSDrive C"
-	
+
 $Problem_Completed_Disk_Space = Select-String $Game_Score_File -Pattern $Problem_Completed_Disk_Space
 
 if($Problem_Completed_Cpu -ne $null -and $Game_Score_File -ne $null){
 $Windows_General_Strip_Menu_Item_5.Text = 'Windows General #5 (disk space)'
 $Windows_General_Strip_Menu_Item_5.ForeColor = 'Green'
-} 
+}
 
 else{
-	
+
 $Windows_General_Strip_Menu_Item_5.Text = 'Windows General #5 (disk space)'
 $Windows_General_Strip_Menu_Item_5.ForeColor = 'Blue'
 
@@ -391,65 +391,65 @@ $Windows_General_Strip_Menu_Item_5.ForeColor = 'Blue'
 
 
 $Problem_Completed_DHCP = "Add-DhcpServerInDC -DNSName dhcp-practice -IPAddress 172.16.0.50"
-	
+
 $Problem_Completed_DHCP = Select-String $Game_Score_File -Pattern $Problem_Completed_DHCP
 
 if($Problem_Completed_DHCP -ne $null -and $Game_Score_File -ne $null){
 $DHCP_DNS_Strip_Menu_Item_Practice.Text = 'DHCP #1 (server)'
 $DHCP_DNS_Strip_Menu_Item_Practice.ForeColor = 'Green'
-} 
+}
 
 else{
-	
+
 $DHCP_DNS_Strip_Menu_Item_Practice.Text = 'DHCP #1 (server)'
 $DHCP_DNS_Strip_Menu_Item_Practice.ForeColor = 'Blue'
 
 }
 
 $Problem_Completed_DHCP_2 = "Add-DhcpServerV4Scope -name 'test' -StartRange 172.16.0.100 -Endrange 172.16.0.200 -SubnetMask 255.255.255.0 -State Active"
-	
+
 $Problem_Completed_DHCP_2 = Select-String $Game_Score_File -Pattern $Problem_Completed_DHCP_2
 
 if($Problem_Completed_DHCP_2 -ne $null -and $Game_Score_File -ne $null){
 $DHCP_DNS_Strip_Menu_Item_Practice_2.Text = 'DHCP #2 (scope)'
 $DHCP_DNS_Strip_Menu_Item_Practice_2.ForeColor = 'Green'
-} 
+}
 
 else{
-	
+
 $DHCP_DNS_Strip_Menu_Item_Practice_2.Text = 'DHCP #2 (scope)'
 $DHCP_DNS_Strip_Menu_Item_Practice_2.ForeColor = 'Blue'
 
 }
 
 $Problem_Completed_DNS_1 = "Get-WindowsFeature -Name"
-	
+
 $Problem_Completed_DNS_1 = Select-String $Game_Score_File -Pattern $Problem_Completed_DNS_1
 
 if($Problem_Completed_DNS_1 -ne $null -and $Game_Score_File -ne $null){
-	
+
 $DHCP_DNS_Strip_Menu_Item_Practice_3.Text = 'DNS #1 (check install)'
 $DHCP_DNS_Strip_Menu_Item_Practice_3.ForeColor = 'Green'
-} 
+}
 
 else{
-	
+
 $DHCP_DNS_Strip_Menu_Item_Practice_3.Text = 'DNS #1 (check install)'
 $DHCP_DNS_Strip_Menu_Item_Practice_3.ForeColor = 'Blue'
 
 }
 
 $Problem_Completed_DNS_2 = "Install-WindowsFeature -Name DNS -IncludeManagementTools"
-	
+
 $Problem_Completed_DNS_2 = Select-String $Game_Score_File -Pattern $Problem_Completed_DNS_2
 
 if($Problem_Completed_DNS_2 -ne $null -and $Game_Score_File -ne $null){
 $DHCP_DNS_Strip_Menu_Item_Practice_4.Text = 'DNS #2 (install DNS)'
 $DHCP_DNS_Strip_Menu_Item_Practice_4.ForeColor = 'Green'
-} 
+}
 
 else{
-	
+
 $DHCP_DNS_Strip_Menu_Item_Practice_4.Text = 'DNS #2 (install DNS)'
 $DHCP_DNS_Strip_Menu_Item_Practice_4.ForeColor = 'Blue'
 
@@ -462,10 +462,10 @@ $Problem_Completed_DNS_3 = Select-String $Game_Score_File -Pattern $Problem_Comp
 if($Problem_Completed_DNS_3 -ne $null -and $Game_Score_File -ne $null){
 $DHCP_DNS_Strip_Menu_Item_Practice_5.Text = 'DNS #3 (forward lookup zone)'
 $DHCP_DNS_Strip_Menu_Item_Practice_5.ForeColor = 'Green'
-} 
+}
 
 else{
-	
+
 $DHCP_DNS_Strip_Menu_Item_Practice_5.Text = 'DNS #3 (forward lookup zone)'
 $DHCP_DNS_Strip_Menu_Item_Practice_5.ForeColor = 'Blue'
 
@@ -478,10 +478,10 @@ $Problem_Completed_Networking_1 = Select-String $Game_Score_File -Pattern $Probl
 if($Problem_Completed_Networking_1 -ne $null -and $Game_Score_File -ne $null){
 $Networking_Strip_Menu_Item_Practice.Text = 'Networking #1 (ip address)'
 $Networking_Strip_Menu_Item_Practice.ForeColor = 'Green'
-} 
+}
 
 else{
-	
+
 $Networking_Strip_Menu_Item_Practice.Text = 'Networking #1 (ip address)'
 $Networking_Strip_Menu_Item_Practice.ForeColor = 'Blue'
 
@@ -494,10 +494,10 @@ $Problem_Completed_Networking_2 = Select-String $Game_Score_File -Pattern $Probl
 if($Problem_Completed_Networking_2 -ne $null -and $Game_Score_File -ne $null){
 $Networking_Strip_Menu_Item_Practice_2.Text = 'Networking #2 (ip / dns)'
 $Networking_Strip_Menu_Item_Practice_2.ForeColor = 'Green'
-} 
+}
 
 else{
-	
+
 $Networking_Strip_Menu_Item_Practice_2.Text = 'Networking #2 (ip / dns)'
 $Networking_Strip_Menu_Item_Practice_2.ForeColor = 'Blue'
 
@@ -510,10 +510,10 @@ $Problem_Completed_Networking_3 = Select-String $Game_Score_File -Pattern $Probl
 if($Problem_Completed_Networking_3 -ne $null -and $Game_Score_File -ne $null){
 $Networking_Strip_Menu_Item_Practice_3.Text = 'Networking #3 (ip / dns)'
 $Networking_Strip_Menu_Item_Practice_3.ForeColor = 'Green'
-} 
+}
 
 else{
-	
+
 $Networking_Strip_Menu_Item_Practice_3.Text = 'Networking #3 (ip / dns)'
 $Networking_Strip_Menu_Item_Practice_3.ForeColor = 'Blue'
 
@@ -526,10 +526,10 @@ $Problem_Completed_Networking_4 = Select-String $Game_Score_File -Pattern $Probl
 if($Problem_Completed_Networking_4 -ne $null -and $Game_Score_File -ne $null){
 $Networking_Strip_Menu_Item_Practice_4.Text = 'Networking #4 (ip)'
 $Networking_Strip_Menu_Item_Practice_4.ForeColor = 'Green'
-} 
+}
 
 else{
-	
+
 $Networking_Strip_Menu_Item_Practice_4.Text = 'Networking #4 (ip)'
 $Networking_Strip_Menu_Item_Practice_4.ForeColor = 'Blue'
 
@@ -542,10 +542,10 @@ $Problem_Completed_Networking_5 = Select-String $Game_Score_File -Pattern $Probl
 if($Problem_Completed_Networking_5 -ne $null -and $Game_Score_File -ne $null){
 $Networking_Strip_Menu_Item_Practice_5.Text = 'Networking #5 (dhcp / dns)'
 $Networking_Strip_Menu_Item_Practice_5.ForeColor = 'Green'
-} 
+}
 
 else{
-	
+
 $Networking_Strip_Menu_Item_Practice_5.Text = 'Networking #5 (dhcp / dns)'
 $Networking_Strip_Menu_Item_Practice_5.ForeColor = 'Blue'
 
@@ -555,7 +555,7 @@ $Networking_Strip_Menu_Item_Practice_5.ForeColor = 'Blue'
 
 function On_Click_Load_Game_Strip_Menu_Item($Sender,$e){
 
-$Completed_In = "" 
+$Completed_In.Text= ""
 
 $Timer_Start_Time.Stop()
 
@@ -571,8 +571,8 @@ $OpenFileDialog.ShowDialog() | Out-Null
 
 $CSV_Header_Check = (Get-Content $OpenFileDialog.FileName | Select-Object -First 1).Split($csvdelimiter)
 
-if($CSV_Header_Check -ne "Problem,Description,Result,Date,CompletionTime,Points"){ 
- 
+if($CSV_Header_Check -ne "Problem,Description,Result,Date,CompletionTime,Points"){
+
 $MessageBoxTitle = "Incompatible csv file"
 
 $MessageBoxBody = "Selected CSV file is incompatible with EleetShell due to header mismatch. Please select appropriate CSV."
@@ -596,7 +596,7 @@ $global:Number_Of_Correct_Answers = $CSV_Length
 $Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
 
 $CSV_Stuff = Import-CSV -Path $Game_Score_File
-	
+
 $Total_Score = $CSV_Stuff | Measure-Object Points -Sum | Select-Object -expand Sum | Out-String
 
 $global:Total_Score = $Total_Score
@@ -611,10 +611,10 @@ Invoke-Expression Dropdown_Problem_Completed_Check
 }
 
 function On_Click_View_Score_And_Stats_Strip_Menu_Item{
-	
+
 $Timer_Start_Time.Stop()
-	
-$Table_Data = Import-CSV -Path $Game_Score_File | Out-GridView 
+
+$Table_Data = Import-CSV -Path $Game_Score_File | Out-GridView
 
 $CSV_Stuff = Import-CSV -Path $Game_Score_File
 
@@ -625,13 +625,13 @@ $global:Number_Of_Correct_Answers = $CSV_Length
 $Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
 
 $CSV_Stuff = Import-CSV -Path $Game_Score_File
-	
+
 $Total_Score = $CSV_Stuff | Measure-Object Points -Sum | Select-Object -expand Sum | Out-String
 
 $global:Total_Score = $Total_Score
 
 $Total_Score_Label.Text = "$Total_Score total points"
-<#	
+<#
 $Average_Time = $CSV_Stuff | Measure-Object CompletionTime -Average | Select-Object -expand CompletionTime | Out-String
 
 Write-Host $Average_Time
@@ -683,25 +683,25 @@ $Windows_General_Strip_Menu_Item_4, $Windows_General_Strip_Menu_Item_5))
 
 function On_Click_Boot_Process_Strip_Menu_Item_Learn($Sender,$e){
 
-    $Completed_In = ""
+    $Completed_In.Text= ""
 
     $Correct_Incorrect.Text= ""
-	
+
 	$Timer_Start_Time.Stop()
 
     $Timer = [System.Diagnostics.Stopwatch]::StartNew()
-	
+
 	$global:Timer_Start_Time = $Timer
-	
+
     $Title.Text = "Windows General #!"
 	$Title.ForeColor = 'Blue'
-	
+
 	$Body.Text = "Find the computer name (hostname) of this device."
 
     $Form.Controls.RemoveByKey("The_Submit_Button")
-	
+
 	$The_Submit_Button = New-Object System.Windows.Forms.Button
-	
+
 	$The_Submit_Button.Name = "The_Submit_Button"
 
 	$The_Submit_Button.Text = "Submit"
@@ -715,21 +715,21 @@ function On_Click_Boot_Process_Strip_Menu_Item_Learn($Sender,$e){
 	$The_Submit_Button.Location = New-Object System.Drawing.Point(30,200)
 
 	$The_Submit_Button.Add_Click({Selected_Practice_Problem})
-	
+
 	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
-	
+
 	$Problem_Completed = "hostname"
-	
+
 	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
-	
+
 	if($Problem_Completed_Check -ne $null) {
 	$Title.Text = "Windows General #1 (COMPLETED)"
-	$Title.ForeColor = 'Green'} 
-	
+	$Title.ForeColor = 'Green'}
+
 	else {
-		
+
 	$Title.Text = "Windows General #1"
-	
+
 	}
 }
 
@@ -741,46 +741,46 @@ Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb ru
 
 if ($Body.Text = "Find the computer name (hostname) of your Windows machine. Use PowerShell."){
 	if($Answer -eq "hostname"){
-		
+
 	$Time_Elapsed = $Timer_Start_Time.Elapsed
 
 	$Timer = $([string]::Format("`{0:d2}:{1:d2}:{2:d2}",
 	$Time_Elapsed.hours,
 	$Time_Elapsed.minutes,
 	$Time_Elapsed.seconds))
-	
+
 	$New_Row | Add-Content -Path $Game_Score_File
 
     $New_Row = New-Object PsObject -Property @{Problem = "Windows General #1" ; Description = "Find the computer name (hostname) of your Windows machine" ;Result = "hostname" ; CompletionTime = $Timer ; Date = $Date ; Points = "1"}
-	
+
     $New_Results += $New_Row
 
     $New_Results | Export-CSV -append $Game_Score_File
-	
+
 	$Timer.Stop
-	
+
 	$CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
 
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
 	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
-	
+
 	$CSV_Stuff = Import-CSV -Path $Game_Score_File
-	
+
 	$Total_Score = $CSV_Stuff | Measure-Object Points -Sum | Select-Object -expand Sum | Out-String
 
 	$global:Total_Score = $Total_Score
 
 	$Total_Score_Label.Text = "$Total_Score total points"
-	
+
 	if($Game_Score_File -eq $null){
-	
+
 	$Total_Score_Label.Text = ""
 	$Total_Number_Of_Answers_Label.Text = ""
 	}
-		
+
     Invoke-Expression Dropdown_Problem_Completed_Check
-	
+
     $Body.Text = "Find the computer name (hostname) of your Windows machine"
 
     $Correct_Incorrect.Text = "Correct, your answer was $Answer."
@@ -792,7 +792,7 @@ if ($Body.Text = "Find the computer name (hostname) of your Windows machine. Use
     }
 
 	else{
-        
+
      $Body.Text = "Find the computer name (hostname) of your Windows machine"
 
      $Correct_Incorrect.Text = "Incorrect, your answer was $Answer."
@@ -800,35 +800,36 @@ if ($Body.Text = "Find the computer name (hostname) of your Windows machine. Use
      $Correct_Incorrect.ForeColor = 'Red'
 
         }
+    $Input_Box.Clear()
 }}
 
 ## Windows General #2 ##
 
 function On_Click_Uptime_Strip_Menu_Item($Sender,$e){
 
-    $Completed_In = ""
+    $Completed_In.Text= ""
 
     $Correct_Incorrect.Text= ""
-	
+
 	$Timer_Start_Time.Stop()
 
     $Timer = [System.Diagnostics.Stopwatch]::StartNew()
-	
+
 	$global:Timer_Start_Time = $Timer
-	
+
     $Title.Text = "Windows General #2"
 	$Title.ForeColor = 'Blue'
-	
+
 	$Description = "Find the uptime of this device. Note, use the 'systeminfo' command and a | (pipe). `nMake sure there is proper spacing on both sides of |"
-	
+
 	$Body.Text = $Description
-	
+
 	$global:Description = $Description
 
     $Form.Controls.RemoveByKey("The_Submit_Button")
-	
+
 	$The_Submit_Button = New-Object System.Windows.Forms.Button
-	
+
 	$The_Submit_Button.Name = "The_Submit_Button"
 
 	$The_Submit_Button.Text = "Submit"
@@ -842,21 +843,21 @@ function On_Click_Uptime_Strip_Menu_Item($Sender,$e){
 	$The_Submit_Button.Location = New-Object System.Drawing.Point(30,200)
 
 	$The_Submit_Button.Add_Click({Selected_Windows_General_Problem_2})
-	
+
 	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
-	
+
 	$Problem_Completed = "systeminfo | find 'Boot Time'"
-	
+
 	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
-	
+
 	if($Problem_Completed_Check -ne $null) {
 	$Title.Text = "Windows General #2 (COMPLETED)"
-	$Title.ForeColor = 'Green'} 
-	
+	$Title.ForeColor = 'Green'}
+
 	else {
-		
+
 	$Title.Text = "Windows General #2"
-	
+
 	}
 }
 
@@ -868,30 +869,30 @@ Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb ru
 
 if ($Body.Text = $Description){
 	if($Input_Box.Text -eq "systeminfo | find 'Boot Time'"){
-		
+
 	$Time_Elapsed = $Timer_Start_Time.Elapsed
 
 	$Timer = $([string]::Format("`{0:d2}:{1:d2}:{2:d2}",
 	$Time_Elapsed.hours,
 	$Time_Elapsed.minutes,
 	$Time_Elapsed.seconds))
-	
+
 	$New_Row | Add-Content -Path $Game_Score_File
 
     $New_Row = New-Object PsObject -Property @{Problem = "Windows General #2" ; Description = "Find the uptime of this device. Note, use the 'systeminfo' command and a | (pipe). Make sure there is proper spacing on both sides of |" ; Result = "systeminfo | find 'Boot Time'" ; CompletionTime = $Timer ; Date = $Date ; Points = "2"}
-	
+
     $New_Results += $New_Row
 
     $New_Results | Export-CSV -append $Game_Score_File
-	
+
 	$Timer.Stop
-	
+
 	$CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
 
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
 	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
-	
+
     Invoke-Expression Dropdown_Problem_Completed_Check
 
     $Body.Text = "$Description"
@@ -899,6 +900,8 @@ if ($Body.Text = $Description){
     $Correct_Incorrect.Text = "Correct, your answer was $Answer."
 
     $Correct_Incorrect.ForeColor = 'Green'
+    
+    $Completed_In.Text = "Completed in $Timer"
 
     }
 
@@ -916,25 +919,25 @@ if ($Body.Text = $Description){
 
 function On_Click_Env_Strip_Menu_Item($Sender,$e){
 
-    $Completed_In = ""
+    $Completed_In.Text= ""
 
     $Correct_Incorrect.Text= ""
-	
+
 	$Timer_Start_Time.Stop()
 
     $Timer = [System.Diagnostics.Stopwatch]::StartNew()
-	
+
 	$global:Timer_Start_Time = $Timer
-	
+
     $Title.Text = "Windows General #3"
 	$Title.ForeColor = 'Blue'
-	
+
 	$Body.Text = "Find the environment variables on this system using a command `nthat has two different three letter words and a :"
-    
+
     $Form.Controls.RemoveByKey("The_Submit_Button")
-	
+
 	$The_Submit_Button = New-Object System.Windows.Forms.Button
-	
+
 	$The_Submit_Button.Name = "The_Submit_Button"
 
 	$The_Submit_Button.Text = "Submit"
@@ -948,21 +951,21 @@ function On_Click_Env_Strip_Menu_Item($Sender,$e){
 	$The_Submit_Button.Location = New-Object System.Drawing.Point(30,200)
 
 	$The_Submit_Button.Add_Click({Selected_Windows_General_Problem_3})
-	
+
 	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
-	
+
 	$Problem_Completed = "dir env:"
-	
+
 	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
-	
+
 	if($Problem_Completed_Check -ne $null) {
 	$Title.Text = "Windows General #3 (COMPLETED)"
-	$Title.ForeColor = 'Green'} 
-	
+	$Title.ForeColor = 'Green'}
+
 	else {
-		
+
 	$Title.Text = "Windows General #3"
-	
+
 	}
 }
 
@@ -973,45 +976,47 @@ $Answer = @($Input_Box.Text)
 Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb runAs
 
 if ($Body.Text = "Find the environment variables on this system using a command `nthat has two different three letter words and a :"){
-	
+
 	if($Input_Box.Text -eq "dir env:"){
-	
+
 	$Time_Elapsed = $Timer_Start_Time.Elapsed
 
 	$Timer = $([string]::Format("`{0:d2}:{1:d2}:{2:d2}",
 	$Time_Elapsed.hours,
 	$Time_Elapsed.minutes,
 	$Time_Elapsed.seconds))
-	
+
 	$New_Row | Add-Content -Path $Game_Score_File
 
     $New_Row = New-Object PsObject -Property @{Problem = "Windows General #3" ; Description = "Find the environment variables on this system using a command `nthat has two different three letter words and a :" ;Result = "dir env:" ; CompletionTime = $Timer ; Date = $Date ; Points = "2"}
-	
+
     $New_Results += $New_Row
 
     $New_Results | Export-CSV -append $Game_Score_File
-	
+
 	$Timer.Stop
-	
+
 	$CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
 
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
 	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
-	
+
 	$CSV_Stuff = Import-CSV -Path $Game_Score_File
-		
+
 	$Total_Score = $CSV_Stuff | Measure-Object Points -Sum | Select-Object -expand Sum | Out-String
 
 	$global:Total_Score = $Total_Score
 
 	$Total_Score_Label.Text = "$Total_Score total points"
-	
+
     Invoke-Expression Dropdown_Problem_Completed_Check
 
     $Body.Text = "Find the environment variables on this system using a command `nthat has two different three letter words and a :"
 
     $Correct_Incorrect.ForeColor = 'Green'
+    
+    $Completed_In.Text = "Completed in $Timer"
 
     $Correct_Incorrect.Text = "Correct, your answer was $Answer."
 
@@ -1020,11 +1025,11 @@ if ($Body.Text = "Find the environment variables on this system using a command 
 	else{
 
 		$Body.Text = "Find the environment variables on this system using a command `nthat has two different three letter words and a :"
-        
+
         $Correct_Incorrect.ForeColor = 'Red'
 
         $Correct_Incorrect.Text = "Incorrect, your answer was $Answer."
-        
+
         }
 	}
 
@@ -1035,25 +1040,25 @@ if ($Body.Text = "Find the environment variables on this system using a command 
 
 function On_Click_Cpu_Strip_Menu_Item($Sender,$e){
 
-    $Completed_In = ""
+    $Completed_In.Text= ""
 
     $Correct_Incorrect.Text= ""
-	
+
 	$Timer_Start_Time.Stop()
 
     $Timer = [System.Diagnostics.Stopwatch]::StartNew()
-	
+
 	$global:Timer_Start_Time = $Timer
-	
+
     $Title.Text = "Windows General #4"
 	$Title.ForeColor = 'Blue'
-	
+
 	$Body.Text = "Find the processes on this machine where the cpu consumption is greater than 20%. `nNote: Use Get-Process and Where-Object separated by a |"
-    
+
     $Form.Controls.RemoveByKey("The_Submit_Button")
-	
+
 	$The_Submit_Button = New-Object System.Windows.Forms.Button
-	
+
 	$The_Submit_Button.Name = "The_Submit_Button"
 
 	$The_Submit_Button.Text = "Submit"
@@ -1067,21 +1072,21 @@ function On_Click_Cpu_Strip_Menu_Item($Sender,$e){
 	$The_Submit_Button.Location = New-Object System.Drawing.Point(30,200)
 
 	$The_Submit_Button.Add_Click({Selected_Windows_General_Problem_4})
-	
+
 	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
-	
+
 	$Problem_Completed = "Get-Process | Where-Object { $_.CPU -gt 20 }"
-	
+
 	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
-	
+
 	if($Problem_Completed_Check -ne $null) {
 	$Title.Text = "Windows General #4 (COMPLETED)"
-	$Title.ForeColor = 'Green'} 
-	
+	$Title.ForeColor = 'Green'}
+
 	else {
-		
+
 	$Title.Text = "Windows General #4"
-	
+
 	}
 }
 
@@ -1092,53 +1097,55 @@ $Answer = @($Input_Box.Text)
 Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb runAs
 
 if ($Body.Text = "Find the processes on this machine where the cpu consumption is greater than 20%. `nNote: Use Get-Process and Where-Object separated by a |"){
-	
+
 	$CPU = 'Get-Process | Where-Object { $_.CPU -gt 20 }'
-	
+
 	if($Input_Box.Text -eq $CPU){
-		
+
 	$Time_Elapsed = $Timer_Start_Time.Elapsed
 
 	$Timer = $([string]::Format("`{0:d2}:{1:d2}:{2:d2}",
 	$Time_Elapsed.hours,
 	$Time_Elapsed.minutes,
 	$Time_Elapsed.seconds))
-	
+
 	$New_Row | Add-Content -Path $Game_Score_File
 
     $New_Row = New-Object PsObject -Property @{Problem = "Windows General #4" ; Description = "Find the processes on this machine where the cpu consumption is greater than 20%. `nNote: Use Get-Process and Where-Object separated by a |" ; Result = "$CPU" ; CompletionTime = $Timer ; Date = $Date ; Points = "3"}
-	
+
     $New_Results += $New_Row
 
     $New_Results | Export-CSV -append $Game_Score_File
-	
+
 	$Timer.Stop
-	
+
 	$CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
 
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
 	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
-	
+
 	$CSV_Stuff = Import-CSV -Path $Game_Score_File
-	
+
 	$Total_Score = $CSV_Stuff | Measure-Object Points -Sum | Select-Object -expand Sum | Out-String
 
 	$global:Total_Score = $Total_Score
 
 	$Total_Score_Label.Text = "$Total_Score total points"
-	
+
 	if($Game_Score_File -eq $null){
-	
+
 	$Total_Score_Label.Text = ""
 	$Total_Number_Of_Answers_Label.Text = ""
 	}
-		
+
     Invoke-Expression Dropdown_Problem_Completed_Check
 
     $Body.Text = "Find the processes on this machine where the cpu consumption is greater than 20%. `nNote: Use Get-Process and Where-Object separated by a |"
-    
+
     $Correct_Incorrect.ForeColor = 'Green'
+    
+    $Completed_In.Text = "Completed in $Timer"
 
     $Correct_Incorrect.Text = "Correct, your answer was $Answer."
 
@@ -1147,11 +1154,11 @@ if ($Body.Text = "Find the processes on this machine where the cpu consumption i
 	else{
 
 		$Body.Text = "Find the processes on this machine where the cpu consumption is greater than 20%. `nNote: Use Get-Process and Where-Object separated by a |"
-        
+
         $Correct_Incorrect.ForeColor = 'Red'
 
         $Correct_Incorrect.Text = "Incorrect, your answer was $Answer."
-        
+
         }
 	}
 
@@ -1162,25 +1169,25 @@ if ($Body.Text = "Find the processes on this machine where the cpu consumption i
 
 function On_Click_Disk_Space_Strip_Menu_Item($Sender,$e){
 
-    $Completed_In = ""
+    $Completed_In.Text= ""
 
     $Correct_Incorrect.Text= ""
-	
+
 	$Timer_Start_Time.Stop()
 
     $Timer = [System.Diagnostics.Stopwatch]::StartNew()
-	
+
 	$global:Timer_Start_Time = $Timer
-	
+
     $Title.Text = "Windows General #5"
 	$Title.ForeColor = 'Blue'
-	
+
 	$Body.Text = "Find the disk space of the current machine's C drive"
 
     $Form.Controls.RemoveByKey("The_Submit_Button")
-	
+
 	$The_Submit_Button = New-Object System.Windows.Forms.Button
-	
+
 	$The_Submit_Button.Name = "The_Submit_Button"
 
 	$The_Submit_Button.Text = "Submit"
@@ -1194,21 +1201,21 @@ function On_Click_Disk_Space_Strip_Menu_Item($Sender,$e){
 	$The_Submit_Button.Location = New-Object System.Drawing.Point(30,200)
 
 	$The_Submit_Button.Add_Click({Selected_Windows_General_Problem_5})
-	
+
 	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
-	
+
 	$Problem_Completed = "Get-PSDrive C"
-	
+
 	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
-	
+
 	if($Problem_Completed_Check -ne $null) {
 	$Title.Text = "Windows General #5 (COMPLETED)"
-	$Title.ForeColor = 'Green'} 
-	
+	$Title.ForeColor = 'Green'}
+
 	else {
-		
+
 	$Title.Text = "Windows General #5"
-	
+
 	}
 }
 
@@ -1219,51 +1226,53 @@ $Answer = @($Input_Box.Text)
 Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb runAs
 
 if ($Body.Text = "Find the disk space of the current machine's C drive"){
-	
+
 	if($Input_Box.Text -eq "Get-PSDrive C"){
-		
+
 	$Time_Elapsed = $Timer_Start_Time.Elapsed
 
 	$Timer = $([string]::Format("`{0:d2}:{1:d2}:{2:d2}",
 	$Time_Elapsed.hours,
 	$Time_Elapsed.minutes,
 	$Time_Elapsed.seconds))
-	
+
 	$New_Row | Add-Content -Path $Game_Score_File
 
     $New_Row = New-Object PsObject -Property @{Problem = "Windows General #5" ; Description = "Find the disk space of the current machine's C drive" ; Result = "Get-PSDrive C" ; CompletionTime = $Timer ; Date = $Date ; Points = "3"}
-	
+
     $New_Results += $New_Row
 
     $New_Results | Export-CSV -append $Game_Score_File
-	
+
 	$Timer.Stop
-	
+
 	$CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
 
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
 	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
-	
+
 	$CSV_Stuff = Import-CSV -Path $Game_Score_File
-	
+
 	$Total_Score = $CSV_Stuff | Measure-Object Points -Sum | Select-Object -expand Sum | Out-String
 
 	$global:Total_Score = $Total_Score
 
 	$Total_Score_Label.Text = "$Total_Score total points"
-	
+
 	if($Game_Score_File -eq $null){
-	
+
 	$Total_Score_Label.Text = ""
 	$Total_Number_Of_Answers_Label.Text = ""
 	}
-		
+
     Invoke-Expression Dropdown_Problem_Completed_Check
 
     $Body.Text = "Find the disk space of the current machine's C drive"
 
     $Correct_Incorrect.ForeColor = 'Green'
+    
+    $Completed_In.Text = "Completed in $Timer"
 
     $Correct_Incorrect.Text = "Correct, your answer was $Answer."
 
@@ -1272,11 +1281,11 @@ if ($Body.Text = "Find the disk space of the current machine's C drive"){
 	else{
 
 		$Body.Text = "Find the disk space of the current machine's C drive"
-        
+
         $Correct_Incorrect.ForeColor = 'Red'
 
         $Correct_Incorrect.Text = "Incorrect, your answer was $Answer."
-        
+
         }
 	}
 
@@ -1305,26 +1314,26 @@ $DHCP_DNS_Strip_Menu_Item_Practice.Text = "DHCP #1 (server)"
 
 function On_Click_DHCP_DNS_Strip_Menu_Item_Practice($Sender,$e){
 
-    $Completed_In = "" 
+    $Completed_In.Text= ""
 
     $Correct_Incorrect.Text= ""
-	
+
 	$Timer_Start_Time.Stop()
 
     $Timer = [System.Diagnostics.Stopwatch]::StartNew()
-	
+
 	$global:Timer_Start_Time = $Timer
-	
+
     $Title.Text= "DHCP #1"
-	
+
 	$Title.ForeColor = 'Blue'
-	
+
 	$Body.Text = "Create a DHCP server in the Domain controller named dhcp-practice with an IP address of 172.16.0.50"
 
     $Form.Controls.RemoveByKey("The_Submit_Button")
-	
+
 	$The_Submit_Button = New-Object System.Windows.Forms.Button
-	
+
 	$The_Submit_Button.Name = "The_Submit_Button"
 
 	$The_Submit_Button.Text = "Submit"
@@ -1338,21 +1347,21 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice($Sender,$e){
 	$The_Submit_Button.Location = New-Object System.Drawing.Point(30,200)
 
 	$The_Submit_Button.Add_Click({Selected_DHCP_DNS_Practice_Problem})
-	
+
 	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
-	
+
 	$Problem_Completed = "Add-DhcpServerInDC -DNSName dhcp-practice -IPAddress 172.16.0.50"
-	
+
 	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
-	
+
 	if($Problem_Completed_Check -ne $null) {
 	$Title.Text = "DHCP #1 (COMPLETED)"
-	$Title.ForeColor = 'Green'} 
-	
+	$Title.ForeColor = 'Green'}
+
 	else {
-		
+
 	$Title.Text = "DHCP #1"
-	
+
 	}
 }
 
@@ -1364,35 +1373,37 @@ Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb ru
 
 if ($Body.Text = "Create a DHCP server in the Domain controller named dhcp-practice with an IP address of 172.16.0.50"){
 	if($Input_Box.Text -eq "Add-DhcpServerInDC -DNSName dhcp-practice -IPAddress 172.16.0.50"){
-		
+
 	$Time_Elapsed = $Timer_Start_Time.Elapsed
 
 	$Timer = $([string]::Format("`{0:d2}:{1:d2}:{2:d2}",
 	$Time_Elapsed.hours,
 	$Time_Elapsed.minutes,
 	$Time_Elapsed.seconds))
-	
+
 	$New_Row | Add-Content -Path $Game_Score_File
 
     $New_Row = New-Object PsObject -Property @{Problem = "DHCP #1" ; Description = "Create a DHCP server in the Domain controller named dhcp-practice with an IP address of 172.16.0.50" ; Result = "Add-DhcpServerInDC -DNSName dhcp-practice -IPAddress 172.16.0.50" ; CompletionTime = $Timer ; Date = $Date ; Points = "5"}
-	
+
     $New_Results += $New_Row
 
     $New_Results | Export-CSV -append $Game_Score_File
-	
+
 	$Timer.Stop
-	
+
 	$CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
 
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
 	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
-	
+
     Invoke-Expression Dropdown_Problem_Completed_Check
 
     $Body.Text = "Create a DHCP server in the Domain controller named dhcp-practice with an IP address of 172.16.0.50"
 
     $Correct_Incorrect.ForeColor = 'Green'
+    
+    $Completed_In.Text = "Completed in $Timer"
 
     $Correct_Incorrect.Text = "Correct, your answer was $Answer."
 
@@ -1401,11 +1412,11 @@ if ($Body.Text = "Create a DHCP server in the Domain controller named dhcp-pract
 	else{
 
 		$Body.Text =  "Create a DHCP server in the Domain controller named dhcp-practice with an IP address of 172.16.0.50"
-        
+
         $Correct_Incorrect.ForeColor = 'Red'
 
         $Correct_Incorrect.Text = "Incorrect, your answer was $Answer."
-        
+
         }
 	}
 
@@ -1420,26 +1431,26 @@ $DHCP_DNS_Strip_Menu_Item_Practice_2.Text = "DHCP #2 (scope)"
 
 function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_2($Sender,$e){
 
-    $Completed_In = ""
+    $Completed_In.Text= ""
 
     $Correct_Incorrect.Text= ""
 
 	$Timer_Start_Time.Stop()
-	
+
 	$Timer = [System.Diagnostics.Stopwatch]::StartNew()
-	
+
 	$global:Timer_Start_Time = $Timer
-	
+
     $Title.Text= "DHCP #2"
-	
+
 	$Title.ForeColor = 'Blue'
-	
+
 	$Body.Text = "Create an active IPv4 DHCP scope named 'test' with a start range of 172.16.0.100, `nend range of 172.16.0.200 and subnet mask of 255.255.255.0"
 
     $Form.Controls.RemoveByKey("The_Submit_Button")
-	
+
 	$The_Submit_Button = New-Object System.Windows.Forms.Button
-	
+
 	$The_Submit_Button.Name = "The_Submit_Button"
 
 	$The_Submit_Button.Text = "Submit"
@@ -1453,22 +1464,22 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_2($Sender,$e){
 	$The_Submit_Button.Location = New-Object System.Drawing.Point(30,200)
 
 	$The_Submit_Button.Add_Click({Selected_DHCP_DNS_Practice_Problem_2})
-	
+
 	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
-	
+
 	$Problem_Completed = "Add-DhcpServerV4Scope -name 'test' -StartRange 172.16.0.100 -Endrange 172.16.0.200 -SubnetMask 255.255.255.0 -State Active"
-	
+
 	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
-	
+
 	if($Problem_Completed_Check -ne $null) {
 	$Title.Text = "DHCP #2 (scope) (COMPLETED)" ## Fix this!
-	$Title.ForeColor = 'Green' } 
-	
+	$Title.ForeColor = 'Green' }
+
 	else {
-		
+
 	$Title.Text = "DHCP #2 (scope)"
     $Body.Text = "Create an active IPv4 DHCP scope named 'test' with a start range of 172.16.0.100, `nend range of 172.16.0.200 and subnet mask of 255.255.255.0"
-	
+
 	}
 
 }
@@ -1481,51 +1492,53 @@ Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb ru
 
 if ($Body.Text = "Create an active IPv4 DHCP scope named 'test' with a start range of 172.16.0.100, `nend range of 172.16.0.200 and subnet mask of 255.255.255.0"){
 	if($Input_Box.Text -eq "Add-DhcpServerV4Scope -name 'test' -StartRange 172.16.0.100 -Endrange 172.16.0.200 -SubnetMask 255.255.255.0 -State Active"){
-		
+
 	$Time_Elapsed = $Timer_Start_Time.Elapsed
 
 	$Timer = $([string]::Format("`{0:d2}:{1:d2}:{2:d2}",
 	$Time_Elapsed.hours,
 	$Time_Elapsed.minutes,
 	$Time_Elapsed.seconds))
-	
+
 	$New_Row | Add-Content -Path $Game_Score_File
 
     $New_Row = New-Object PsObject -Property @{Problem = "DHCP #2" ; Description = "Create an active IPv4 DHCP scope named 'test' with a start range of 172.16.0.100, `nend range of 172.16.0.200 and subnet mask of 255.255.255.0" ; Result = "Add-DhcpServerV4Scope -name 'test' -StartRange 172.16.0.100 -Endrange 172.16.0.200 -SubnetMask 255.255.255.0 -State Active" ; CompletionTime = $Timer ; Date = $Date ; Points = "5"}
-	
+
     $New_Results += $New_Row
 
     $New_Results | Export-CSV -append $Game_Score_File
-	
+
 	$Timer.Stop
-	
+
 	$CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
 
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
 	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
-	
+
 	$CSV_Stuff = Import-CSV -Path $Game_Score_File
-	
+
 	$Total_Score = $CSV_Stuff | Measure-Object Points -Sum | Select-Object -expand Sum | Out-String
 
 	$global:Total_Score = $Total_Score
 
 	$Total_Score_Label.Text = "$Total_Score total points"
-	
+
 	if($Game_Score_File -eq $null){
-	
+
 	$Total_Score_Label.Text = ""
 	$Total_Number_Of_Answers_Label.Text = ""
 	}
-	
+
     Invoke-Expression Dropdown_Problem_Completed_Check
 
     $Body.Text = "Create an active IPv4 DHCP scope named 'test' with a start range of 172.16.0.100, `nend range of 172.16.0.200 and subnet mask of 255.255.255.0"
-	
+
     $Correct_Incorrect.Text = "Correct, your answer was $Answer."
 
     $Correct_Incorrect.ForeColor = 'Green'
+    
+    $Completed_In.Text = "Completed in $Timer"
 
     }
 
@@ -1547,26 +1560,26 @@ $DHCP_DNS_Strip_Menu_Item_Practice_3.Text = "DNS #1 (check install)"
 
 function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_3($Sender,$e){
 
-    $Completed_In = "" 
+    $Completed_In.Text= ""
 
     $Correct_Incorrect.Text= ""
 
 	$Timer_Start_Time.Stop()
-	
+
 	$Timer = [System.Diagnostics.Stopwatch]::StartNew()
-	
+
 	$global:Timer_Start_Time = $Timer
-	
+
     $Title.Text = "DNS #1 (check install)"
-	
+
 	$Title.ForeColor = 'Blue'
-	
+
 	$Body.Text = "Check if DNS is installed on this system."
 
     $Form.Controls.RemoveByKey("The_Submit_Button")
-	
+
 	$The_Submit_Button = New-Object System.Windows.Forms.Button
-	
+
 	$The_Submit_Button.Name = "The_Submit_Button"
 
 	$The_Submit_Button.Text = "Submit"
@@ -1580,23 +1593,23 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_3($Sender,$e){
 	$The_Submit_Button.Location = New-Object System.Drawing.Point(30,200)
 
 	$The_Submit_Button.Add_Click({Selected_DHCP_DNS_Practice_Problem_3})
-	
+
 	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
-	
+
 	$Problem_Completed = "Get-WindowsFeature -Name *DNS*"
-	
+
 	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
-	
+
 	if($Problem_Completed_Check -ne $null) {
 	$Title.Text = "DNS #1 (check install) (COMPLETED)"
 	$Title.ForeColor = 'Green'} ## Fix this!
-	
+
 	else {
-		
+
 	$Title.Text = "DNS #1 (check install)"
-	
+
 	}
-	
+
 }
 
 function Selected_DHCP_DNS_Practice_Problem_3{
@@ -1607,44 +1620,44 @@ Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb ru
 
 if ($Body.Text = "Check if DNS is installed on this system."){
 	if($Input_Box.Text -eq "Get-WindowsFeature -Name *DNS*"){
-		
+
 	$Time_Elapsed = $Timer_Start_Time.Elapsed
 
 	$Timer = $([string]::Format("`{0:d2}:{1:d2}:{2:d2}",
 	$Time_Elapsed.hours,
 	$Time_Elapsed.minutes,
 	$Time_Elapsed.seconds))
-	
+
 	$New_Row | Add-Content -Path $Game_Score_File
 
     $New_Row = New-Object PsObject -Property @{Problem = "DNS #1 (check install)" ; Description = "Check if DNS is installed on this system" ; Result = "Get-WindowsFeature -Name *DNS*" ; CompletionTime = $Timer ; Date = $Date ; Points = "1"}
-	
+
     $New_Results += $New_Row
 
     $New_Results | Export-CSV -append $Game_Score_File
-	
+
 	$Timer.Stop
-	
+
 	$CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
 
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
 	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
-	
+
 	$CSV_Stuff = Import-CSV -Path $Game_Score_File
-	
+
 	$Total_Score = $CSV_Stuff | Measure-Object Points -Sum | Select-Object -expand Sum | Out-String
 
 	$global:Total_Score = $Total_Score
 
 	$Total_Score_Label.Text = "$Total_Score total points"
-	
+
 	if($Game_Score_File -eq $null){
-	
+
 	$Total_Score_Label.Text = ""
 	$Total_Number_Of_Answers_Label.Text = ""
 	}
-		
+
     Invoke-Expression Dropdown_Problem_Completed_Check
 
     $Body.Text = "Check if DNS is installed on this system."
@@ -1652,6 +1665,8 @@ if ($Body.Text = "Check if DNS is installed on this system."){
     $Correct_Incorrect.Text = "Correct, your answer was $Answer."
 
     $Correct_Incorrect.ForeColor = 'Green'
+    
+    $Completed_In.Text = "Completed in $Timer"
 
     }
 
@@ -1673,26 +1688,26 @@ $DHCP_DNS_Strip_Menu_Item_Practice_4.Text = "DNS #2 (install DNS)"
 
 function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_4($Sender,$e){
 
-    $Completed_In = ""
+    $Completed_In.Text= ""
 
     $Correct_Incorrect.Text= ""
 
 	$Timer_Start_Time.Stop()
-	
+
 	$Timer = [System.Diagnostics.Stopwatch]::StartNew()
-	
+
 	$global:Timer_Start_Time = $Timer
-	
+
     $Title.Text= "DNS #1 (check install)"
-	
+
 	$Title.ForeColor = 'Blue'
-	
+
 	$Body.Text = "Install DNS and management tools on this system"
 
     $Form.Controls.RemoveByKey("The_Submit_Button")
-	
+
 	$The_Submit_Button = New-Object System.Windows.Forms.Button
-	
+
 	$The_Submit_Button.Name = "The_Submit_Button"
 
 	$The_Submit_Button.Text = "Submit"
@@ -1706,23 +1721,23 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_4($Sender,$e){
 	$The_Submit_Button.Location = New-Object System.Drawing.Point(30,200)
 
 	$The_Submit_Button.Add_Click({Selected_DHCP_DNS_Practice_Problem_4})
-	
+
 	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
-	
+
 	$Problem_Completed = "Install-WindowsFeature -Name DNS -IncludeManagementTools"
-	
+
 	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
-	
+
 	if($Problem_Completed_Check -ne $null) {
 	$Title.Text = "DNS #2 (install DNS) (COMPLETED)"
 	$Title.ForeColor = 'Green'} ## Fix this!
-	
+
 	else {
-		
+
 	$Title.Text = "DNS #2 (install DNS)"
-	
+
 	}
-	
+
 	$Input_Box.Clear()
 }
 
@@ -1734,44 +1749,44 @@ Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb ru
 
 if ($Body.Text = "Install DNS and management tools on this system"){
 	if($Input_Box.Text -eq "Install-WindowsFeature -Name DNS -IncludeManagementTools"){
-		
+
 	$Time_Elapsed = $Timer_Start_Time.Elapsed
 
 	$Timer = $([string]::Format("`{0:d2}:{1:d2}:{2:d2}",
 	$Time_Elapsed.hours,
 	$Time_Elapsed.minutes,
 	$Time_Elapsed.seconds))
-	
+
 	$New_Row | Add-Content -Path $Game_Score_File
 
     $New_Row = New-Object PsObject -Property @{Problem = "DNS #2 (install DNS)" ; Description = "Install DNS and management tools on this system" ; Result = "Install-WindowsFeature -Name DNS -IncludeManagementTools" ; CompletionTime = $Timer ; Date = $Date ; Points = "1"}
-	
+
     $New_Results += $New_Row
 
     $New_Results | Export-CSV -append $Game_Score_File
-	
+
 	$Timer.Stop
-	
+
 	$CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
 
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
 	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
-	
+
 	$CSV_Stuff = Import-CSV -Path $Game_Score_File
-	
+
 	$Total_Score = $CSV_Stuff | Measure-Object Points -Sum | Select-Object -expand Sum | Out-String
 
 	$global:Total_Score = $Total_Score
 
 	$Total_Score_Label.Text = "$Total_Score total points"
-	
+
 	if($Game_Score_File -eq $null){
-	
+
 	$Total_Score_Label.Text = ""
 	$Total_Number_Of_Answers_Label.Text = ""
 	}
-	
+
     Invoke-Expression Dropdown_Problem_Completed_Check
 
     $Body.Text = "Install DNS and management tools on this system"
@@ -1779,6 +1794,8 @@ if ($Body.Text = "Install DNS and management tools on this system"){
     $Correct_Incorrect.Text = "Correct, your answer was $Answer."
 
     $Correct_Incorrect.ForeColor = 'Green'
+    
+    $Completed_In.Text = "Completed in $Timer"
 
     }
 
@@ -1800,26 +1817,26 @@ $DHCP_DNS_Strip_Menu_Item_Practice_5.Text = "DNS #3 (forward lookup zone)"
 
 function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_5($Sender,$e){
 
-    $Completed_In = ""
+    $Completed_In.Text= ""
 
     $Correct_Incorrect.Text= ""
 
 	$Timer_Start_Time.Stop()
-	
+
 	$Timer = [System.Diagnostics.Stopwatch]::StartNew()
-	
+
 	$global:Timer_Start_Time = $Timer
-	
+
     $Title.Text= "DNS #3 (forward lookup zone)"
-	
+
 	$Title.ForeColor = 'Blue'
-	
+
 	$Body.Text = "Add a forward lookup zone with DynamicUpdate for Eliteshell.org `nwith secure and nonsecure dynamic updates"
 
     $Form.Controls.RemoveByKey("The_Submit_Button")
-	
+
 	$The_Submit_Button = New-Object System.Windows.Forms.Button
-	
+
 	$The_Submit_Button.Name = "The_Submit_Button"
 
 	$The_Submit_Button.Text = "Submit"
@@ -1833,21 +1850,21 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_5($Sender,$e){
 	$The_Submit_Button.Location = New-Object System.Drawing.Point(30,200)
 
 	$The_Submit_Button.Add_Click({Selected_DHCP_DNS_Practice_Problem_5})
-	
+
 	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
-	
+
 	$Problem_Completed = "Add-DnsServerPrimaryZone -Name Eliteshell.org -Zonefile Eliteshell.org.DNS -DynamicUpdate NonsecureAndSecure"
-	
+
 	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
-	
+
 	if($Problem_Completed_Check -ne $null) {
 	$Title.Text = "DNS #3 (forward lookup zone) (COMPLETED)"
 	$Title.ForeColor = 'Green'} ## Fix this!
-	
+
 	else {
-		
+
 	$Title.Text = "DNS #3 (forward lookup zone)"
-	
+
 	}
 }
 
@@ -1860,44 +1877,44 @@ Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb ru
 if ($Body.Text = "Add a forward lookup zone with DynamicUpdate for Eliteshell.org `nwith secure and nonsecure dynamic updates"){
 
 	if($Input_Box.Text -eq "Add-DnsServerPrimaryZone -Name Eliteshell.org -Zonefile Eliteshell.org.DNS -DynamicUpdate NonsecureAndSecure"){
-	
+
 	$Time_Elapsed = $Timer_Start_Time.Elapsed
 
 	$Timer = $([string]::Format("`{0:d2}:{1:d2}:{2:d2}",
 	$Time_Elapsed.hours,
 	$Time_Elapsed.minutes,
 	$Time_Elapsed.seconds))
-	
+
 	$New_Row | Add-Content -Path $Game_Score_File
 
     $New_Row = New-Object PsObject -Property @{Problem = "DNS #3 (forward lookup zone)" ; Description = "Add a forward lookup zone with DynamicUpdate for Eliteshell.org `nwith secure and nonsecure dynamic updates" ; Result = "Add-DnsServerPrimaryZone -Name Eliteshell.org -Zonefile Eliteshell.org.DNS -DynamicUpdate NonsecureAndSecure" ; CompletionTime = $Timer ; Date = $Date ; Points = "4"}
-	
+
     $New_Results += $New_Row
 
     $New_Results | Export-CSV -append $Game_Score_File
-	
+
 	$Timer.Stop
-	
+
 	$CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
 
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
 	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
-	
+
 	$CSV_Stuff = Import-CSV -Path $Game_Score_File
-	
+
 	$Total_Score = $CSV_Stuff | Measure-Object Points -Sum | Select-Object -expand Sum | Out-String
 
 	$global:Total_Score = $Total_Score
 
 	$Total_Score_Label.Text = "$Total_Score total points"
-	
+
 	if($Game_Score_File -eq $null){
-	
+
 	$Total_Score_Label.Text = ""
 	$Total_Number_Of_Answers_Label.Text = ""
 	}
-	
+
     Invoke-Expression Dropdown_Problem_Completed_Check
 
     $Body.Text = "Add a forward lookup zone with DynamicUpdate for Eliteshell.org `nwith secure and nonsecure dynamic updates"
@@ -1905,6 +1922,8 @@ if ($Body.Text = "Add a forward lookup zone with DynamicUpdate for Eliteshell.or
     $Correct_Incorrect.Text = "Correct, your answer was $Answer."
 
     $Correct_Incorrect.ForeColor = 'Green'
+    
+    $Completed_In.Text = "Completed in $Timer"
 
     }
 
@@ -1940,28 +1959,28 @@ $Networking_Strip_Menu_Item_Practice.Name = "Networking_Strip_Menu_Item_Practice
 $Networking_Strip_Menu_Item_Practice.Size = New-Object System.Drawing.Size(35, 20)
 $Networking_Strip_Menu_Item_Practice.Text = "Networking #1 (ip address)"
 
-function On_Click_Networking_Strip_Menu_Item($Sender,$e){ 
+function On_Click_Networking_Strip_Menu_Item($Sender,$e){
 
-    $Completed_In = ""
+    $Completed_In.Text= ""
 
     $Correct_Incorrect.Text= ""
-	
+
 	$Timer_Start_Time.Stop()
 
     $Timer = [System.Diagnostics.Stopwatch]::StartNew()
-	
+
 	$global:Timer_Start_Time = $Timer
-	
+
     $Title.Text= "Networking #1"
-	
+
 	$Title.ForeColor = 'Blue'
-	
+
 	$Body.Text = "Find the IP address of this machine and all corresponding information"
 
     $Form.Controls.RemoveByKey("The_Submit_Button")
-	
+
 	$The_Submit_Button = New-Object System.Windows.Forms.Button
-	
+
 	$The_Submit_Button.Name = "The_Submit_Button"
 
 	$The_Submit_Button.Text = "Submit"
@@ -1975,21 +1994,21 @@ function On_Click_Networking_Strip_Menu_Item($Sender,$e){
 	$The_Submit_Button.Location = New-Object System.Drawing.Point(30,200)
 
 	$The_Submit_Button.Add_Click({Selected_Networking_Practice_Problem})
-	
+
 	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
-	
+
 	$Problem_Completed = "ipconfig /all"
-	
+
 	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
-	
+
 	if($Problem_Completed_Check -ne $null) {
 	$Title.Text = "Networking #1 (COMPLETED)"
-	$Title.ForeColor = 'Green'} 
-	
+	$Title.ForeColor = 'Green'}
+
 	else {
-		
+
 	$Title.Text = "Networking #1"
-	
+
 	}
 }
 
@@ -2001,51 +2020,53 @@ Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb ru
 
 if ($Body.Text = "Find the IP address of this machine and all corresponding information"){
 	if($Input_Box.Text -eq "ipconfig /all"){
-		
+
 	$Time_Elapsed = $Timer_Start_Time.Elapsed
 
 	$Timer = $([string]::Format("`{0:d2}:{1:d2}:{2:d2}",
 	$Time_Elapsed.hours,
 	$Time_Elapsed.minutes,
 	$Time_Elapsed.seconds))
-	
+
 	$New_Row | Add-Content -Path $Game_Score_File
 
     $New_Row = New-Object PsObject -Property @{Problem = "Networking #1" ; Description = "Find the IP address of this machine and all corresponding information" ; Result = "ipconfig /all" ; CompletionTime = $Timer ; Date = $Date ; Points = "5"}
-	
+
     $New_Results += $New_Row
 
     $New_Results | Export-CSV -append $Game_Score_File
-	
+
 	$Timer.Stop
-	
+
 	$CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
 
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
 	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
-	
+
 	$CSV_Stuff = Import-CSV -Path $Game_Score_File
-	
+
 	$Total_Score = $CSV_Stuff | Measure-Object Points -Sum | Select-Object -expand Sum | Out-String
 
 	$global:Total_Score = $Total_Score
 
 	$Total_Score_Label.Text = "$Total_Score total points"
-	
+
 	if($Game_Score_File -eq $null){
-	
+
 	$Total_Score_Label.Text = ""
 	$Total_Number_Of_Answers_Label.Text = ""
 	}
-	
+
     Invoke-Expression Dropdown_Problem_Completed_Check
 
     $Body.Text = "Find the IP address of this machine and all corresponding information"
-	
+
     $Correct_Incorrect.Text = "Correct, your answer was $Answer."
 
     $Correct_Incorrect.ForeColor = 'Green'
+    
+    $Completed_In.Text = "Completed in $Timer"
 
     }
 
@@ -2068,26 +2089,26 @@ $Networking_Strip_Menu_Item_Practice_2.Text = "Networking #2 (ip / dns)"
 
 function On_Click_Networking_Strip_Menu_Item_2($Sender,$e){
 
-    $Completed_In = ""
+    $Completed_In.Text= ""
 
-    $Correct_Incorrect.Text= "" 
-	
+    $Correct_Incorrect.Text= ""
+
 	$Timer_Start_Time.Stop()
 
     $Timer = [System.Diagnostics.Stopwatch]::StartNew()
-	
+
 	$global:Timer_Start_Time = $Timer
-	
+
     $Title.Text= "Networking #2"
-	
+
 	$Title.ForeColor = 'Blue'
-	
+
 	$Body.Text = "View the DNS cache on this system"
 
     $Form.Controls.RemoveByKey("The_Submit_Button")
-	
+
 	$The_Submit_Button = New-Object System.Windows.Forms.Button
-	
+
 	$The_Submit_Button.Name = "The_Submit_Button"
 
 	$The_Submit_Button.Text = "Submit"
@@ -2101,21 +2122,21 @@ function On_Click_Networking_Strip_Menu_Item_2($Sender,$e){
 	$The_Submit_Button.Location = New-Object System.Drawing.Point(30,200)
 
 	$The_Submit_Button.Add_Click({Selected_Networking_Practice_Problem_2})
-	
+
 	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
-	
+
 	$Problem_Completed = "ipconfig /displaydns"
-	
+
 	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
-	
+
 	if($Problem_Completed_Check -ne $null) {
 	$Title.Text = "Networking #2 (COMPLETED)"
-	$Title.ForeColor = 'Green'} 
-	
+	$Title.ForeColor = 'Green'}
+
 	else {
-		
+
 	$Title.Text = "Networking #2"
-	
+
 	}
 }
 
@@ -2127,51 +2148,53 @@ Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb ru
 
 if ($Body.Text = "View the DNS cache on this system"){
 	if($Input_Box.Text -eq "ipconfig /displaydns"){
-		
+
 	$Time_Elapsed = $Timer_Start_Time.Elapsed
 
 	$Timer = $([string]::Format("`{0:d2}:{1:d2}:{2:d2}",
 	$Time_Elapsed.hours,
 	$Time_Elapsed.minutes,
 	$Time_Elapsed.seconds))
-	
+
 	$New_Row | Add-Content -Path $Game_Score_File
 
     $New_Row = New-Object PsObject -Property @{Problem = "Networking #2" ; Description = "View the DNS cache on this system" ; Result = "ipconfig /displaydns" ; CompletionTime = $Timer ; Date = $Date ; Points = "2"}
-	
+
     $New_Results += $New_Row
 
     $New_Results | Export-CSV -append $Game_Score_File
-	
+
 	$Timer.Stop
-	
+
 	$CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
 
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
 	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
-	
+
 	$CSV_Stuff = Import-CSV -Path $Game_Score_File
-	
+
 	$Total_Score = $CSV_Stuff | Measure-Object Points -Sum | Select-Object -expand Sum | Out-String
 
 	$global:Total_Score = $Total_Score
 
 	$Total_Score_Label.Text = "$Total_Score total points"
-	
+
 	if($Game_Score_File -eq $null){
-	
+
 	$Total_Score_Label.Text = ""
 	$Total_Number_Of_Answers_Label.Text = ""
 	}
-	
+
     Invoke-Expression Dropdown_Problem_Completed_Check
 
     $Body.Text = "View the DNS cache on this system"
-	
+
     $Correct_Incorrect.Text = "Correct, your answer was $Answer."
 
     $Correct_Incorrect.ForeColor = 'Green'
+    
+    $Completed_In.Text = "Completed in $Timer"
 
     }
 
@@ -2191,28 +2214,28 @@ $Networking_Strip_Menu_Item_Practice_3.Name = "Networking_Strip_Menu_Item_Practi
 $Networking_Strip_Menu_Item_Practice_3.Size = New-Object System.Drawing.Size(35, 20)
 $Networking_Strip_Menu_Item_Practice_3.Text = "Networking #3 (ip / dns)"
 
-function On_Click_Networking_Strip_Menu_Item_3($Sender,$e){ 
+function On_Click_Networking_Strip_Menu_Item_3($Sender,$e){
 
-    $Completed_In = ""
+    $Completed_In.Text= ""
 
     $Correct_Incorrect.Text= ""
-	
+
 	$Timer_Start_Time.Stop()
 
     $Timer = [System.Diagnostics.Stopwatch]::StartNew()
-	
+
 	$global:Timer_Start_Time = $Timer
-	
+
     $Title.Text= "Networking #3"
-	
+
 	$Title.ForeColor = 'Blue'
-	
+
 	$Body.Text = "Flush the DNS cache on this system"
 
     $Form.Controls.RemoveByKey("The_Submit_Button")
-	
+
 	$The_Submit_Button = New-Object System.Windows.Forms.Button
-	
+
 	$The_Submit_Button.Name = "The_Submit_Button"
 
 	$The_Submit_Button.Text = "Submit"
@@ -2226,21 +2249,21 @@ function On_Click_Networking_Strip_Menu_Item_3($Sender,$e){
 	$The_Submit_Button.Location = New-Object System.Drawing.Point(30,200)
 
 	$The_Submit_Button.Add_Click({Selected_Networking_Practice_Problem_3})
-	
+
 	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
-	
+
 	$Problem_Completed = "ipconfig /flushdns"
-	
+
 	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
-	
+
 	if($Problem_Completed_Check -ne $null) {
 	$Title.Text = "Networking #3 (COMPLETED)"
-	$Title.ForeColor = 'Green'} 
-	
+	$Title.ForeColor = 'Green'}
+
 	else {
-		
+
 	$Title.Text = "Networking #3"
-	
+
 	}
 }
 
@@ -2252,51 +2275,53 @@ Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb ru
 
 if ($Body.Text = "Flush the DNS cache on this system"){
 	if($Input_Box.Text -eq "ipconfig /flushdns"){
-		
+
 	$Time_Elapsed = $Timer_Start_Time.Elapsed
 
 	$Timer = $([string]::Format("`{0:d2}:{1:d2}:{2:d2}",
 	$Time_Elapsed.hours,
 	$Time_Elapsed.minutes,
 	$Time_Elapsed.seconds))
-	
+
 	$New_Row | Add-Content -Path $Game_Score_File
 
     $New_Row = New-Object PsObject -Property @{Problem = "Networking #3" ; Description = "Flush the DNS cache on this system" ; Result = "ipconfig /flushdns" ; CompletionTime = $Timer ; Date = $Date ; Points = "2"}
-	
+
     $New_Results += $New_Row
 
     $New_Results | Export-CSV -append $Game_Score_File
-	
+
 	$Timer.Stop
-	
+
 	$CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
 
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
 	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
-	
+
 	$CSV_Stuff = Import-CSV -Path $Game_Score_File
-	
+
 	$Total_Score = $CSV_Stuff | Measure-Object Points -Sum | Select-Object -expand Sum | Out-String
 
 	$global:Total_Score = $Total_Score
 
 	$Total_Score_Label.Text = "$Total_Score total points"
-	
+
 	if($Game_Score_File -eq $null){
-	
+
 	$Total_Score_Label.Text = ""
 	$Total_Number_Of_Answers_Label.Text = ""
 	}
-	
+
     Invoke-Expression Dropdown_Problem_Completed_Check
 
     $Body.Text = "Flush the DNS cache on this system"
-	
+
     $Correct_Incorrect.Text = "Correct, your answer was $Answer."
 
     $Correct_Incorrect.ForeColor = 'Green'
+    
+    $Completed_In.Text = "Completed in $Timer"
 
     }
 
@@ -2316,28 +2341,28 @@ $Networking_Strip_Menu_Item_Practice_4.Name = "Networking_Strip_Menu_Item_Practi
 $Networking_Strip_Menu_Item_Practice_4.Size = New-Object System.Drawing.Size(35, 20)
 $Networking_Strip_Menu_Item_Practice_4.Text = "Networking #4 (ip)"
 
-function On_Click_Networking_Strip_Menu_Item_4($Sender,$e){ 
+function On_Click_Networking_Strip_Menu_Item_4($Sender,$e){
 
-    $Completed_In = ""
+    $Completed_In.Text= ""
 
     $Correct_Incorrect.Text= ""
-	
+
 	$Timer_Start_Time.Stop()
 
     $Timer = [System.Diagnostics.Stopwatch]::StartNew()
-	
+
 	$global:Timer_Start_Time = $Timer
-	
+
     $Title.Text= "Networking #4"
-	
+
 	$Title.ForeColor = 'Blue'
-	
+
 	$Body.Text = "Change the ip address of this machine"
 
     $Form.Controls.RemoveByKey("The_Submit_Button")
-	
+
 	$The_Submit_Button = New-Object System.Windows.Forms.Button
-	
+
 	$The_Submit_Button.Name = "The_Submit_Button"
 
 	$The_Submit_Button.Text = "Submit"
@@ -2351,21 +2376,21 @@ function On_Click_Networking_Strip_Menu_Item_4($Sender,$e){
 	$The_Submit_Button.Location = New-Object System.Drawing.Point(30,200)
 
 	$The_Submit_Button.Add_Click({Selected_Networking_Practice_Problem_4})
-	
+
 	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
-	
+
 	$Problem_Completed = "ipconfig /renew"
-	
+
 	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
-	
+
 	if($Problem_Completed_Check -ne $null) {
 	$Title.Text = "Networking #4 (COMPLETED)"
-	$Title.ForeColor = 'Green'} 
-	
+	$Title.ForeColor = 'Green'}
+
 	else {
-		
+
 	$Title.Text = "Networking #4"
-	
+
 	}
 }
 
@@ -2377,44 +2402,44 @@ Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb ru
 
 if ($Body.Text = "Change the ip address of this machine"){
 	if($Input_Box.Text -eq "ipconfig /renew"){
-		
+
 	$Time_Elapsed = $Timer_Start_Time.Elapsed
 
 	$Timer = $([string]::Format("`{0:d2}:{1:d2}:{2:d2}",
 	$Time_Elapsed.hours,
 	$Time_Elapsed.minutes,
 	$Time_Elapsed.seconds))
-	
+
 	$New_Row | Add-Content -Path $Game_Score_File
 
     $New_Row = New-Object PsObject -Property @{Problem = "Networking #4" ; Description = "Change the ip address of this machine" ; Result = "ipconfig /renew" ; CompletionTime = $Timer ; Date = $Date ; Points = "2"}
-	
+
     $New_Results += $New_Row
 
     $New_Results | Export-CSV -append $Game_Score_File
-	
+
 	$Timer.Stop
-	
+
 	$CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
 
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
 	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
-	
+
 	$CSV_Stuff = Import-CSV -Path $Game_Score_File
-	
+
 	$Total_Score = $CSV_Stuff | Measure-Object Points -Sum | Select-Object -expand Sum | Out-String
 
 	$global:Total_Score = $Total_Score
 
 	$Total_Score_Label.Text = "$Total_Score total points"
-	
+
 	if($Game_Score_File -eq $null){
-	
+
 	$Total_Score_Label.Text = ""
 	$Total_Number_Of_Answers_Label.Text = ""
 	}
-	
+
     Invoke-Expression Dropdown_Problem_Completed_Check
 
     $Body.Text = "Change the ip address of this machine"
@@ -2422,6 +2447,8 @@ if ($Body.Text = "Change the ip address of this machine"){
     $Correct_Incorrect.Text = "Correct, your answer was $Answer."
 
     $Correct_Incorrect.ForeColor = 'Green'
+    
+    $Completed_In.Text = "Completed in $Timer"
 
     }
 
@@ -2443,26 +2470,26 @@ $Networking_Strip_Menu_Item_Practice_5.Text = "Networking #5 (dhcp / dns)"
 
 function On_Click_Networking_Strip_Menu_Item_5($Sender,$e){
 
-    $Completed_In = ""
+    $Completed_In.Text= ""
 
-    $Correct_Incorrect.Text= "" 
-	
+    $Correct_Incorrect.Text= ""
+
 	$Timer_Start_Time.Stop()
 
     $Timer = [System.Diagnostics.Stopwatch]::StartNew()
-	
+
 	$global:Timer_Start_Time = $Timer
-	
+
     $Title.Text= "Networking #5"
-	
+
 	$Title.ForeColor = 'Blue'
-	
+
 	$Body.Text = "Register (refresh) DHCP leases and DNS names for system network adapters"
 
     $Form.Controls.RemoveByKey("The_Submit_Button")
-	
+
 	$The_Submit_Button = New-Object System.Windows.Forms.Button
-	
+
 	$The_Submit_Button.Name = "The_Submit_Button"
 
 	$The_Submit_Button.Text = "Submit"
@@ -2476,21 +2503,21 @@ function On_Click_Networking_Strip_Menu_Item_5($Sender,$e){
 	$The_Submit_Button.Location = New-Object System.Drawing.Point(30,200)
 
 	$The_Submit_Button.Add_Click({Selected_Networking_Practice_Problem_5})
-	
+
 	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
-	
+
 	$Problem_Completed = "ipconfig /registerdns"
-	
+
 	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
-	
+
 	if($Problem_Completed_Check -ne $null) {
 	$Title.Text = "Networking #5 (COMPLETED)"
-	$Title.ForeColor = 'Green'} 
-	
+	$Title.ForeColor = 'Green'}
+
 	else {
-		
+
 	$Title.Text = "Networking #5"
-	
+
 	}
 }
 
@@ -2502,38 +2529,38 @@ Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb ru
 
 if ($Body.Text = "Register (refresh) DHCP leases and DNS names for system network adapters"){
 	if($Input_Box.Text -eq "ipconfig /registerdns"){
-		
+
 	$Time_Elapsed = $Timer_Start_Time.Elapsed
 
 	$Timer = $([string]::Format("`{0:d2}:{1:d2}:{2:d2}",
 	$Time_Elapsed.hours,
 	$Time_Elapsed.minutes,
 	$Time_Elapsed.seconds))
-	
+
 	$New_Row | Add-Content -Path $Game_Score_File
 
     $New_Row = New-Object PsObject -Property @{Problem = "Networking #5" ; Description = "Register (refresh) DHCP leases and DNS names for system network adapters" ; Result = "ipconfig /registerdns" ; CompletionTime = $Timer ; Date = $Date ; Points = "2"}
-	
+
     $New_Results += $New_Row
 
     $New_Results | Export-CSV -append $Game_Score_File
-	
+
 	$Timer.Stop
-	
+
 	$CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
 
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
 	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
-	
+
 	$CSV_Stuff = Import-CSV -Path $Game_Score_File
-	
+
 	$Total_Score = $CSV_Stuff | Measure-Object Points -Sum | Select-Object -expand Sum | Out-String
 
 	$global:Total_Score = $Total_Score
 
 	$Total_Score_Label.Text = "$Total_Score total points"
-	
+
     Invoke-Expression Dropdown_Problem_Completed_Check
 
     $Body.Text = "Register (refresh) DHCP leases and DNS names for system network adapters"
@@ -2541,6 +2568,8 @@ if ($Body.Text = "Register (refresh) DHCP leases and DNS names for system networ
     $Correct_Incorrect.Text = "Correct, your answer was $Answer."
 
     $Correct_Incorrect.ForeColor = 'Green'
+    
+    $Completed_In.Text = "Completed in $Timer"
 
     }
 

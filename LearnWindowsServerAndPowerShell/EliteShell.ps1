@@ -6,7 +6,9 @@ Add-Type -AssemblyName PresentationCore,PresentationFramework
 `
 $Date = Get-Date -format "MM-dd-yy"
 
-$OS = (Get-WMIObject win32_operatingsystem) | Select Name
+$OS = (Get-WMIObject win32_operatingsystem) | Select Name | Out-String
+
+Write-Host $OS
 
 <#
 
@@ -1374,7 +1376,7 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice($Sender,$e){
 
     }
 
-    if ($OS -notcontains "Windows Server"){
+    if ($OS -notmatch "Windows Server"){
 
     $MessageBoxTitle = "Incorrect Operating System."
 
@@ -2193,7 +2195,6 @@ if ($Body.Text = "Find the IP address of this machine and all corresponding info
 
 	$Input_Box.Clear()
 }
-
 
 ## Networking 2##
 

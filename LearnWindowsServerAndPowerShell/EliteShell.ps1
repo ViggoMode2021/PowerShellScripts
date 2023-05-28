@@ -8,8 +8,6 @@ $Date = Get-Date -format "MM-dd-yy"
 
 $OS = (Get-WMIObject win32_operatingsystem) | Select Name | Out-String
 
-Write-Host $OS
-
 <#
 
 $Forest = Get-ADDomain -Current LocalComputer | Select-Object -expand Forest
@@ -1385,7 +1383,7 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice($Sender,$e){
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
 
     }
-
+   
     $Completed_In.Text= ""
 
     $Correct_Incorrect.Text= ""
@@ -1507,6 +1505,16 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_2($Sender,$e){
     $MessageBoxTitle = "No score file loaded."
 
     $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+    }
+
+    if ($OS -notmatch "Windows Server"){
+
+    $MessageBoxTitle = "Incorrect Operating System."
+
+    $MessageBoxBody = "This system is not running Windows Server. You can still practice these problems, but you will not receive proper PowerShell results."
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
 
@@ -1650,6 +1658,16 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_3($Sender,$e){
 
     }
 
+    if ($OS -notmatch "Windows Server"){
+
+    $MessageBoxTitle = "Incorrect Operating System."
+
+    $MessageBoxBody = "This system is not running Windows Server. You can still practice these problems, but you will not receive proper PowerShell results."
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+    }
+
     $Completed_In.Text= ""
 
     $Correct_Incorrect.Text= ""
@@ -1787,6 +1805,16 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_4($Sender,$e){
 
     }
 
+    if ($OS -notmatch "Windows Server"){
+
+    $MessageBoxTitle = "Incorrect Operating System."
+
+    $MessageBoxBody = "This system is not running Windows Server. You can still practice these problems, but you will not receive proper PowerShell results."
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+    }
+
     $Completed_In.Text= ""
 
     $Correct_Incorrect.Text= ""
@@ -1914,12 +1942,22 @@ $DHCP_DNS_Strip_Menu_Item_Practice_5.Size = New-Object System.Drawing.Size(152, 
 $DHCP_DNS_Strip_Menu_Item_Practice_5.Text = "DNS #3 (forward lookup zone)"
 
 function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_5($Sender,$e){
-  
+
     if($Game_Score_File -eq $null){
 
     $MessageBoxTitle = "No score file loaded."
 
     $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+    }
+
+    if ($OS -notmatch "Windows Server"){
+
+    $MessageBoxTitle = "Incorrect Operating System."
+
+    $MessageBoxBody = "This system is not running Windows Server. You can still practice these problems, but you will not receive proper PowerShell results."
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
 

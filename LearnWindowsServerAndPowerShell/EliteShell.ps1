@@ -107,6 +107,17 @@ $Correct_Incorrect.Font = 'Verdana,11,style=Bold'
 $Correct_Incorrect.Location = New-Object System.Drawing.Point(30,400)
 
 
+$Completed_In = New-Object $Label_Object
+
+$Completed_In.Text= ""
+
+$Completed_In.AutoSize = $true
+
+$Completed_In.Font = 'Verdana,11,style=Bold'
+
+$Completed_In.Location = New-Object System.Drawing.Point(100,600)
+
+
 $Total_Number_Of_Answers_Label = New-Object $Label_Object
 
 $Total_Number_Of_Answers_Label.Text = ""
@@ -118,6 +129,7 @@ $Total_Number_Of_Answers_Label.Font = 'Calibri,12,style=Bold'
 $Total_Number_Of_Answers_Label.ForeColor = 'Blue'
 
 $Total_Number_Of_Answers_Label.Location = New-Object System.Drawing.Point(1600,100)
+
 
 $Total_Score_Label = New-Object $Label_Object
 
@@ -170,7 +182,9 @@ $View_Score_And_Stats_Strip_Menu_Item.Text = "View Score + Stats"
 
 $File_Menu_Item.DropDownItems.AddRange(@($New_Game_Strip_Menu_Item, $Load_Game_Strip_Menu_Item))
 
-function On_Click_New_Game_Strip_Menu_Item($Sender,$e){  
+function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
+    
+    $Completed_In = ""   
 
 	$Form.Controls.RemoveByKey("The_Submit_Button")
 	
@@ -539,7 +553,9 @@ $Networking_Strip_Menu_Item_Practice_5.ForeColor = 'Blue'
 
 }
 
-function On_Click_Load_Game_Strip_Menu_Item($Sender,$e){ 
+function On_Click_Load_Game_Strip_Menu_Item($Sender,$e){
+
+$Completed_In = "" 
 
 $Timer_Start_Time.Stop()
 
@@ -667,6 +683,8 @@ $Windows_General_Strip_Menu_Item_4, $Windows_General_Strip_Menu_Item_5))
 
 function On_Click_Boot_Process_Strip_Menu_Item_Learn($Sender,$e){
 
+    $Completed_In = ""
+
     $Correct_Incorrect.Text= ""
 	
 	$Timer_Start_Time.Stop()
@@ -769,6 +787,8 @@ if ($Body.Text = "Find the computer name (hostname) of your Windows machine. Use
 
     $Correct_Incorrect.ForeColor = 'Green'
 
+    $Completed_In.Text = "Completed in $Timer"
+
     }
 
 	else{
@@ -785,6 +805,8 @@ if ($Body.Text = "Find the computer name (hostname) of your Windows machine. Use
 ## Windows General #2 ##
 
 function On_Click_Uptime_Strip_Menu_Item($Sender,$e){
+
+    $Completed_In = ""
 
     $Correct_Incorrect.Text= ""
 	
@@ -893,6 +915,8 @@ if ($Body.Text = $Description){
 ## Windows General #3 ##
 
 function On_Click_Env_Strip_Menu_Item($Sender,$e){
+
+    $Completed_In = ""
 
     $Correct_Incorrect.Text= ""
 	
@@ -1010,6 +1034,8 @@ if ($Body.Text = "Find the environment variables on this system using a command 
 ## Windows General #4 ##
 
 function On_Click_Cpu_Strip_Menu_Item($Sender,$e){
+
+    $Completed_In = ""
 
     $Correct_Incorrect.Text= ""
 	
@@ -1135,6 +1161,8 @@ if ($Body.Text = "Find the processes on this machine where the cpu consumption i
 ## Windows General #5 ##
 
 function On_Click_Disk_Space_Strip_Menu_Item($Sender,$e){
+
+    $Completed_In = ""
 
     $Correct_Incorrect.Text= ""
 	
@@ -1275,7 +1303,9 @@ $DHCP_DNS_Strip_Menu_Item_Practice.Name = "DHCP_DNS_Strip_Menu_Item_Practice"
 $DHCP_DNS_Strip_Menu_Item_Practice.Size = New-Object System.Drawing.Size(152, 22)
 $DHCP_DNS_Strip_Menu_Item_Practice.Text = "DHCP #1 (server)"
 
-function On_Click_DHCP_DNS_Strip_Menu_Item_Practice($Sender,$e){ 
+function On_Click_DHCP_DNS_Strip_Menu_Item_Practice($Sender,$e){
+
+    $Completed_In = "" 
 
     $Correct_Incorrect.Text= ""
 	
@@ -1389,6 +1419,8 @@ $DHCP_DNS_Strip_Menu_Item_Practice_2.Size = New-Object System.Drawing.Size(152, 
 $DHCP_DNS_Strip_Menu_Item_Practice_2.Text = "DHCP #2 (scope)"
 
 function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_2($Sender,$e){
+
+    $Completed_In = ""
 
     $Correct_Incorrect.Text= ""
 
@@ -1515,6 +1547,8 @@ $DHCP_DNS_Strip_Menu_Item_Practice_3.Text = "DNS #1 (check install)"
 
 function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_3($Sender,$e){
 
+    $Completed_In = "" 
+
     $Correct_Incorrect.Text= ""
 
 	$Timer_Start_Time.Stop()
@@ -1638,6 +1672,8 @@ $DHCP_DNS_Strip_Menu_Item_Practice_4.Size = New-Object System.Drawing.Size(152, 
 $DHCP_DNS_Strip_Menu_Item_Practice_4.Text = "DNS #2 (install DNS)"
 
 function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_4($Sender,$e){
+
+    $Completed_In = ""
 
     $Correct_Incorrect.Text= ""
 
@@ -1763,6 +1799,8 @@ $DHCP_DNS_Strip_Menu_Item_Practice_5.Size = New-Object System.Drawing.Size(152, 
 $DHCP_DNS_Strip_Menu_Item_Practice_5.Text = "DNS #3 (forward lookup zone)"
 
 function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_5($Sender,$e){
+
+    $Completed_In = ""
 
     $Correct_Incorrect.Text= ""
 
@@ -1904,6 +1942,8 @@ $Networking_Strip_Menu_Item_Practice.Text = "Networking #1 (ip address)"
 
 function On_Click_Networking_Strip_Menu_Item($Sender,$e){ 
 
+    $Completed_In = ""
+
     $Correct_Incorrect.Text= ""
 	
 	$Timer_Start_Time.Stop()
@@ -2028,6 +2068,8 @@ $Networking_Strip_Menu_Item_Practice_2.Text = "Networking #2 (ip / dns)"
 
 function On_Click_Networking_Strip_Menu_Item_2($Sender,$e){
 
+    $Completed_In = ""
+
     $Correct_Incorrect.Text= "" 
 	
 	$Timer_Start_Time.Stop()
@@ -2150,6 +2192,8 @@ $Networking_Strip_Menu_Item_Practice_3.Size = New-Object System.Drawing.Size(35,
 $Networking_Strip_Menu_Item_Practice_3.Text = "Networking #3 (ip / dns)"
 
 function On_Click_Networking_Strip_Menu_Item_3($Sender,$e){ 
+
+    $Completed_In = ""
 
     $Correct_Incorrect.Text= ""
 	
@@ -2274,6 +2318,8 @@ $Networking_Strip_Menu_Item_Practice_4.Text = "Networking #4 (ip)"
 
 function On_Click_Networking_Strip_Menu_Item_4($Sender,$e){ 
 
+    $Completed_In = ""
+
     $Correct_Incorrect.Text= ""
 	
 	$Timer_Start_Time.Stop()
@@ -2396,6 +2442,8 @@ $Networking_Strip_Menu_Item_Practice_5.Size = New-Object System.Drawing.Size(35,
 $Networking_Strip_Menu_Item_Practice_5.Text = "Networking #5 (dhcp / dns)"
 
 function On_Click_Networking_Strip_Menu_Item_5($Sender,$e){
+
+    $Completed_In = ""
 
     $Correct_Incorrect.Text= "" 
 	
@@ -2524,7 +2572,7 @@ $Active_Directory_Strip_Menu_Item.Name = "Active_Directory_Strip_Menu_Item"
 $Active_Directory_Strip_Menu_Item.Size = New-Object System.Drawing.Size(51, 20)
 $Active_Directory_Strip_Menu_Item.Text = "Active Directory"
 
-$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Total_Number_Of_Answers_Label, $Total_Score_Label, $Score_Box, $Correct_Incorrect))
+$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Total_Number_Of_Answers_Label, $Total_Score_Label, $Score_Box, $Completed_In, $Correct_Incorrect))
 
 ## Form dialogue
 $Form.ShowDialog()

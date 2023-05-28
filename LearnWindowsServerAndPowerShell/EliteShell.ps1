@@ -6,6 +6,8 @@ Add-Type -AssemblyName PresentationCore,PresentationFramework
 `
 $Date = Get-Date -format "MM-dd-yy"
 
+$OS = (Get-WMIObject win32_operatingsystem) | Select Name
+
 <#
 
 $Forest = Get-ADDomain -Current LocalComputer | Select-Object -expand Forest
@@ -74,6 +76,7 @@ $MessageIconSuccess = [System.Windows.MessageBoxImage]::Information
 
 $Label_Object = [System.Windows.Forms.Label]
 
+
 $Title = New-Object $Label_Object
 
 $Title.Text= ""
@@ -113,14 +116,14 @@ $Completed_In.Text= ""
 
 $Completed_In.AutoSize = $true
 
-$Completed_In.Font = 'Verdana,11,style=Bold'
+$Completed_In.Font = 'Verdana,10,style=Italic'
 
-$Completed_In.Location = New-Object System.Drawing.Point(100,600)
+$Completed_In.Location = New-Object System.Drawing.Point(30,500)
 
 
 $Total_Number_Of_Answers_Label = New-Object $Label_Object
 
-$Total_Number_Of_Answers_Label.Text = ""
+$Total_Number_Of_Answers_Label.Text = "No score file loaded"
 
 $Total_Number_Of_Answers_Label.AutoSize = $true
 
@@ -683,6 +686,16 @@ $Windows_General_Strip_Menu_Item_4, $Windows_General_Strip_Menu_Item_5))
 
 function On_Click_Boot_Process_Strip_Menu_Item_Learn($Sender,$e){
 
+    if($Game_Score_File -eq $null){
+
+    $MessageBoxTitle = "No score file loaded."
+
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+    }
+
     $Completed_In.Text= ""
 
     $Correct_Incorrect.Text= ""
@@ -786,6 +799,7 @@ if ($Body.Text = "Find the computer name (hostname) of your Windows machine. Use
     $Correct_Incorrect.Text = "Correct, your answer was $Answer."
 
     $Correct_Incorrect.ForeColor = 'Green'
+    $Completed_In.Text = "Completed in $Timer"
 
     $Completed_In.Text = "Completed in $Timer"
 
@@ -806,6 +820,16 @@ if ($Body.Text = "Find the computer name (hostname) of your Windows machine. Use
 ## Windows General #2 ##
 
 function On_Click_Uptime_Strip_Menu_Item($Sender,$e){
+
+    if($Game_Score_File -eq $null){
+
+    $MessageBoxTitle = "No score file loaded."
+
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+    }
 
     $Completed_In.Text= ""
 
@@ -900,7 +924,6 @@ if ($Body.Text = $Description){
     $Correct_Incorrect.Text = "Correct, your answer was $Answer."
 
     $Correct_Incorrect.ForeColor = 'Green'
-    
     $Completed_In.Text = "Completed in $Timer"
 
     }
@@ -918,6 +941,16 @@ if ($Body.Text = $Description){
 ## Windows General #3 ##
 
 function On_Click_Env_Strip_Menu_Item($Sender,$e){
+
+    if($Game_Score_File -eq $null){
+
+    $MessageBoxTitle = "No score file loaded."
+
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+    }
 
     $Completed_In.Text= ""
 
@@ -1015,7 +1048,6 @@ if ($Body.Text = "Find the environment variables on this system using a command 
     $Body.Text = "Find the environment variables on this system using a command `nthat has two different three letter words and a :"
 
     $Correct_Incorrect.ForeColor = 'Green'
-    
     $Completed_In.Text = "Completed in $Timer"
 
     $Correct_Incorrect.Text = "Correct, your answer was $Answer."
@@ -1039,6 +1071,16 @@ if ($Body.Text = "Find the environment variables on this system using a command 
 ## Windows General #4 ##
 
 function On_Click_Cpu_Strip_Menu_Item($Sender,$e){
+
+    if($Game_Score_File -eq $null){
+
+    $MessageBoxTitle = "No score file loaded."
+
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+    }
 
     $Completed_In.Text= ""
 
@@ -1144,7 +1186,6 @@ if ($Body.Text = "Find the processes on this machine where the cpu consumption i
     $Body.Text = "Find the processes on this machine where the cpu consumption is greater than 20%. `nNote: Use Get-Process and Where-Object separated by a |"
 
     $Correct_Incorrect.ForeColor = 'Green'
-    
     $Completed_In.Text = "Completed in $Timer"
 
     $Correct_Incorrect.Text = "Correct, your answer was $Answer."
@@ -1168,6 +1209,16 @@ if ($Body.Text = "Find the processes on this machine where the cpu consumption i
 ## Windows General #5 ##
 
 function On_Click_Disk_Space_Strip_Menu_Item($Sender,$e){
+
+    if($Game_Score_File -eq $null){
+
+    $MessageBoxTitle = "No score file loaded."
+
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+    }
 
     $Completed_In.Text= ""
 
@@ -1271,7 +1322,6 @@ if ($Body.Text = "Find the disk space of the current machine's C drive"){
     $Body.Text = "Find the disk space of the current machine's C drive"
 
     $Correct_Incorrect.ForeColor = 'Green'
-    
     $Completed_In.Text = "Completed in $Timer"
 
     $Correct_Incorrect.Text = "Correct, your answer was $Answer."
@@ -1313,6 +1363,26 @@ $DHCP_DNS_Strip_Menu_Item_Practice.Size = New-Object System.Drawing.Size(152, 22
 $DHCP_DNS_Strip_Menu_Item_Practice.Text = "DHCP #1 (server)"
 
 function On_Click_DHCP_DNS_Strip_Menu_Item_Practice($Sender,$e){
+
+    if($Game_Score_File -eq $null){
+
+    $MessageBoxTitle = "No score file loaded."
+
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+    }
+
+    if ($OS -notcontains "Windows Server"){
+
+    $MessageBoxTitle = "Incorrect Operating System."
+
+    $MessageBoxBody = "This system is not running Windows Server. You can still practice these problems, but you will not receive proper PowerShell results."
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+    }
 
     $Completed_In.Text= ""
 
@@ -1402,7 +1472,6 @@ if ($Body.Text = "Create a DHCP server in the Domain controller named dhcp-pract
     $Body.Text = "Create a DHCP server in the Domain controller named dhcp-practice with an IP address of 172.16.0.50"
 
     $Correct_Incorrect.ForeColor = 'Green'
-    
     $Completed_In.Text = "Completed in $Timer"
 
     $Correct_Incorrect.Text = "Correct, your answer was $Answer."
@@ -1430,6 +1499,16 @@ $DHCP_DNS_Strip_Menu_Item_Practice_2.Size = New-Object System.Drawing.Size(152, 
 $DHCP_DNS_Strip_Menu_Item_Practice_2.Text = "DHCP #2 (scope)"
 
 function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_2($Sender,$e){
+
+    if($Game_Score_File -eq $null){
+
+    $MessageBoxTitle = "No score file loaded."
+
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+    }
 
     $Completed_In.Text= ""
 
@@ -1537,7 +1616,6 @@ if ($Body.Text = "Create an active IPv4 DHCP scope named 'test' with a start ran
     $Correct_Incorrect.Text = "Correct, your answer was $Answer."
 
     $Correct_Incorrect.ForeColor = 'Green'
-    
     $Completed_In.Text = "Completed in $Timer"
 
     }
@@ -1559,6 +1637,16 @@ $DHCP_DNS_Strip_Menu_Item_Practice_3.Size = New-Object System.Drawing.Size(152, 
 $DHCP_DNS_Strip_Menu_Item_Practice_3.Text = "DNS #1 (check install)"
 
 function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_3($Sender,$e){
+
+    if($Game_Score_File -eq $null){
+
+    $MessageBoxTitle = "No score file loaded."
+
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+    }
 
     $Completed_In.Text= ""
 
@@ -1665,7 +1753,6 @@ if ($Body.Text = "Check if DNS is installed on this system."){
     $Correct_Incorrect.Text = "Correct, your answer was $Answer."
 
     $Correct_Incorrect.ForeColor = 'Green'
-    
     $Completed_In.Text = "Completed in $Timer"
 
     }
@@ -1687,6 +1774,16 @@ $DHCP_DNS_Strip_Menu_Item_Practice_4.Size = New-Object System.Drawing.Size(152, 
 $DHCP_DNS_Strip_Menu_Item_Practice_4.Text = "DNS #2 (install DNS)"
 
 function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_4($Sender,$e){
+
+    if($Game_Score_File -eq $null){
+
+    $MessageBoxTitle = "No score file loaded."
+
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+    }
 
     $Completed_In.Text= ""
 
@@ -1794,7 +1891,6 @@ if ($Body.Text = "Install DNS and management tools on this system"){
     $Correct_Incorrect.Text = "Correct, your answer was $Answer."
 
     $Correct_Incorrect.ForeColor = 'Green'
-    
     $Completed_In.Text = "Completed in $Timer"
 
     }
@@ -1816,6 +1912,16 @@ $DHCP_DNS_Strip_Menu_Item_Practice_5.Size = New-Object System.Drawing.Size(152, 
 $DHCP_DNS_Strip_Menu_Item_Practice_5.Text = "DNS #3 (forward lookup zone)"
 
 function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_5($Sender,$e){
+  
+    if($Game_Score_File -eq $null){
+
+    $MessageBoxTitle = "No score file loaded."
+
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+    }
 
     $Completed_In.Text= ""
 
@@ -1922,7 +2028,6 @@ if ($Body.Text = "Add a forward lookup zone with DynamicUpdate for Eliteshell.or
     $Correct_Incorrect.Text = "Correct, your answer was $Answer."
 
     $Correct_Incorrect.ForeColor = 'Green'
-    
     $Completed_In.Text = "Completed in $Timer"
 
     }
@@ -1960,6 +2065,16 @@ $Networking_Strip_Menu_Item_Practice.Size = New-Object System.Drawing.Size(35, 2
 $Networking_Strip_Menu_Item_Practice.Text = "Networking #1 (ip address)"
 
 function On_Click_Networking_Strip_Menu_Item($Sender,$e){
+
+    if($Game_Score_File -eq $null){
+
+    $MessageBoxTitle = "No score file loaded."
+
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+    }
 
     $Completed_In.Text= ""
 
@@ -2065,7 +2180,6 @@ if ($Body.Text = "Find the IP address of this machine and all corresponding info
     $Correct_Incorrect.Text = "Correct, your answer was $Answer."
 
     $Correct_Incorrect.ForeColor = 'Green'
-    
     $Completed_In.Text = "Completed in $Timer"
 
     }
@@ -2088,6 +2202,16 @@ $Networking_Strip_Menu_Item_Practice_2.Size = New-Object System.Drawing.Size(35,
 $Networking_Strip_Menu_Item_Practice_2.Text = "Networking #2 (ip / dns)"
 
 function On_Click_Networking_Strip_Menu_Item_2($Sender,$e){
+
+    if($Game_Score_File -eq $null){
+
+    $MessageBoxTitle = "No score file loaded."
+
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+    }
 
     $Completed_In.Text= ""
 
@@ -2193,7 +2317,6 @@ if ($Body.Text = "View the DNS cache on this system"){
     $Correct_Incorrect.Text = "Correct, your answer was $Answer."
 
     $Correct_Incorrect.ForeColor = 'Green'
-    
     $Completed_In.Text = "Completed in $Timer"
 
     }
@@ -2215,6 +2338,16 @@ $Networking_Strip_Menu_Item_Practice_3.Size = New-Object System.Drawing.Size(35,
 $Networking_Strip_Menu_Item_Practice_3.Text = "Networking #3 (ip / dns)"
 
 function On_Click_Networking_Strip_Menu_Item_3($Sender,$e){
+
+    if($Game_Score_File -eq $null){
+
+    $MessageBoxTitle = "No score file loaded."
+
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+    }
 
     $Completed_In.Text= ""
 
@@ -2320,7 +2453,6 @@ if ($Body.Text = "Flush the DNS cache on this system"){
     $Correct_Incorrect.Text = "Correct, your answer was $Answer."
 
     $Correct_Incorrect.ForeColor = 'Green'
-    
     $Completed_In.Text = "Completed in $Timer"
 
     }
@@ -2342,6 +2474,16 @@ $Networking_Strip_Menu_Item_Practice_4.Size = New-Object System.Drawing.Size(35,
 $Networking_Strip_Menu_Item_Practice_4.Text = "Networking #4 (ip)"
 
 function On_Click_Networking_Strip_Menu_Item_4($Sender,$e){
+
+    if($Game_Score_File -eq $null){
+
+    $MessageBoxTitle = "No score file loaded."
+
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+    }
 
     $Completed_In.Text= ""
 
@@ -2447,7 +2589,6 @@ if ($Body.Text = "Change the ip address of this machine"){
     $Correct_Incorrect.Text = "Correct, your answer was $Answer."
 
     $Correct_Incorrect.ForeColor = 'Green'
-    
     $Completed_In.Text = "Completed in $Timer"
 
     }
@@ -2469,6 +2610,16 @@ $Networking_Strip_Menu_Item_Practice_5.Size = New-Object System.Drawing.Size(35,
 $Networking_Strip_Menu_Item_Practice_5.Text = "Networking #5 (dhcp / dns)"
 
 function On_Click_Networking_Strip_Menu_Item_5($Sender,$e){
+
+    if($Game_Score_File -eq $null){
+
+    $MessageBoxTitle = "No score file loaded."
+
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+    }
 
     $Completed_In.Text= ""
 
@@ -2568,7 +2719,6 @@ if ($Body.Text = "Register (refresh) DHCP leases and DNS names for system networ
     $Correct_Incorrect.Text = "Correct, your answer was $Answer."
 
     $Correct_Incorrect.ForeColor = 'Green'
-    
     $Completed_In.Text = "Completed in $Timer"
 
     }

@@ -6,7 +6,25 @@ Add-Type -AssemblyName PresentationCore,PresentationFramework
 `
 $Date = Get-Date -format "MM-dd-yy"
 
-$OS = (Get-WMIObject win32_operatingsystem) |  Select-Object -expand Name | Out-String
+$OS = (Get-WMIObject win32_operatingsystem) | Select-Object -expand Name | Out-String
+
+$OS = $OS.Replace("|C:\WINDOWS|\Device\Harddisk0\Partition3", "")
+
+$Script_Or_Executable_Name = $MyInvocation.InvocationName
+
+if($Script_Or_Executable_Name -notmatch ".ps1"){
+
+$Last_Accessed_Time = Get-ChildItem -Path ${env:ProgramFiles(x86)} -Filter "EliteShell.exe" -Recurse |
+Get-ItemProperty | select lastaccesstime | Select-Object -expand lastaccesstime
+
+}
+
+else{
+
+$Last_Accessed_Time = Get-ChildItem -Path $Script_Or_Executable_Name -Recurse |
+Get-ItemProperty | select lastaccesstime | Select-Object -expand lastaccesstime
+
+}
 
 <#
 
@@ -42,7 +60,7 @@ $Menu_Bar = New-Object System.Windows.Forms.MenuStrip
 $New_Game_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $Load_Game_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $View_Score_And_Stats_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
-$View_System_Information_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
+$View_My_EliteShell_Information_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $Windows_General_Strip_Menu_Item_Learn = New-Object System.Windows.Forms.ToolStripMenuItem
 
 $Windows_General_Strip_Menu_Item_2 = New-Object System.Windows.Forms.ToolStripMenuItem
@@ -184,11 +202,11 @@ $View_Score_And_Stats_Strip_Menu_Item.Name= "View_Score_And_Stats_Strip_Menu_Ite
 $View_Score_And_Stats_Strip_Menu_Item.Size = New-Object System.Drawing.Size(152, 22)
 $View_Score_And_Stats_Strip_Menu_Item.Text = "View Score + Stats"
 
-$View_System_Information_Strip_Menu_Item.Name= "View_System_Information_Strip_Menu_Item"
-$View_System_Information_Strip_Menu_Item.Size = New-Object System.Drawing.Size(152, 22)
-$View_System_Information_Strip_Menu_Item.Text = "View System Information"
+$View_My_EliteShell_Information_Strip_Menu_Item.Name= "View_My_EliteShell_Information_Strip_Menu_Item"
+$View_My_EliteShell_Information_Strip_Menu_Item.Size = New-Object System.Drawing.Size(152, 22)
+$View_My_EliteShell_Information_Strip_Menu_Item.Text = "View My EliteShell Information"
 
-$File_Menu_Item.DropDownItems.AddRange(@($New_Game_Strip_Menu_Item, $Load_Game_Strip_Menu_Item, $View_System_Information_Strip_Menu_Item))
+$File_Menu_Item.DropDownItems.AddRange(@($New_Game_Strip_Menu_Item, $Load_Game_Strip_Menu_Item, $View_My_EliteShell_Information_Strip_Menu_Item))
 
 function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 
@@ -385,7 +403,7 @@ $Problem_Completed_Disk_Space = "Get-PSDrive C"
 
 $Problem_Completed_Disk_Space = Select-String $Game_Score_File -Pattern $Problem_Completed_Disk_Space
 
-if($Problem_Completed_Cpu -ne $null -and $Game_Score_File -ne $null){
+if($Problem_Completed_Disk_Space -ne $null -and $Game_Score_File -ne $null){
 $Windows_General_Strip_Menu_Item_5.Text = 'Windows General #5 (disk space)'
 $Windows_General_Strip_Menu_Item_5.ForeColor = 'Green'
 }
@@ -648,9 +666,13 @@ $global:Average_Time = $Average_Time
 #>
 }
 
-function On_Click_View_System_Information_Strip_Menu_Item {
+function On_Click_View_My_EliteShell_Information_Strip_Menu_Item {
 
-$Title.Text = $OS
+$MessageBoxTitle = "My EliteShell Information:"
+
+$MessageBoxBody = "OS: $OS `n Last Run Time: $Last_Accessed_Time"
+
+$Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconSuccess)
 
 }
 
@@ -660,7 +682,7 @@ $Load_Game_Strip_Menu_Item.Add_Click( { On_Click_Load_Game_Strip_Menu_Item $Load
 
 $View_Score_And_Stats_Strip_Menu_Item.Add_Click( { On_Click_View_Score_And_Stats_Strip_Menu_Item $View_Score_And_Stats_Strip_Menu_Item $EventArgs} )
 
-$View_System_Information_Strip_Menu_Item.Add_Click( { On_Click_View_System_Information_Strip_Menu_Item View_System_Information_Strip_Menu_Item $EventArgs} )
+$View_My_EliteShell_Information_Strip_Menu_Item.Add_Click( { On_Click_View_My_EliteShell_Information_Strip_Menu_Item View_My_EliteShell_Information_Strip_Menu_Item $EventArgs} )
 
 ## end File menu item ##
 
@@ -1387,8 +1409,16 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice($Sender,$e){
 
     }
 
+    if ($OS -notmatch "Windows Server"){
 
-   
+    $MessageBoxTitle = "Incorrect Operating System."
+
+    $MessageBoxBody = "This system is not running Windows Server. You can still practice these problems, but you will not receive proper PowerShell results."
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+    }
+
     $Completed_In.Text= ""
 
     $Correct_Incorrect.Text= ""

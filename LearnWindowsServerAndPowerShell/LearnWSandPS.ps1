@@ -61,6 +61,8 @@ $New_Game_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $Load_Game_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $View_Score_And_Stats_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $View_My_EliteShell_Information_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
+$View_EliteShell_Answers_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
+$Buy_Scripts_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $Windows_General_Strip_Menu_Item_Learn = New-Object System.Windows.Forms.ToolStripMenuItem
 
 $Windows_General_Strip_Menu_Item_2 = New-Object System.Windows.Forms.ToolStripMenuItem
@@ -120,8 +122,8 @@ $Body.Font = 'Verdana,11,style=Bold'
 $Body.Location = New-Object System.Drawing.Point(30,80)
 
 <#
-$EliteShell_Logo = New-Object System.Windows.Forms.PictureBox 
-$EliteShell_Logo.Location = New-Object System.Drawing.Size(455,380) 
+$EliteShell_Logo = New-Object System.Windows.Forms.PictureBox
+$EliteShell_Logo.Location = New-Object System.Drawing.Size(455,380)
 $EliteShell_Logo.Width =  $image.Size.Width;
 $EliteShell_Logo.Height =  $image.Size.Height;
 $Image = (get-item 'C:\Users\ryans\Desktop\EliteShell.png')
@@ -217,7 +219,15 @@ $View_My_EliteShell_Information_Strip_Menu_Item.Name= "View_My_EliteShell_Inform
 $View_My_EliteShell_Information_Strip_Menu_Item.Size = New-Object System.Drawing.Size(152, 22)
 $View_My_EliteShell_Information_Strip_Menu_Item.Text = "View My EliteShell Information"
 
-$File_Menu_Item.DropDownItems.AddRange(@($New_Game_Strip_Menu_Item, $Load_Game_Strip_Menu_Item, $View_My_EliteShell_Information_Strip_Menu_Item))
+$View_EliteShell_Answers_Strip_Menu_Item.Name= "View_EliteShell_Answers_Strip_Menu_Item"
+$View_EliteShell_Answers_Strip_Menu_Item.Size = New-Object System.Drawing.Size(152, 22)
+$View_EliteShell_Answers_Strip_Menu_Item.Text = "View EliteShell Answers"
+
+$Buy_Scripts_Strip_Menu_Item.Name= "Buy_Scripts_Strip_Menu_Item"
+$Buy_Scripts_Strip_Menu_Item.Size = New-Object System.Drawing.Size(152, 22)
+$Buy_Scripts_Strip_Menu_Item.Text = "Buy PowerShell Scripts"
+
+$File_Menu_Item.DropDownItems.AddRange(@($New_Game_Strip_Menu_Item, $Load_Game_Strip_Menu_Item, $View_My_EliteShell_Information_Strip_Menu_Item, $View_EliteShell_Answers_Strip_Menu_Item, $Buy_Scripts_Strip_Menu_Item))
 
 function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 
@@ -685,13 +695,48 @@ $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTit
 
 }
 
+function On_Click_View_EliteShell_Answers_Strip_Menu_Item{
+
+$MessageBoxTitle = "View answers on GitHub"
+
+$MessageBoxBody = "By clicking yes, you will be sent to GitHub to view EliteShell answers."
+
+$Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeYesNoCancel,$MessageIconSuccess)
+
+if($Confirmation -eq 'Yes'){
+
+$Test_Connection = Test-Connection -ComputerName www.github.com -ErrorAction "SilentlyContinue";
+
+if ($null -eq $Test_Connection)
+{
+  $MessageBoxTitle = "No internet connection"
+
+  $MessageBoxBody = "Your device currently does not have internet connection. EliteShell answers are available on www.GitHub.com."
+
+  $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+  Exit
+}
+
+else{
+
+Start-Process "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/LearnWindowsServerAndPowerShell/Answers-EliteShell.ps1"
+
+}
+
+}
+
+}
+
 $New_Game_Strip_Menu_Item.Add_Click( { On_Click_New_Game_Strip_Menu_Item $New_Game_Strip_Menu_Item $EventArgs} )
 
 $Load_Game_Strip_Menu_Item.Add_Click( { On_Click_Load_Game_Strip_Menu_Item $Load_Game_Strip_Menu_Item $EventArgs} )
 
 $View_Score_And_Stats_Strip_Menu_Item.Add_Click( { On_Click_View_Score_And_Stats_Strip_Menu_Item $View_Score_And_Stats_Strip_Menu_Item $EventArgs} )
 
-$View_My_EliteShell_Information_Strip_Menu_Item.Add_Click( { On_Click_View_My_EliteShell_Information_Strip_Menu_Item View_My_EliteShell_Information_Strip_Menu_Item $EventArgs} )
+$View_My_EliteShell_Information_Strip_Menu_Item.Add_Click( { On_Click_View_My_EliteShell_Information_Strip_Menu_Item $View_My_EliteShell_Information_Strip_Menu_Item $EventArgs} )
+
+$View_EliteShell_Answers_Strip_Menu_Item.Add_Click( { On_Click_View_EliteShell_Answers_Strip_Menu_Item $View_My_EliteShell_Answers_Strip_Menu_Item $EventArgs} )
 
 ## end File menu item ##
 

@@ -61,17 +61,20 @@ $New_Game_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $Load_Game_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $View_Score_And_Stats_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $View_My_EliteShell_Information_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
+$View_EliteShell_Answers_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $Windows_General_Strip_Menu_Item_Learn = New-Object System.Windows.Forms.ToolStripMenuItem
 
 $Windows_General_Strip_Menu_Item_2 = New-Object System.Windows.Forms.ToolStripMenuItem
 $Windows_General_Strip_Menu_Item_3 = New-Object System.Windows.Forms.ToolStripMenuItem
 $Windows_General_Strip_Menu_Item_4 = New-Object System.Windows.Forms.ToolStripMenuItem
 $Windows_General_Strip_Menu_Item_5 = New-Object System.Windows.Forms.ToolStripMenuItem
+
 $DHCP_DNS_Strip_Menu_Item_Practice = New-Object System.Windows.Forms.ToolStripMenuItem
 $DHCP_DNS_Strip_Menu_Item_Practice_2 = New-Object System.Windows.Forms.ToolStripMenuItem
 $DHCP_DNS_Strip_Menu_Item_Practice_3 = New-Object System.Windows.Forms.ToolStripMenuItem
 $DHCP_DNS_Strip_Menu_Item_Practice_4 = New-Object System.Windows.Forms.ToolStripMenuItem
 $DHCP_DNS_Strip_Menu_Item_Practice_5 = New-Object System.Windows.Forms.ToolStripMenuItem
+
 $Networking_Strip_Menu_Item_Practice = New-Object System.Windows.Forms.ToolStripMenuItem
 $Networking_Strip_Menu_Item_Practice_2 = New-Object System.Windows.Forms.ToolStripMenuItem
 $Networking_Strip_Menu_Item_Practice_3 = New-Object System.Windows.Forms.ToolStripMenuItem
@@ -117,6 +120,15 @@ $Body.Font = 'Verdana,11,style=Bold'
 
 $Body.Location = New-Object System.Drawing.Point(30,80)
 
+<#
+$EliteShell_Logo = New-Object System.Windows.Forms.PictureBox
+$EliteShell_Logo.Location = New-Object System.Drawing.Size(455,380)
+$EliteShell_Logo.Width =  $image.Size.Width;
+$EliteShell_Logo.Height =  $image.Size.Height;
+$Image = (get-item 'C:\Users\ryans\Desktop\EliteShell.png')
+$EliteShell_Logo = [System.Drawing.Image]::FromFile((Get-Item $Image))
+$EliteShell_Logo.Image = $Image
+#>
 
 $Correct_Incorrect = New-Object $Label_Object
 
@@ -126,7 +138,7 @@ $Correct_Incorrect.AutoSize = $true
 
 $Correct_Incorrect.Font = 'Verdana,11,style=Bold'
 
-$Correct_Incorrect.Location = New-Object System.Drawing.Point(30,400)
+$Correct_Incorrect.Location = New-Object System.Drawing.Point(30,300)
 
 
 $Completed_In = New-Object $Label_Object
@@ -135,9 +147,9 @@ $Completed_In.Text= ""
 
 $Completed_In.AutoSize = $true
 
-$Completed_In.Font = 'Verdana,10,style=Italic'
+$Completed_In.Font = 'Verdana,10,style=Italic,Bold'
 
-$Completed_In.Location = New-Object System.Drawing.Point(30,500)
+$Completed_In.Location = New-Object System.Drawing.Point(30,350)
 
 
 $Total_Number_Of_Answers_Label = New-Object $Label_Object
@@ -206,7 +218,11 @@ $View_My_EliteShell_Information_Strip_Menu_Item.Name= "View_My_EliteShell_Inform
 $View_My_EliteShell_Information_Strip_Menu_Item.Size = New-Object System.Drawing.Size(152, 22)
 $View_My_EliteShell_Information_Strip_Menu_Item.Text = "View My EliteShell Information"
 
-$File_Menu_Item.DropDownItems.AddRange(@($New_Game_Strip_Menu_Item, $Load_Game_Strip_Menu_Item, $View_My_EliteShell_Information_Strip_Menu_Item))
+$View_EliteShell_Answers_Strip_Menu_Item.Name= "View_EliteShell_Answers_Strip_Menu_Item"
+$View_EliteShell_Answers_Strip_Menu_Item.Size = New-Object System.Drawing.Size(152, 22)
+$View_EliteShell_Answers_Strip_Menu_Item.Text = "View EliteShell Answers"
+
+$File_Menu_Item.DropDownItems.AddRange(@($New_Game_Strip_Menu_Item, $Load_Game_Strip_Menu_Item, $View_My_EliteShell_Information_Strip_Menu_Item, $View_EliteShell_Answers_Strip_Menu_Item))
 
 function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 
@@ -251,11 +267,9 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 
     $MessageBoxTitle = "File creation error."
 
-    $MessageBoxBody = "$New_Game_File_CheckSum already exists. Please try again."
+    $MessageBoxBody = "$New_Game_File_CheckSum already exists. Creating a file with the same name and today's date appended."
 
     $New_Game_File = New-Item $Desktop_Path\$New_Game_Filename$Date.csv -ItemType File
-
-    Write-Host $New_Game_File
 
 	$New_Game_Filename_Csv_Rename = "$New_Game_Filename$Date.csv"
 
@@ -676,13 +690,20 @@ $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTit
 
 }
 
+function On_Click_View_EliteShell_Answers_Strip_Menu_Item{
+
+
+}
+
 $New_Game_Strip_Menu_Item.Add_Click( { On_Click_New_Game_Strip_Menu_Item $New_Game_Strip_Menu_Item $EventArgs} )
 
 $Load_Game_Strip_Menu_Item.Add_Click( { On_Click_Load_Game_Strip_Menu_Item $Load_Game_Strip_Menu_Item $EventArgs} )
 
 $View_Score_And_Stats_Strip_Menu_Item.Add_Click( { On_Click_View_Score_And_Stats_Strip_Menu_Item $View_Score_And_Stats_Strip_Menu_Item $EventArgs} )
 
-$View_My_EliteShell_Information_Strip_Menu_Item.Add_Click( { On_Click_View_My_EliteShell_Information_Strip_Menu_Item View_My_EliteShell_Information_Strip_Menu_Item $EventArgs} )
+$View_My_EliteShell_Information_Strip_Menu_Item.Add_Click( { On_Click_View_My_EliteShell_Information_Strip_Menu_Item $View_My_EliteShell_Information_Strip_Menu_Item $EventArgs} )
+
+$View_EliteShell_Answers_Strip_Menu_Item.Add_Click( { On_Click_View_EliteShell_Answers_Strip_Menu_Item $View_My_EliteShell_Answers_Strip_Menu_Item $EventArgs} )
 
 ## end File menu item ##
 

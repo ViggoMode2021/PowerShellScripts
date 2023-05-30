@@ -62,6 +62,7 @@ $Load_Game_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $View_Score_And_Stats_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $View_My_EliteShell_Information_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $View_EliteShell_Answers_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
+$Buy_Scripts_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $Windows_General_Strip_Menu_Item_Learn = New-Object System.Windows.Forms.ToolStripMenuItem
 
 $Windows_General_Strip_Menu_Item_2 = New-Object System.Windows.Forms.ToolStripMenuItem
@@ -80,6 +81,8 @@ $Networking_Strip_Menu_Item_Practice_2 = New-Object System.Windows.Forms.ToolStr
 $Networking_Strip_Menu_Item_Practice_3 = New-Object System.Windows.Forms.ToolStripMenuItem
 $Networking_Strip_Menu_Item_Practice_4 = New-Object System.Windows.Forms.ToolStripMenuItem
 $Networking_Strip_Menu_Item_Practice_5 = New-Object System.Windows.Forms.ToolStripMenuItem
+$Networking_Strip_Menu_Item_Practice_6 = New-Object System.Windows.Forms.ToolStripMenuItem
+$Networking_Strip_Menu_Item_Practice_7 = New-Object System.Windows.Forms.ToolStripMenuItem
 
 $Score_Box = New-Object System.Windows.Forms.GroupBox
 $Score_Box.Location = New-Object System.Drawing.Size(1550,50)
@@ -222,7 +225,11 @@ $View_EliteShell_Answers_Strip_Menu_Item.Name= "View_EliteShell_Answers_Strip_Me
 $View_EliteShell_Answers_Strip_Menu_Item.Size = New-Object System.Drawing.Size(152, 22)
 $View_EliteShell_Answers_Strip_Menu_Item.Text = "View EliteShell Answers"
 
-$File_Menu_Item.DropDownItems.AddRange(@($New_Game_Strip_Menu_Item, $Load_Game_Strip_Menu_Item, $View_My_EliteShell_Information_Strip_Menu_Item, $View_EliteShell_Answers_Strip_Menu_Item))
+$Buy_Scripts_Strip_Menu_Item.Name= "Buy_Scripts_Strip_Menu_Item"
+$Buy_Scripts_Strip_Menu_Item.Size = New-Object System.Drawing.Size(152, 22)
+$Buy_Scripts_Strip_Menu_Item.Text = "Buy PowerShell Scripts"
+
+$File_Menu_Item.DropDownItems.AddRange(@($New_Game_Strip_Menu_Item, $Load_Game_Strip_Menu_Item, $View_My_EliteShell_Information_Strip_Menu_Item, $View_EliteShell_Answers_Strip_Menu_Item, $Buy_Scripts_Strip_Menu_Item))
 
 function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 
@@ -591,6 +598,38 @@ $Networking_Strip_Menu_Item_Practice_5.ForeColor = 'Blue'
 
 }
 
+$Problem_Completed_Networking_6 = "Get-NetTCPConnection"
+
+$Problem_Completed_Networking_6 = Select-String $Game_Score_File -Pattern $Problem_Completed_Networking_6
+
+if($Problem_Completed_Networking_6 -ne $null -and $Game_Score_File -ne $null){
+$Networking_Strip_Menu_Item_Practice_6.Text = 'Networking #6 (ports)'
+$Networking_Strip_Menu_Item_Practice_6.ForeColor = 'Green'
+}
+
+else{
+
+$Networking_Strip_Menu_Item_Practice_6.Text = 'Networking #6 (ports)'
+$Networking_Strip_Menu_Item_Practice_6.ForeColor = 'Blue'
+
+}
+
+$Problem_Completed_Networking_7 = "Test-NetConnection -ComputerName google.com -TraceRoute"
+
+$Problem_Completed_Networking_7 = Select-String $Game_Score_File -Pattern $Problem_Completed_Networking_7
+
+if($Problem_Completed_Networking_7 -ne $null -and $Game_Score_File -ne $null){
+$Networking_Strip_Menu_Item_Practice_7.Text = 'Networking #7 (traceroute)'
+$Networking_Strip_Menu_Item_Practice_7.ForeColor = 'Green'
+}
+
+else{
+
+$Networking_Strip_Menu_Item_Practice_7.Text = 'Networking #7 (traceroute)'
+$Networking_Strip_Menu_Item_Practice_7.ForeColor = 'Blue'
+
+}
+
 }
 
 function On_Click_Load_Game_Strip_Menu_Item($Sender,$e){
@@ -692,6 +731,34 @@ $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTit
 
 function On_Click_View_EliteShell_Answers_Strip_Menu_Item{
 
+$MessageBoxTitle = "View answers on GitHub"
+
+$MessageBoxBody = "By clicking yes, you will be sent to GitHub to view EliteShell answers."
+
+$Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeYesNoCancel,$MessageIconSuccess)
+
+if($Confirmation -eq 'Yes'){
+
+$Test_Connection = Test-Connection -ComputerName www.github.com -ErrorAction "SilentlyContinue";
+
+if ($null -eq $Test_Connection)
+{
+  $MessageBoxTitle = "No internet connection"
+
+  $MessageBoxBody = "Your device currently does not have internet connection. EliteShell answers are available on www.GitHub.com."
+
+  $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+  Exit
+}
+
+else{
+
+Start-Process "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/LearnWindowsServerAndPowerShell/Answers-EliteShell.ps1"
+
+}
+
+}
 
 }
 
@@ -2241,7 +2308,7 @@ if ($Body.Text = "Find the IP address of this machine and all corresponding info
 
 	$New_Row | Add-Content -Path $Game_Score_File
 
-    $New_Row = New-Object PsObject -Property @{Problem = "Networking #1" ; Description = "Find the IP address of this machine and all corresponding information" ; Result = "ipconfig /all" ; CompletionTime = $Timer ; Date = $Date ; Points = "5"}
+    $New_Row = New-Object PsObject -Property @{Problem = "Networking #1" ; Description = "Find the IP address of this machine and all corresponding information" ; Result = "ipconfig /all" ; CompletionTime = $Timer ; Date = $Date ; Points = "2"}
 
     $New_Results += $New_Row
 
@@ -2828,6 +2895,266 @@ if ($Body.Text = "Register (refresh) DHCP leases and DNS names for system networ
 	$Input_Box.Clear()
 }
 
+## Networking 6##
+
+$Networking_Strip_Menu_Item_Practice_6.Name = "Networking_Strip_Menu_Item_Practice_6"
+$Networking_Strip_Menu_Item_Practice_6.Size = New-Object System.Drawing.Size(35, 20)
+$Networking_Strip_Menu_Item_Practice_6.Text = "Networking #6 (ports)"
+
+function On_Click_Networking_Strip_Menu_Item_6($Sender,$e){
+
+    if($Game_Score_File -eq $null){
+
+    $MessageBoxTitle = "No score file loaded."
+
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+    }
+
+    $Completed_In.Text= ""
+
+    $Correct_Incorrect.Text= ""
+
+	$Timer_Start_Time.Stop()
+
+    $Timer = [System.Diagnostics.Stopwatch]::StartNew()
+
+	$global:Timer_Start_Time = $Timer
+
+    $Title.Text= "Networking #5"
+
+	$Title.ForeColor = 'Blue'
+
+	$Body.Text = "Find all active listening ports. Hint, don't use the 'netstat' command."
+
+    $Form.Controls.RemoveByKey("The_Submit_Button")
+
+	$The_Submit_Button = New-Object System.Windows.Forms.Button
+
+	$The_Submit_Button.Name = "The_Submit_Button"
+
+	$The_Submit_Button.Text = "Submit"
+
+	$The_Submit_Button.AutoSize = $True
+
+	$The_Submit_Button.Font = 'Verdana,12,style=Bold'
+
+	$The_Submit_Button.ForeColor = 'Blue'
+
+	$The_Submit_Button.Location = New-Object System.Drawing.Point(30,200)
+
+	$The_Submit_Button.Add_Click({Selected_Networking_Practice_Problem_6})
+
+	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
+
+	$Problem_Completed = "Get-NetTCPConnection"
+
+	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
+
+	if($Problem_Completed_Check -ne $null) {
+	$Title.Text = "Networking #6 (COMPLETED)"
+	$Title.ForeColor = 'Green'}
+
+	else {
+
+	$Title.Text = "Networking #6"
+
+	}
+}
+
+function Selected_Networking_Practice_Problem_6{
+
+$Answer = @($Input_Box.Text)
+
+Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb runAs
+
+if ($Body.Text = "Find all active listening ports. Hint, don't use the 'netstat' command."){
+	if($Input_Box.Text -eq "Get-NetTCPConnection"){
+
+	$Time_Elapsed = $Timer_Start_Time.Elapsed
+
+	$Timer = $([string]::Format("`{0:d2}:{1:d2}:{2:d2}",
+	$Time_Elapsed.hours,
+	$Time_Elapsed.minutes,
+	$Time_Elapsed.seconds))
+
+	$New_Row | Add-Content -Path $Game_Score_File
+
+    $New_Row = New-Object PsObject -Property @{Problem = "Networking #6" ; Description = "Find all active listening ports. Hint, don't use the 'netstat' command." ; Result = "Get-NetTCPConnection" ; CompletionTime = $Timer ; Date = $Date ; Points = "2"}
+
+    $New_Results += $New_Row
+
+    $New_Results | Export-CSV -append $Game_Score_File
+
+	$Timer.Stop
+
+	$CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
+
+	$global:Number_Of_Correct_Answers = $CSV_Length
+
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
+
+	$CSV_Stuff = Import-CSV -Path $Game_Score_File
+
+	$Total_Score = $CSV_Stuff | Measure-Object Points -Sum | Select-Object -expand Sum | Out-String
+
+	$global:Total_Score = $Total_Score
+
+	$Total_Score_Label.Text = "$Total_Score total points"
+
+    Invoke-Expression Dropdown_Problem_Completed_Check
+
+    $Body.Text = "Find all active listening ports. Hint, don't use the 'netstat' command."
+
+    $Correct_Incorrect.Text = "Correct, your answer was $Answer."
+
+    $Correct_Incorrect.ForeColor = 'Green'
+    $Completed_In.Text = "Completed in $Timer"
+
+    }
+
+	else{
+		$Body.Text = "Find all active listening ports. Hint, don't use the 'netstat' command."
+        $Correct_Incorrect.Text = "Incorrect, your answer was $Answer."
+        $Correct_Incorrect.ForeColor = 'Red'
+        }
+	}
+
+	$Input_Box.Clear()
+}
+
+## Networking 7##
+
+$Networking_Strip_Menu_Item_Practice_7.Name = "Networking_Strip_Menu_Item_Practice_7"
+$Networking_Strip_Menu_Item_Practice_7.Size = New-Object System.Drawing.Size(35, 20)
+$Networking_Strip_Menu_Item_Practice_7.Text = "Networking #7 ( traceroute )"
+
+function On_Click_Networking_Strip_Menu_Item_7($Sender,$e){
+
+    if($Game_Score_File -eq $null){
+
+    $MessageBoxTitle = "No score file loaded."
+
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+    }
+
+    $Completed_In.Text= ""
+
+    $Correct_Incorrect.Text= ""
+
+	$Timer_Start_Time.Stop()
+
+    $Timer = [System.Diagnostics.Stopwatch]::StartNew()
+
+	$global:Timer_Start_Time = $Timer
+
+    $Title.Text= "Networking #6"
+
+	$Title.ForeColor = 'Blue'
+
+	$Body.Text = "Using the 'Test-NetConnection' cmdlet, find the traceroute to GitHub.com"
+
+    $Form.Controls.RemoveByKey("The_Submit_Button")
+
+	$The_Submit_Button = New-Object System.Windows.Forms.Button
+
+	$The_Submit_Button.Name = "The_Submit_Button"
+
+	$The_Submit_Button.Text = "Submit"
+
+	$The_Submit_Button.AutoSize = $True
+
+	$The_Submit_Button.Font = 'Verdana,12,style=Bold'
+
+	$The_Submit_Button.ForeColor = 'Blue'
+
+	$The_Submit_Button.Location = New-Object System.Drawing.Point(30,200)
+
+	$The_Submit_Button.Add_Click({Selected_Networking_Practice_Problem_7})
+
+	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
+
+	$Problem_Completed = "Test-NetConnection -ComputerName google.com -TraceRoute"
+
+	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
+
+	if($Problem_Completed_Check -ne $null) {
+	$Title.Text = "Networking #7 (COMPLETED)"
+	$Title.ForeColor = 'Green'}
+
+	else {
+
+	$Title.Text = "Networking #7"
+
+	}
+}
+
+function Selected_Networking_Practice_Problem_7{
+
+$Answer = @($Input_Box.Text)
+
+Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb runAs
+
+if ($Body.Text = "Using the 'Test-NetConnection' cmdlet, find the traceroute to GitHub.com"){
+	if($Input_Box.Text -eq "Test-NetConnection -ComputerName GitHub.com -TraceRoute"){
+
+	$Time_Elapsed = $Timer_Start_Time.Elapsed
+
+	$Timer = $([string]::Format("`{0:d2}:{1:d2}:{2:d2}",
+	$Time_Elapsed.hours,
+	$Time_Elapsed.minutes,
+	$Time_Elapsed.seconds))
+
+	$New_Row | Add-Content -Path $Game_Score_File
+
+    $New_Row = New-Object PsObject -Property @{Problem = "Networking #7" ; Description = "Using the 'Test-NetConnection' cmdlet, find the traceroute to GitHub.com." ; Result = "Test-NetConnection -ComputerName google.com -TraceRoute" ; CompletionTime = $Timer ; Date = $Date ; Points = "3"}
+
+    $New_Results += $New_Row
+
+    $New_Results | Export-CSV -append $Game_Score_File
+
+	$Timer.Stop
+
+	$CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
+
+	$global:Number_Of_Correct_Answers = $CSV_Length
+
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
+
+	$CSV_Stuff = Import-CSV -Path $Game_Score_File
+
+	$Total_Score = $CSV_Stuff | Measure-Object Points -Sum | Select-Object -expand Sum | Out-String
+
+	$global:Total_Score = $Total_Score
+
+	$Total_Score_Label.Text = "$Total_Score total points"
+
+    Invoke-Expression Dropdown_Problem_Completed_Check
+
+    $Body.Text = "Using the 'Test-NetConnection' cmdlet, find the traceroute to GitHub.com"
+
+    $Correct_Incorrect.Text = "Correct, your answer was $Answer."
+
+    $Correct_Incorrect.ForeColor = 'Green'
+    $Completed_In.Text = "Completed in $Timer"
+
+    }
+
+	else{
+		$Body.Text = "Using the 'Test-NetConnection' cmdlet, find the traceroute to GitHub.com"
+        $Correct_Incorrect.Text = "Incorrect, your answer was $Answer."
+        $Correct_Incorrect.ForeColor = 'Red'
+        }
+	}
+
+	$Input_Box.Clear()
+}
+
 $Networking_Strip_Menu_Item_Practice.Add_Click( { On_Click_Networking_Strip_Menu_Item $Networking_Strip_Menu_Item_Practice $EventArgs} )
 
 $Networking_Strip_Menu_Item_Practice_2.Add_Click( { On_Click_Networking_Strip_Menu_Item_2 $Networking_Strip_Menu_Item_Practice_2 $EventArgs} )
@@ -2838,7 +3165,11 @@ $Networking_Strip_Menu_Item_Practice_4.Add_Click( { On_Click_Networking_Strip_Me
 
 $Networking_Strip_Menu_Item_Practice_5.Add_Click( { On_Click_Networking_Strip_Menu_Item_5 $Networking_Strip_Menu_Item_Practice_5 $EventArgs} )
 
-$Networking_Strip_Menu_Item.DropDownItems.AddRange(@($Networking_Strip_Menu_Item_Practice, $Networking_Strip_Menu_Item_Practice_2, $Networking_Strip_Menu_Item_Practice_3, $Networking_Strip_Menu_Item_Practice_4, $Networking_Strip_Menu_Item_Practice_5))
+$Networking_Strip_Menu_Item_Practice_6.Add_Click( { On_Click_Networking_Strip_Menu_Item_6 $Networking_Strip_Menu_Item_Practice_6 $EventArgs} )
+
+$Networking_Strip_Menu_Item_Practice_7.Add_Click( { On_Click_Networking_Strip_Menu_Item_6 $Networking_Strip_Menu_Item_Practice_7 $EventArgs} )
+
+$Networking_Strip_Menu_Item.DropDownItems.AddRange(@($Networking_Strip_Menu_Item_Practice, $Networking_Strip_Menu_Item_Practice_2, $Networking_Strip_Menu_Item_Practice_3, $Networking_Strip_Menu_Item_Practice_4, $Networking_Strip_Menu_Item_Practice_5, $Networking_Strip_Menu_Item_Practice_6, $Networking_Strip_Menu_Item_Practice_7))
 
 ## Active Directory ##
 

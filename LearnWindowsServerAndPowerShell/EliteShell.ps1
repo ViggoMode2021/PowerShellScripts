@@ -733,7 +733,7 @@ function On_Click_View_EliteShell_Answers_Strip_Menu_Item{
 
 $MessageBoxTitle = "View answers on GitHub"
 
-$MessageBoxBody = "By clicking yes, you will be sent to GitHub to view EliteShell answers."
+$MessageBoxBody = "By clicking yes, you will be sent to GitHub.com to view EliteShell answers."
 
 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeYesNoCancel,$MessageIconSuccess)
 
@@ -829,7 +829,7 @@ function On_Click_Boot_Process_Strip_Menu_Item_Learn($Sender,$e){
 
 	$global:Timer_Start_Time = $Timer
 
-    $Title.Text = "Windows General #!"
+    $Title.Text = "Windows General #1"
 	$Title.ForeColor = 'Blue'
 
 	$Body.Text = "Find the computer name (hostname) of this device."
@@ -3112,7 +3112,7 @@ if ($Body.Text = "Using the 'Test-NetConnection' cmdlet, find the traceroute to 
 
 	$New_Row | Add-Content -Path $Game_Score_File
 
-    $New_Row = New-Object PsObject -Property @{Problem = "Networking #7" ; Description = "Using the 'Test-NetConnection' cmdlet, find the traceroute to GitHub.com." ; Result = "Test-NetConnection -ComputerName google.com -TraceRoute" ; CompletionTime = $Timer ; Date = $Date ; Points = "3"}
+    $New_Row = New-Object PsObject -Property @{Problem = "Networking #7" ; Description = "Using the 'Test-NetConnection' cmdlet, find the traceroute to GitHub.com." ; Result = "Test-NetConnection -ComputerName GitHub.com -TraceRoute" ; CompletionTime = $Timer ; Date = $Date ; Points = "3"}
 
     $New_Results += $New_Row
 
@@ -3167,7 +3167,7 @@ $Networking_Strip_Menu_Item_Practice_5.Add_Click( { On_Click_Networking_Strip_Me
 
 $Networking_Strip_Menu_Item_Practice_6.Add_Click( { On_Click_Networking_Strip_Menu_Item_6 $Networking_Strip_Menu_Item_Practice_6 $EventArgs} )
 
-$Networking_Strip_Menu_Item_Practice_7.Add_Click( { On_Click_Networking_Strip_Menu_Item_6 $Networking_Strip_Menu_Item_Practice_7 $EventArgs} )
+$Networking_Strip_Menu_Item_Practice_7.Add_Click( { On_Click_Networking_Strip_Menu_Item_7 $Networking_Strip_Menu_Item_Practice_7 $EventArgs} )
 
 $Networking_Strip_Menu_Item.DropDownItems.AddRange(@($Networking_Strip_Menu_Item_Practice, $Networking_Strip_Menu_Item_Practice_2, $Networking_Strip_Menu_Item_Practice_3, $Networking_Strip_Menu_Item_Practice_4, $Networking_Strip_Menu_Item_Practice_5, $Networking_Strip_Menu_Item_Practice_6, $Networking_Strip_Menu_Item_Practice_7))
 

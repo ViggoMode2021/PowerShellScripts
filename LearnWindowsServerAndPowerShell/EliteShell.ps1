@@ -1512,7 +1512,7 @@ function On_Click_Serial_Number_Strip_Menu_Item($Sender,$e){
     $Title.Text = "Windows General #6"
 	$Title.ForeColor = 'Blue'
 
-	$Body.Text = "Find the serial number of this device using the Get-Wmi-Object cmdlet, a pipe, and Select-Object -ExpandProperty"
+	$Body.Text = "Find the serial number of this device using the Get-WmiObject cmdlet, a pipe, and Select-Object -ExpandProperty"
 
     $Form.Controls.RemoveByKey("The_Submit_Button")
 
@@ -1530,11 +1530,11 @@ function On_Click_Serial_Number_Strip_Menu_Item($Sender,$e){
 
 	$The_Submit_Button.Location = New-Object System.Drawing.Point(30,200)
 
-	$The_Submit_Button.Add_Click({Selected_Windows_General_Problem_5})
+	$The_Submit_Button.Add_Click({Selected_Windows_General_Problem_6})
 
 	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
 
-	$Problem_Completed = "Get-PSDrive C"
+	$Problem_Completed = "Get-WmiObject win32_bios | Select-Object -ExpandProperty SerialNumber"
 
 	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
 
@@ -1555,7 +1555,7 @@ $Answer = @($Input_Box.Text)
 
 Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb runAs
 
-if ($Body.Text = "Find the serial number of this device using the Get-Wmi-Object cmdlet, a pipe, and Select-Object -ExpandProperty"){
+if ($Body.Text = "Find the serial number of this device using the Get-WmiObject cmdlet, a pipe, and Select-Object -ExpandProperty"){
 
 	if($Input_Box.Text -eq "Get-WmiObject win32_bios | Select-Object -ExpandProperty SerialNumber"){
 
@@ -1568,7 +1568,7 @@ if ($Body.Text = "Find the serial number of this device using the Get-Wmi-Object
 
 	$New_Row | Add-Content -Path $Game_Score_File
 
-    $New_Row = New-Object PsObject -Property @{Problem = "Windows General #6" ; Description = "Find the serial number of this device using the Get-Wmi-Object cmdlet, a pipe, and Select-Object -ExpandProperty" ; Result = "Get-WmiObject win32_bios | Select-Object -ExpandProperty SerialNumber" ; CompletionTime = $Timer ; Date = $Date ; Points = "3"}
+    $New_Row = New-Object PsObject -Property @{Problem = "Windows General #6" ; Description = "Find the serial number of this device using the Get-WmiObject cmdlet, a pipe, and Select-Object -ExpandProperty" ; Result = "Get-WmiObject win32_bios | Select-Object -ExpandProperty SerialNumber" ; CompletionTime = $Timer ; Date = $Date ; Points = "3"}
 
     $New_Results += $New_Row
 
@@ -1598,7 +1598,7 @@ if ($Body.Text = "Find the serial number of this device using the Get-Wmi-Object
 
     Invoke-Expression Dropdown_Problem_Completed_Check
 
-    $Body.Text = "Find the serial number of this device using the Get-Wmi-Object cmdlet, a pipe, and Select-Object -ExpandProperty"
+    $Body.Text = "Find the serial number of this device using the Get-WmiObject cmdlet, a pipe, and Select-Object -ExpandProperty"
 
     $Correct_Incorrect.ForeColor = 'Green'
     $Completed_In.Text = "Completed in $Timer"
@@ -1609,7 +1609,7 @@ if ($Body.Text = "Find the serial number of this device using the Get-Wmi-Object
 
 	else{
 
-		$Body.Text = "Find the serial number of this device using the Get-Wmi-Object cmdlet, a pipe, and Select-Object -ExpandProperty"
+		$Body.Text = "Find the serial number of this device using the Get-WmiObject cmdlet, a pipe, and Select-Object -ExpandProperty"
 
         $Correct_Incorrect.ForeColor = 'Red'
 

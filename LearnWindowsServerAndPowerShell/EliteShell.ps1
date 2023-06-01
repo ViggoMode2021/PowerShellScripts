@@ -2527,7 +2527,7 @@ if ($Body.Text = "Find the IP address of this machine and all corresponding info
 	$Input_Box.Clear()
 }
 
-## Networking 2##
+## Networking 2 ##
 
 $Networking_Strip_Menu_Item_Practice_2.Name = "Networking_Strip_Menu_Item_Practice_2"
 $Networking_Strip_Menu_Item_Practice_2.Size = New-Object System.Drawing.Size(35, 20)
@@ -2799,7 +2799,7 @@ if ($Body.Text = "Flush the DNS cache on this system"){
 	$Input_Box.Clear()
 }
 
-## Networking 4##
+## Networking 4 ##
 
 $Networking_Strip_Menu_Item_Practice_4.Name = "Networking_Strip_Menu_Item_Practice_4"
 $Networking_Strip_Menu_Item_Practice_4.Size = New-Object System.Drawing.Size(35, 20)
@@ -2935,7 +2935,7 @@ if ($Body.Text = "Change the ip address of this machine"){
 	$Input_Box.Clear()
 }
 
-## Networking 5##
+## Networking 5 ##
 
 $Networking_Strip_Menu_Item_Practice_5.Name = "Networking_Strip_Menu_Item_Practice_5"
 $Networking_Strip_Menu_Item_Practice_5.Size = New-Object System.Drawing.Size(35, 20)
@@ -3340,6 +3340,12 @@ $Networking_Strip_Menu_Item_Practice_6.Add_Click( { On_Click_Networking_Strip_Me
 $Networking_Strip_Menu_Item_Practice_7.Add_Click( { On_Click_Networking_Strip_Menu_Item_7 $Networking_Strip_Menu_Item_Practice_7 $EventArgs} )
 
 $Networking_Strip_Menu_Item.DropDownItems.AddRange(@($Networking_Strip_Menu_Item_Practice, $Networking_Strip_Menu_Item_Practice_2, $Networking_Strip_Menu_Item_Practice_3, $Networking_Strip_Menu_Item_Practice_4, $Networking_Strip_Menu_Item_Practice_5, $Networking_Strip_Menu_Item_Practice_6, $Networking_Strip_Menu_Item_Practice_7))
+
+## start Windows General menu item ##
+
+$Windows_Registry_Strip_Menu_Item.Name = "Windows_Registry_Strip_Menu_Item"
+$Windows_Registry_Strip_Menu_Item.Size = New-Object System.Drawing.Size(35, 20)
+$Windows_Registry_Strip_Menu_Item.Text = "Windows Registry"
 
 ## Active Directory ##
 

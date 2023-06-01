@@ -437,6 +437,21 @@ $Windows_General_Strip_Menu_Item_5.ForeColor = 'Blue'
 
 }
 
+$Problem_Completed_Serial_Number = "Get-WmiObject win32_bios | Select-Object -ExpandProperty SerialNumber"
+
+$Problem_Completed_Serial_Number = Select-String $Game_Score_File -Pattern $Problem_Completed_Serial_Number
+
+if($Problem_Completed_Serial_Number -ne $null -and $Game_Score_File -ne $null){
+$Windows_General_Strip_Menu_Item_6.Text = 'Windows General #6 (serial number)'
+$Windows_General_Strip_Menu_Item_6.ForeColor = 'Green'
+}
+
+else{
+
+$Windows_General_Strip_Menu_Item_6.Text = 'Windows General #6 (serial number)'
+$Windows_General_Strip_Menu_Item_6.ForeColor = 'Blue'
+
+}
 
 $Problem_Completed_DHCP = "Add-DhcpServerInDC -DNSName dhcp-practice -IPAddress 172.16.0.50"
 

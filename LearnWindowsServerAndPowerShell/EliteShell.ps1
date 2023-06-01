@@ -106,7 +106,7 @@ $Label_Object = [System.Windows.Forms.Label]
 
 $Title = New-Object $Label_Object
 
-$Title.Text= ""
+$Title.Text= "Welcome to EliteShell"
 
 $Title.AutoSize = $true
 
@@ -117,7 +117,7 @@ $Title.Location = New-Object System.Drawing.Point(30,40)
 
 $Body = New-Object $Label_Object
 
-$Body.Text= ""
+$Body.Text= "Please create a new game, load a game, or just start practicing by selecting a practice problem from the dropdown below."
 
 $Body.AutoSize = $true
 
@@ -940,7 +940,6 @@ if ($Body.Text = "Find the computer name (hostname) of your Windows machine. Use
     $Correct_Incorrect.Text = "Correct, your answer was $Answer."
 
     $Correct_Incorrect.ForeColor = 'Green'
-    $Completed_In.Text = "Completed in $Timer"
 
     $Completed_In.Text = "Completed in $Timer"
 
@@ -3356,4 +3355,6 @@ $Active_Directory_Strip_Menu_Item.Text = "Active Directory"
 $Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Total_Number_Of_Answers_Label, $Total_Score_Label, $Score_Box, $Completed_In, $Correct_Incorrect))
 
 ## Form dialogue
+$Form.AutoScale = $true
+$Form.AutoScaleMode = "Font"
 $Form.ShowDialog()

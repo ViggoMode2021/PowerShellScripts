@@ -52,6 +52,7 @@ $Form.Font = 'Verdana,11,style=Bold'
 
 $File_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem  # Main File dropdown
 $Windows_General_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem # Main Windows General dropdown
+$Windows_Registry_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem # Main Networking dropdown
 $Active_Directory_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem  # Main Active Directory dropdown
 $DHCP_DNS_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem  # Main DHCP DNS General dropdown
 $Networking_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem # Main Networking dropdown
@@ -191,14 +192,11 @@ $Input_Box.Size = New-Object System.Drawing.Size(380,1500)
 $Menu_Bar.Items.AddRange(@(
 $File_Menu_Item,
 $Windows_General_Strip_Menu_Item,
+$Windows_Registry_Strip_Menu_Item,
 $Active_Directory_Strip_Menu_Item,
 $Networking_Strip_Menu_Item,
 $DHCP_DNS_Strip_Menu_Item,
-$Windows_General_Strip_Menu_Item_Learn,
-$Windows_General_Strip_Menu_Item_2,
-$Windows_General_Strip_Menu_Item_3,
-$Windows_General_Strip_Menu_Item_4,
-$Windows_General_Strip_Menu_Item_5))
+$Windows_General_Strip_Menu_Item_Learn))
 
 ## start File menu item ##
 
@@ -1615,8 +1613,22 @@ if ($Body.Text = "Find the serial number of this device using the Get-WmiObject 
 
         $Correct_Incorrect.Text = "Incorrect, your answer was $Answer."
 
-        }
-	}
+        $Correct_Answer = "Get-WmiObject win32_bios | Select-Object -ExpandProperty SerialNumber"
+
+        if ( [string]$Answer -ceq [string]$Correct_Answer ) {
+        return -1
+          }
+          for ( $i = 0; $i -lt $string1.Length; $i++ ) {
+            if ( [string]$Answer[$i] -cne [string]$Correct_Answer[$i] ) {
+              return $i
+            }
+          }
+          $Length_Off = [string]$Answer.Length
+
+          return $Length_Off
+
+            }
+	    }
 
 	$Input_Box.Clear()
 }

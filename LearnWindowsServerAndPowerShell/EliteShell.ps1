@@ -69,6 +69,7 @@ $Windows_General_Strip_Menu_Item_2 = New-Object System.Windows.Forms.ToolStripMe
 $Windows_General_Strip_Menu_Item_3 = New-Object System.Windows.Forms.ToolStripMenuItem
 $Windows_General_Strip_Menu_Item_4 = New-Object System.Windows.Forms.ToolStripMenuItem
 $Windows_General_Strip_Menu_Item_5 = New-Object System.Windows.Forms.ToolStripMenuItem
+$Windows_General_Strip_Menu_Item_6 = New-Object System.Windows.Forms.ToolStripMenuItem
 
 $DHCP_DNS_Strip_Menu_Item_Practice = New-Object System.Windows.Forms.ToolStripMenuItem
 $DHCP_DNS_Strip_Menu_Item_Practice_2 = New-Object System.Windows.Forms.ToolStripMenuItem
@@ -739,7 +740,7 @@ $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTit
 
 if($Confirmation -eq 'Yes'){
 
-$Test_Connection = Test-Connection -ComputerName www.github.com -ErrorAction "SilentlyContinue";
+$Test_Connection = Test-Connection -ComputerName www.github.com -ErrorAction SilentlyContinue;
 
 if ($null -eq $Test_Connection)
 {
@@ -800,8 +801,12 @@ $Windows_General_Strip_Menu_Item_5.Name = "Windows_General_Strip_Menu_Item_5"
 $Windows_General_Strip_Menu_Item_5.Size = New-Object System.Drawing.Size(152, 22)
 $Windows_General_Strip_Menu_Item_5.Text = "Windows General #5 (disk space)"
 
+$Windows_General_Strip_Menu_Item_6.Name = "Windows_General_Strip_Menu_Item_6"
+$Windows_General_Strip_Menu_Item_6.Size = New-Object System.Drawing.Size(152, 22)
+$Windows_General_Strip_Menu_Item_6.Text = "Windows General #6 (serial number)"
+
 $Windows_General_Strip_Menu_Item.DropDownItems.AddRange(@($Windows_General_Strip_Menu_Item_Learn, $Windows_General_Strip_Menu_Item_2, $Windows_General_Strip_Menu_Item_3
-$Windows_General_Strip_Menu_Item_4, $Windows_General_Strip_Menu_Item_5))
+$Windows_General_Strip_Menu_Item_4, $Windows_General_Strip_Menu_Item_5, $Windows_General_Strip_Menu_Item_6))
 
 ## end Windows General menu item ##
 
@@ -1465,6 +1470,142 @@ if ($Body.Text = "Find the disk space of the current machine's C drive"){
 	$Input_Box.Clear()
 }
 
+## Windows General #6 ##
+
+function On_Click_Serial_Number_Strip_Menu_Item($Sender,$e){
+
+    if($Game_Score_File -eq $null){
+
+    $MessageBoxTitle = "No score file loaded."
+
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+    }
+
+    $Completed_In.Text= ""
+
+    $Correct_Incorrect.Text= ""
+
+	$Timer_Start_Time.Stop()
+
+    $Timer = [System.Diagnostics.Stopwatch]::StartNew()
+
+	$global:Timer_Start_Time = $Timer
+
+    $Title.Text = "Windows General #6"
+	$Title.ForeColor = 'Blue'
+
+	$Body.Text = "Find the serial number of this device using the Get-Wmi-Object cmdlet, a pipe, and Select-Object -ExpandProperty"
+
+    $Form.Controls.RemoveByKey("The_Submit_Button")
+
+	$The_Submit_Button = New-Object System.Windows.Forms.Button
+
+	$The_Submit_Button.Name = "The_Submit_Button"
+
+	$The_Submit_Button.Text = "Submit"
+
+	$The_Submit_Button.AutoSize = $True
+
+	$The_Submit_Button.Font = 'Verdana,12,style=Bold'
+
+	$The_Submit_Button.ForeColor = 'Blue'
+
+	$The_Submit_Button.Location = New-Object System.Drawing.Point(30,200)
+
+	$The_Submit_Button.Add_Click({Selected_Windows_General_Problem_5})
+
+	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
+
+	$Problem_Completed = "Get-PSDrive C"
+
+	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
+
+	if($Problem_Completed_Check -ne $null) {
+	$Title.Text = "Windows General #6 (COMPLETED)"
+	$Title.ForeColor = 'Green'}
+
+	else {
+
+	$Title.Text = "Windows General #6"
+
+	}
+}
+
+function Selected_Windows_General_Problem_6{
+
+$Answer = @($Input_Box.Text)
+
+Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb runAs
+
+if ($Body.Text = "Find the serial number of this device using the Get-Wmi-Object cmdlet, a pipe, and Select-Object -ExpandProperty"){
+
+	if($Input_Box.Text -eq "Get-WmiObject win32_bios | Select-Object -ExpandProperty SerialNumber"){
+
+	$Time_Elapsed = $Timer_Start_Time.Elapsed
+
+	$Timer = $([string]::Format("`{0:d2}:{1:d2}:{2:d2}",
+	$Time_Elapsed.hours,
+	$Time_Elapsed.minutes,
+	$Time_Elapsed.seconds))
+
+	$New_Row | Add-Content -Path $Game_Score_File
+
+    $New_Row = New-Object PsObject -Property @{Problem = "Windows General #6" ; Description = "Find the serial number of this device using the Get-Wmi-Object cmdlet, a pipe, and Select-Object -ExpandProperty" ; Result = "Get-WmiObject win32_bios | Select-Object -ExpandProperty SerialNumber" ; CompletionTime = $Timer ; Date = $Date ; Points = "3"}
+
+    $New_Results += $New_Row
+
+    $New_Results | Export-CSV -append $Game_Score_File
+
+	$Timer.Stop
+
+	$CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
+
+	$global:Number_Of_Correct_Answers = $CSV_Length
+
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
+
+	$CSV_Stuff = Import-CSV -Path $Game_Score_File
+
+	$Total_Score = $CSV_Stuff | Measure-Object Points -Sum | Select-Object -expand Sum | Out-String
+
+	$global:Total_Score = $Total_Score
+
+	$Total_Score_Label.Text = "$Total_Score total points"
+
+	if($Game_Score_File -eq $null){
+
+	$Total_Score_Label.Text = ""
+	$Total_Number_Of_Answers_Label.Text = ""
+	}
+
+    Invoke-Expression Dropdown_Problem_Completed_Check
+
+    $Body.Text = "Find the serial number of this device using the Get-Wmi-Object cmdlet, a pipe, and Select-Object -ExpandProperty"
+
+    $Correct_Incorrect.ForeColor = 'Green'
+    $Completed_In.Text = "Completed in $Timer"
+
+    $Correct_Incorrect.Text = "Correct, your answer was $Answer."
+
+    }
+
+	else{
+
+		$Body.Text = "Find the serial number of this device using the Get-Wmi-Object cmdlet, a pipe, and Select-Object -ExpandProperty"
+
+        $Correct_Incorrect.ForeColor = 'Red'
+
+        $Correct_Incorrect.Text = "Incorrect, your answer was $Answer."
+
+        }
+	}
+
+	$Input_Box.Clear()
+}
+
 $Windows_General_Strip_Menu_Item_Learn.Add_Click( { On_Click_Boot_Process_Strip_Menu_Item_Learn $Windows_General_Strip_Menu_Item_Learn $EventArgs} )
 
 $Windows_General_Strip_Menu_Item_2.Add_Click( { On_Click_Uptime_Strip_Menu_Item $Windows_General_Strip_Menu_Item_2 $EventArgs} )
@@ -1474,6 +1615,8 @@ $Windows_General_Strip_Menu_Item_3.Add_Click( { On_Click_Env_Strip_Menu_Item $Wi
 $Windows_General_Strip_Menu_Item_4.Add_Click( { On_Click_Cpu_Strip_Menu_Item $Windows_General_Strip_Menu_Item_4 $EventArgs} )
 
 $Windows_General_Strip_Menu_Item_5.Add_Click( { On_Click_Disk_Space_Strip_Menu_Item $Windows_General_Strip_Menu_Item_5 $EventArgs} )
+
+$Windows_General_Strip_Menu_Item_6.Add_Click( { On_Click_Serial_Number_Strip_Menu_Item $Windows_General_Strip_Menu_Item_6 $EventArgs} )
 
 ## DHCP & DNS #1 (check install) ##
 
@@ -3025,11 +3168,11 @@ if ($Body.Text = "Find all active listening ports. Hint, don't use the 'netstat'
 	$Input_Box.Clear()
 }
 
-## Networking 7##
+## Networking 7 ##
 
 $Networking_Strip_Menu_Item_Practice_7.Name = "Networking_Strip_Menu_Item_Practice_7"
 $Networking_Strip_Menu_Item_Practice_7.Size = New-Object System.Drawing.Size(35, 20)
-$Networking_Strip_Menu_Item_Practice_7.Text = "Networking #7 ( traceroute )"
+$Networking_Strip_Menu_Item_Practice_7.Text = "Networking #7 (traceroute)"
 
 function On_Click_Networking_Strip_Menu_Item_7($Sender,$e){
 
@@ -3112,7 +3255,7 @@ if ($Body.Text = "Using the 'Test-NetConnection' cmdlet, find the traceroute to 
 
 	$New_Row | Add-Content -Path $Game_Score_File
 
-    $New_Row = New-Object PsObject -Property @{Problem = "Networking #7" ; Description = "Using the 'Test-NetConnection' cmdlet, find the traceroute to GitHub.com." ; Result = "Test-NetConnection -ComputerName GitHub.com -TraceRoute" ; CompletionTime = $Timer ; Date = $Date ; Points = "3"}
+    $New_Row = New-Object PsObject -Property @{Problem = "Networking #7" ; Description = "Using the 'Test-NetConnection' cmdlet, find the traceroute to GitHub.com." ; Result = "" ; CompletionTime = $Timer ; Date = $Date ; Points = "3"}
 
     $New_Results += $New_Row
 

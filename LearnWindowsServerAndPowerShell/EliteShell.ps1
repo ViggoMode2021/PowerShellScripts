@@ -10,6 +10,8 @@ $OS = (Get-WMIObject win32_operatingsystem) | Select-Object -expand Name | Out-S
 
 $OS = $OS.Replace("|C:\WINDOWS|\Device\Harddisk0\Partition3", "")
 
+$ErrorActionPreference = 'SilentlyContinue'
+
 $Script_Or_Executable_Name = $MyInvocation.InvocationName
 
 if($Script_Or_Executable_Name -notmatch ".ps1"){
@@ -85,6 +87,8 @@ $Networking_Strip_Menu_Item_Practice_4 = New-Object System.Windows.Forms.ToolStr
 $Networking_Strip_Menu_Item_Practice_5 = New-Object System.Windows.Forms.ToolStripMenuItem
 $Networking_Strip_Menu_Item_Practice_6 = New-Object System.Windows.Forms.ToolStripMenuItem
 $Networking_Strip_Menu_Item_Practice_7 = New-Object System.Windows.Forms.ToolStripMenuItem
+
+$Windows_Registry_Strip_Menu_Item_Practice = New-Object System.Windows.Forms.ToolStripMenuItem
 
 $Score_Box = New-Object System.Windows.Forms.GroupBox
 $Score_Box.Location = New-Object System.Drawing.Size(1550,50)
@@ -644,6 +648,23 @@ $Networking_Strip_Menu_Item_Practice_7.ForeColor = 'Blue'
 
 }
 
+$Problem_Completed_Windows_Registry = "set-location -path HKLM:SOFTWARE"
+
+$Problem_Completed_Windows_Registry = Select-String $Game_Score_File -Pattern $Problem_Completed_Windows_Registry
+
+if($Problem_Completed_Windows_Registry -ne $null -and $Game_Score_File -ne $null){
+$Windows_Registry_Strip_Menu_Item_Practice.Text = 'Windows Registry #1 ( path )'
+$Windows_Registry_Strip_Menu_Item_Practice.ForeColor = 'Green'
+}
+
+else{
+
+$Windows_Registry_Strip_Menu_Item_Practice.Text = 'Windows Registry #1 ( path )'
+$Windows_Registry_Strip_Menu_Item_Practice.ForeColor = 'Blue'
+
+}
+
+
 }
 
 function On_Click_Load_Game_Strip_Menu_Item($Sender,$e){
@@ -753,7 +774,44 @@ $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTit
 
 if($Confirmation -eq 'Yes'){
 
-$Test_Connection = Test-Connection -ComputerName www.github.com -ErrorAction SilentlyContinue;
+try {
+
+$Test_Connection = Test-Connection -ComputerName www.github.com -Count 1 -ErrorAction "SilentlyContinue"
+
+if ($null -ne $Test_Connection){
+
+Start-Process "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/LearnWindowsServerAndPowerShell/Answers-EliteShell.ps1"
+
+}
+
+else{
+
+
+$MessageBoxTitle = "No internet connection"
+
+$MessageBoxBody = "Your device currently does not have internet connection. EliteShell answers are available on www.GitHub.com."
+
+$Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+Exit
+
+}
+}
+
+catch [System.Net.NetworkInformation.PingException] {
+
+$MessageBoxTitle = "No internet connection"
+
+$MessageBoxBody = "Your device currently does not have internet connection. EliteShell answers are available on www.GitHub.com."
+
+$Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+Exit
+
+}
+
+<#
+$Test_Connection = Test-Connection -ComputerName www.github.com -Quiet;
 
 if ($null -eq $Test_Connection)
 {
@@ -771,7 +829,7 @@ else{
 Start-Process "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/LearnWindowsServerAndPowerShell/Answers-EliteShell.ps1"
 
 }
-
+#>
 }
 
 }
@@ -831,7 +889,7 @@ function On_Click_Boot_Process_Strip_Menu_Item_Learn($Sender,$e){
 
     $MessageBoxTitle = "No score file loaded."
 
-    $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded."
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
 
@@ -965,7 +1023,7 @@ function On_Click_Uptime_Strip_Menu_Item($Sender,$e){
 
     $MessageBoxTitle = "No score file loaded."
 
-    $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded."
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
 
@@ -1086,7 +1144,7 @@ function On_Click_Env_Strip_Menu_Item($Sender,$e){
 
     $MessageBoxTitle = "No score file loaded."
 
-    $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded."
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
 
@@ -1216,7 +1274,7 @@ function On_Click_Cpu_Strip_Menu_Item($Sender,$e){
 
     $MessageBoxTitle = "No score file loaded."
 
-    $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded."
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
 
@@ -1354,7 +1412,7 @@ function On_Click_Disk_Space_Strip_Menu_Item($Sender,$e){
 
     $MessageBoxTitle = "No score file loaded."
 
-    $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded."
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
 
@@ -1490,7 +1548,7 @@ function On_Click_Serial_Number_Strip_Menu_Item($Sender,$e){
 
     $MessageBoxTitle = "No score file loaded."
 
-    $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded."
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
 
@@ -1614,17 +1672,19 @@ if ($Body.Text = "Find the serial number of this device using the Get-WmiObject 
 
         $Correct_Answer = "Get-WmiObject win32_bios | Select-Object -ExpandProperty SerialNumber"
 
-        if ( [string]$Answer -ceq [string]$Correct_Answer ) {
+        if ( $Input_Box.Text -ceq $Correct_Answer ) {
         return -1
           }
-          for ( $i = 0; $i -lt $string1.Length; $i++ ) {
-            if ( [string]$Answer[$i] -cne [string]$Correct_Answer[$i] ) {
+          for ( $i = 0; $i -lt $Answer.Length; $i++ ) {
+            if ( $Input_Box.Text[$i] -cne $Correct_Answer[$i] ) {
               return $i
             }
           }
-          $Length_Off = [string]$Answer.Length
+          $Length_Off = $Input_Box.Text.Length | Out-String
 
-          return $Length_Off
+          Write-Host $Length_Off
+
+          Write-Host "mkehaoksdofasd"
 
             }
 	    }
@@ -1660,7 +1720,7 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice($Sender,$e){
 
     $MessageBoxTitle = "No score file loaded."
 
-    $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded."
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
 
@@ -1796,7 +1856,7 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_2($Sender,$e){
 
     $MessageBoxTitle = "No score file loaded."
 
-    $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded."
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
 
@@ -1944,7 +2004,7 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_3($Sender,$e){
 
     $MessageBoxTitle = "No score file loaded."
 
-    $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded."
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
 
@@ -2091,7 +2151,7 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_4($Sender,$e){
 
     $MessageBoxTitle = "No score file loaded."
 
-    $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded."
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
 
@@ -2239,7 +2299,7 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_5($Sender,$e){
 
     $MessageBoxTitle = "No score file loaded."
 
-    $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded."
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
 
@@ -2402,7 +2462,7 @@ function On_Click_Networking_Strip_Menu_Item($Sender,$e){
 
     $MessageBoxTitle = "No score file loaded."
 
-    $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded."
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
 
@@ -2538,7 +2598,7 @@ function On_Click_Networking_Strip_Menu_Item_2($Sender,$e){
 
     $MessageBoxTitle = "No score file loaded."
 
-    $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded."
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
 
@@ -2674,7 +2734,7 @@ function On_Click_Networking_Strip_Menu_Item_3($Sender,$e){
 
     $MessageBoxTitle = "No score file loaded."
 
-    $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded."
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
 
@@ -2810,7 +2870,7 @@ function On_Click_Networking_Strip_Menu_Item_4($Sender,$e){
 
     $MessageBoxTitle = "No score file loaded."
 
-    $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded."
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
 
@@ -2946,7 +3006,7 @@ function On_Click_Networking_Strip_Menu_Item_5($Sender,$e){
 
     $MessageBoxTitle = "No score file loaded."
 
-    $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded."
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
 
@@ -3076,7 +3136,7 @@ function On_Click_Networking_Strip_Menu_Item_6($Sender,$e){
 
     $MessageBoxTitle = "No score file loaded."
 
-    $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded."
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
 
@@ -3206,7 +3266,7 @@ function On_Click_Networking_Strip_Menu_Item_7($Sender,$e){
 
     $MessageBoxTitle = "No score file loaded."
 
-    $MessageBoxBody = "No game is loaded. Your results will not be recorded"
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded."
 
     $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
 
@@ -3345,6 +3405,144 @@ $Networking_Strip_Menu_Item.DropDownItems.AddRange(@($Networking_Strip_Menu_Item
 $Windows_Registry_Strip_Menu_Item.Name = "Windows_Registry_Strip_Menu_Item"
 $Windows_Registry_Strip_Menu_Item.Size = New-Object System.Drawing.Size(35, 20)
 $Windows_Registry_Strip_Menu_Item.Text = "Windows Registry"
+
+$Windows_Registry_Strip_Menu_Item_Practice.Name = "Windows_Registry_Strip_Menu_Item_Practice"
+$Windows_Registry_Strip_Menu_Item_Practice.Size = New-Object System.Drawing.Size(35, 20)
+$Windows_Registry_Strip_Menu_Item_Practice.Text = "Windows Registry #1 ( path )"
+
+function On_Click_Windows_Registry_Strip_Menu_Item($Sender,$e){
+
+    if($Game_Score_File -eq $null){
+
+    $MessageBoxTitle = "No score file loaded."
+
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded."
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+    }
+
+    $Completed_In.Text= ""
+
+    $Correct_Incorrect.Text= ""
+
+	$Timer_Start_Time.Stop()
+
+    $Timer = [System.Diagnostics.Stopwatch]::StartNew()
+
+	$global:Timer_Start_Time = $Timer
+
+    $Title.Text= "Windows Registry #1"
+
+	$Title.ForeColor = 'Blue'
+
+	$Body.Text = "Using the set-location cmdlet, set the location to HKey Local Machine's Software subkey"
+
+    $Form.Controls.RemoveByKey("The_Submit_Button")
+
+	$The_Submit_Button = New-Object System.Windows.Forms.Button
+
+	$The_Submit_Button.Name = "The_Submit_Button"
+
+	$The_Submit_Button.Text = "Submit"
+
+	$The_Submit_Button.AutoSize = $True
+
+	$The_Submit_Button.Font = 'Verdana,12,style=Bold'
+
+	$The_Submit_Button.ForeColor = 'Blue'
+
+	$The_Submit_Button.Location = New-Object System.Drawing.Point(30,200)
+
+	$The_Submit_Button.Add_Click({Selected_Windows_Registry_Practice_Problem})
+
+	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
+
+	$Problem_Completed = "set-location -path HKLM:SOFTWARE"
+
+	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
+
+	if($Problem_Completed_Check -ne $null) {
+	$Title.Text = "Windows Registry #1 ( COMPLETED )"
+	$Title.ForeColor = 'Green'}
+
+	else {
+
+	$Title.Text = "Windows Registry #1 ( path )"
+
+	}
+}
+
+function Selected_Windows_Registry_Practice_Problem{
+
+$Answer = @($Input_Box.Text)
+
+Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb runAs
+
+if ($Body.Text = "Using the set-location cmdlet, set the location to HKey Local Machine's Software subkey"){
+	if($Input_Box.Text -eq "set-location -path HKLM:SOFTWARE"){
+
+	$Time_Elapsed = $Timer_Start_Time.Elapsed
+
+	$Timer = $([string]::Format("`{0:d2}:{1:d2}:{2:d2}",
+	$Time_Elapsed.hours,
+	$Time_Elapsed.minutes,
+	$Time_Elapsed.seconds))
+
+	$New_Row | Add-Content -Path $Game_Score_File
+
+    $New_Row = New-Object PsObject -Property @{Problem = "Windows Registry #1 ( path )" ; Description = "Using the set-location cmdlet, set the location to HKey Local Machine's Software subkey" ; Result = "set-location -path HKLM:SOFTWARE" ; CompletionTime = $Timer ; Date = $Date ; Points = "3"}
+
+    $New_Results += $New_Row
+
+    $New_Results | Export-CSV -append $Game_Score_File
+
+	$Timer.Stop
+
+	$CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
+
+	$global:Number_Of_Correct_Answers = $CSV_Length
+
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
+
+	$CSV_Stuff = Import-CSV -Path $Game_Score_File
+
+	$Total_Score = $CSV_Stuff | Measure-Object Points -Sum | Select-Object -expand Sum | Out-String
+
+	$global:Total_Score = $Total_Score
+
+	$Total_Score_Label.Text = "$Total_Score total points"
+
+	if($Game_Score_File -eq $null){
+
+	$Total_Score_Label.Text = ""
+	$Total_Number_Of_Answers_Label.Text = ""
+	}
+
+    Invoke-Expression Dropdown_Problem_Completed_Check
+
+    $Body.Text = "Using the set-location cmdlet, set the location to HKey Local Machine's Software subkey"
+
+    $Correct_Incorrect.Text = "Correct, your answer was $Answer."
+
+    $Correct_Incorrect.ForeColor = 'Green'
+    $Completed_In.Text = "Completed in $Timer"
+
+    }
+
+	else{
+		$Body.Text = "Using the set-location cmdlet, set the location to HKey Local Machine's Software subkey"
+        $Correct_Incorrect.Text = "Incorrect, your answer was $Answer."
+        $Correct_Incorrect.ForeColor = 'Red'
+        }
+	}
+
+	$Input_Box.Clear()
+}
+
+$Windows_Registry_Strip_Menu_Item_Practice.Add_Click( { On_Click_Windows_Registry_Strip_Menu_Item $Windows_Registry_Strip_Menu_Item_Practice $EventArgs} )
+
+$Windows_Registry_Strip_Menu_Item.DropDownItems.AddRange(@($Windows_Registry_Strip_Menu_Item_Practice))
 
 ## Active Directory ##
 

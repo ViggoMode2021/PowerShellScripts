@@ -191,7 +191,7 @@ $Input_Box.Name = "Input_Box"
 $Input_Box.Text = "Enter PowerShell code here"
 $Input_Box.Font = 'Calibri,12,style=Bold'
 $Input_Box.Location = New-Object System.Drawing.Point(30,150)
-$Input_Box.Size = New-Object System.Drawing.Size(380,1500)
+$Input_Box.Size = New-Object System.Drawing.Size(580,1800)
 
 $Menu_Bar.Items.AddRange(@(
 $File_Menu_Item,
@@ -778,14 +778,27 @@ try {
 
 $Test_Connection = Test-Connection -ComputerName www.github.com -Count 1 -ErrorAction "SilentlyContinue"
 
-if ($null -ne $Test_Connection){
+if ($Test_Connection -eq $null){
 
-Start-Process "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/LearnWindowsServerAndPowerShell/Answers-EliteShell.ps1"
+$MessageBoxTitle = "No internet connection"
+
+$MessageBoxBody = "Your device currently does not have internet connection. EliteShell answers are available on www.GitHub.com."
+
+$Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+Exit
 
 }
 
 else{
 
+Start-Process "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/LearnWindowsServerAndPowerShell/Answers-EliteShell.ps1"
+
+}
+
+}
+
+catch {
 
 $MessageBoxTitle = "No internet connection"
 
@@ -796,19 +809,7 @@ $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTit
 Exit
 
 }
-}
 
-catch [System.Net.NetworkInformation.PingException] {
-
-$MessageBoxTitle = "No internet connection"
-
-$MessageBoxBody = "Your device currently does not have internet connection. EliteShell answers are available on www.GitHub.com."
-
-$Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
-
-Exit
-
-}
 
 <#
 $Test_Connection = Test-Connection -ComputerName www.github.com -Quiet;
@@ -830,8 +831,6 @@ Start-Process "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts
 
 }
 #>
-}
-
 }
 
 $New_Game_Strip_Menu_Item.Add_Click( { On_Click_New_Game_Strip_Menu_Item $New_Game_Strip_Menu_Item $EventArgs} )

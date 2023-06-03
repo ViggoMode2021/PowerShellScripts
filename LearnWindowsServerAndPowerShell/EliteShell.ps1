@@ -745,12 +745,17 @@ $Total_Score = $CSV_Stuff | Measure-Object Points -Sum | Select-Object -expand S
 $global:Total_Score = $Total_Score
 
 $Total_Score_Label.Text = "$Total_Score total points"
+
+$global:Total_Score = $Total_Score
+
 <#
 $Average_Time = $CSV_Stuff | Measure-Object CompletionTime -Average | Select-Object -expand CompletionTime | Out-String
 
 Write-Host $Average_Time
 
 $global:Average_Time = $Average_Time
+
+
 #>
 }
 
@@ -810,6 +815,7 @@ Exit
 
 }
 
+}
 
 <#
 $Test_Connection = Test-Connection -ComputerName www.github.com -Quiet;

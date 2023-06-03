@@ -89,6 +89,7 @@ $Networking_Strip_Menu_Item_Practice_6 = New-Object System.Windows.Forms.ToolStr
 $Networking_Strip_Menu_Item_Practice_7 = New-Object System.Windows.Forms.ToolStripMenuItem
 
 $Windows_Registry_Strip_Menu_Item_Practice = New-Object System.Windows.Forms.ToolStripMenuItem
+$Windows_Registry_Strip_Menu_Item_Practice_2 = New-Object System.Windows.Forms.ToolStripMenuItem
 
 $Score_Box = New-Object System.Windows.Forms.GroupBox
 $Score_Box.Location = New-Object System.Drawing.Size(1550,50)
@@ -664,6 +665,21 @@ $Windows_Registry_Strip_Menu_Item_Practice.ForeColor = 'Blue'
 
 }
 
+$Problem_Completed_Windows_Registry_2 = "Get-PSDrive -PSProvider 'Registry' | Select-Object -Property Name, Root"
+
+$Problem_Completed_Windows_Registry_2 = Select-String $Game_Score_File -Pattern $Problem_Completed_Windows_Registry_2
+
+if($Problem_Completed_Windows_Registry_2 -ne $null -and $Game_Score_File -ne $null){
+$Windows_Registry_Strip_Menu_Item_Practice_2.Text = 'Windows Registry #2 ( root keys )'
+$Windows_Registry_Strip_Menu_Item_Practice_2.ForeColor = 'Green'
+}
+
+else{
+
+$Windows_Registry_Strip_Menu_Item_Practice_2.Text = 'Windows Registry #2 ( root keys )'
+$Windows_Registry_Strip_Menu_Item_Practice_2.ForeColor = 'Blue'
+
+}
 
 }
 
@@ -3415,6 +3431,10 @@ $Windows_Registry_Strip_Menu_Item_Practice.Name = "Windows_Registry_Strip_Menu_I
 $Windows_Registry_Strip_Menu_Item_Practice.Size = New-Object System.Drawing.Size(35, 20)
 $Windows_Registry_Strip_Menu_Item_Practice.Text = "Windows Registry #1 ( path )"
 
+$Windows_Registry_Strip_Menu_Item_Practice_2.Name = "Windows_Registry_Strip_Menu_Item_Practice_2"
+$Windows_Registry_Strip_Menu_Item_Practice_2.Size = New-Object System.Drawing.Size(35, 20)
+$Windows_Registry_Strip_Menu_Item_Practice_2.Text = "Windows Registry #2 ( root keys )"
+
 function On_Click_Windows_Registry_Strip_Menu_Item($Sender,$e){
 
     if($Game_Score_File -eq $null){
@@ -3545,9 +3565,142 @@ if ($Body.Text = "Using the set-location cmdlet, set the location to HKey Local 
 	$Input_Box.Clear()
 }
 
+function On_Click_Windows_Registry_Strip_Menu_Item_2($Sender,$e){
+
+    if($Game_Score_File -eq $null){
+
+    $MessageBoxTitle = "No score file loaded."
+
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded."
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+    }
+
+    $Completed_In.Text= ""
+
+    $Correct_Incorrect.Text= ""
+
+	$Timer_Start_Time.Stop()
+
+    $Timer = [System.Diagnostics.Stopwatch]::StartNew()
+
+	$global:Timer_Start_Time = $Timer
+
+    $Title.Text= "Windows Registry #2"
+
+	$Title.ForeColor = 'Blue'
+
+	$Body.Text = "List all of the roots available to the Registry PSProvider to see the entry points using the Get-PSDrive cmdlet and a pipe |."
+
+    $Form.Controls.RemoveByKey("The_Submit_Button")
+
+	$The_Submit_Button = New-Object System.Windows.Forms.Button
+
+	$The_Submit_Button.Name = "The_Submit_Button"
+
+	$The_Submit_Button.Text = "Submit"
+
+	$The_Submit_Button.AutoSize = $True
+
+	$The_Submit_Button.Font = 'Verdana,12,style=Bold'
+
+	$The_Submit_Button.ForeColor = 'Blue'
+
+	$The_Submit_Button.Location = New-Object System.Drawing.Point(30,200)
+
+	$The_Submit_Button.Add_Click({Selected_Windows_Registry_Practice_Problem_2})
+
+	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
+
+	$Problem_Completed = "Get-PSDrive -PSProvider 'Registry' | Select-Object -Property Name, Root"
+
+	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
+
+	if($Problem_Completed_Check -ne $null) {
+	$Title.Text = "Windows Registry #2 ( COMPLETED )"
+	$Title.ForeColor = 'Green'}
+
+	else {
+
+	$Title.Text = "Windows Registry #2 ( root keys )"
+
+	}
+}
+
+function Selected_Windows_Registry_Practice_Problem_2{
+
+$Answer = @($Input_Box.Text)
+
+Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb runAs
+
+if ($Body.Text = "List all of the roots available to the Registry PSProvider to see the entry points using the Get-PSDrive cmdlet and a pipe |."){
+	if($Input_Box.Text -eq "Get-PSDrive -PSProvider 'Registry' | Select-Object -Property Name, Root"){
+
+	$Time_Elapsed = $Timer_Start_Time.Elapsed
+
+	$Timer = $([string]::Format("`{0:d2}:{1:d2}:{2:d2}",
+	$Time_Elapsed.hours,
+	$Time_Elapsed.minutes,
+	$Time_Elapsed.seconds))
+
+	$New_Row | Add-Content -Path $Game_Score_File
+
+    $New_Row = New-Object PsObject -Property @{Problem = "Windows Registry #2 ( root keys )" ; Description = "List all of the roots available to the Registry PSProvider to see the entry points using the Get-PSDrive cmdlet and a pipe |." ; Result = "Get-PSDrive -PSProvider 'Registry' | Select-Object -Property Name, Root" ; CompletionTime = $Timer ; Date = $Date ; Points = "3"}
+
+    $New_Results += $New_Row
+
+    $New_Results | Export-CSV -append $Game_Score_File
+
+	$Timer.Stop
+
+	$CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
+
+	$global:Number_Of_Correct_Answers = $CSV_Length
+
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
+
+	$CSV_Stuff = Import-CSV -Path $Game_Score_File
+
+	$Total_Score = $CSV_Stuff | Measure-Object Points -Sum | Select-Object -expand Sum | Out-String
+
+	$global:Total_Score = $Total_Score
+
+	$Total_Score_Label.Text = "$Total_Score total points"
+
+	if($Game_Score_File -eq $null){
+
+	$Total_Score_Label.Text = ""
+	$Total_Number_Of_Answers_Label.Text = ""
+	}
+
+    Invoke-Expression Dropdown_Problem_Completed_Check
+
+    $Body.Text = "List all of the roots available to the Registry PSProvider to see the entry points using the Get-PSDrive cmdlet and a pipe |."
+
+    $Correct_Incorrect.Text = "Correct, your answer was $Answer."
+
+    $Correct_Incorrect.ForeColor = 'Green'
+    $Completed_In.Text = "Completed in $Timer"
+
+    }
+
+	else{
+		$Body.Text = "List all of the roots available to the Registry PSProvider to see the entry points using the Get-PSDrive cmdlet and a pipe |."
+        $Correct_Incorrect.Text = "Incorrect, your answer was $Answer."
+        $Correct_Incorrect.ForeColor = 'Red'
+        }
+	}
+
+	$Input_Box.Clear()
+}
+
+
 $Windows_Registry_Strip_Menu_Item_Practice.Add_Click( { On_Click_Windows_Registry_Strip_Menu_Item $Windows_Registry_Strip_Menu_Item_Practice $EventArgs} )
 
-$Windows_Registry_Strip_Menu_Item.DropDownItems.AddRange(@($Windows_Registry_Strip_Menu_Item_Practice))
+$Windows_Registry_Strip_Menu_Item_Practice_2.Add_Click( { On_Click_Windows_Registry_Strip_Menu_Item_2 $Windows_Registry_Strip_Menu_Item_Practice_2 $EventArgs} )
+
+$Windows_Registry_Strip_Menu_Item.DropDownItems.AddRange(@($Windows_Registry_Strip_Menu_Item_Practice, $Windows_Registry_Strip_Menu_Item_Practice_2))
 
 ## Active Directory ##
 

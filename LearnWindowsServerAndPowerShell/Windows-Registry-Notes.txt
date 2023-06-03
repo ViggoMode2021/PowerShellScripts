@@ -1,0 +1,51 @@
+Registry
+
+Intro:
+
+    * Windows is the only OS that uses a registry. Linux hides txt files and doesn't want user seeing registry files
+    * In Linux, everything is a txt file
+    * Registry is a centralized database
+
+What is the Windows Registry?:
+
+    * Complex hierarchical database that contains values that affect how OS works.
+    * 15 to 20 megabytes - LOADED INTO RAM - designed for very fast reads and writes
+    * Stored on hard drive is known as registry Hives
+    * Contains keys and values; keys are container objects similar to folders, values are non-container objects similar to files.
+    * Contains 5 main keys:
+        1. HKEY_CLASSES_ROOT "HKCR" (contains information about registered applications, such as file associations, practically deprecated and kept for backwards compatibility)
+        2. HKEY_CURRENT_USER "HKCU" (current user logged in)
+        3. HKEY_LOCAL_MACHINE "HKLM" (contains 7 subkeys and is MOST CRITICAL KEY):
+
+            - SAM (Security Accounts Manager) - holds all usernames and passwords, 6000 variations used to crack file
+            - Security (accessible only by admin)
+            - System (boot process and kernel functions)
+            - Software (3rd party software settings)
+            - Hardware (created dynamically during boot)
+            - Components
+            - BCD_dat (in the \boot folder in the system partition)
+
+        4. HKEY_USERS (used if more than one user logged on, for example, on a server)
+        5. HKEY_CURRENT_CONFIG "HKCC" (contains information gathered at runtime; information stored temporarily or permanently on disk)
+
+Data stored in the registry:
+
+        * String values Unicode
+        * Binary data
+        * Unsigned integers
+        * Symbolic links
+        * Multi-string values
+        * Resource list (Plug and Play)
+        * Resource descriptor (Plug and play)
+        * 64-Bit Integers
+
+Registry is located at Windows/System32/Config
+
+User hive is stored in NTUSERDAT
+
+.NET Framework applications use XML files for configuration
+Portable applications keep configuration data in folder where exe files live (usually in flashdrive)
+
+Control panel is where all tools are at and where users can safely modify configurations
+
+Regedit is for technicians

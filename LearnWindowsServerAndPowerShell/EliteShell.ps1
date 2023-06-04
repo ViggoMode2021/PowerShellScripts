@@ -366,9 +366,7 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 
     $Created = (Get-ChildItem $Game_Score_File).CreationTime
 
-    Write-Host "Created on: $Created"
-
-    $Score_File_Information.Text= "Score File: $New_Game_Filename_Csv"
+    $Score_File_Information.Text= "Score File: $New_Game_Filename_Csv `nCreated on: $Created"
 
     }
 
@@ -674,13 +672,13 @@ $Problem_Completed_Windows_Registry = "set-location -path HKLM:SOFTWARE"
 $Problem_Completed_Windows_Registry = Select-String $Game_Score_File -Pattern $Problem_Completed_Windows_Registry
 
 if($Problem_Completed_Windows_Registry -ne $null -and $Game_Score_File -ne $null){
-$Windows_Registry_Strip_Menu_Item_Practice.Text = 'Windows Registry #1 ( path )'
+$Windows_Registry_Strip_Menu_Item_Practice.Text = 'Windows Registry #1 (path)'
 $Windows_Registry_Strip_Menu_Item_Practice.ForeColor = 'Green'
 }
 
 else{
 
-$Windows_Registry_Strip_Menu_Item_Practice.Text = 'Windows Registry #1 ( path )'
+$Windows_Registry_Strip_Menu_Item_Practice.Text = 'Windows Registry #1 (path)'
 $Windows_Registry_Strip_Menu_Item_Practice.ForeColor = 'Blue'
 
 }
@@ -767,7 +765,7 @@ Invoke-Expression Dropdown_Problem_Completed_Check
 
 $Created = (Get-ChildItem $Game_Score_File).CreationTime
 
-Write-Host "Created on: $Created"
+$Score_File_Information.Text= "Score File: $CSV_Filename `nCreated on: $Created"
 
 }
 }
@@ -3468,7 +3466,7 @@ $Windows_Registry_Strip_Menu_Item.Text = "Windows Registry"
 
 $Windows_Registry_Strip_Menu_Item_Practice.Name = "Windows_Registry_Strip_Menu_Item_Practice"
 $Windows_Registry_Strip_Menu_Item_Practice.Size = New-Object System.Drawing.Size(35, 20)
-$Windows_Registry_Strip_Menu_Item_Practice.Text = "Windows Registry #1 ( path )"
+$Windows_Registry_Strip_Menu_Item_Practice.Text = "Windows Registry #1 (path)"
 
 $Windows_Registry_Strip_Menu_Item_Practice_2.Name = "Windows_Registry_Strip_Menu_Item_Practice_2"
 $Windows_Registry_Strip_Menu_Item_Practice_2.Size = New-Object System.Drawing.Size(35, 20)
@@ -3532,7 +3530,7 @@ function On_Click_Windows_Registry_Strip_Menu_Item($Sender,$e){
 
 	else {
 
-	$Title.Text = "Windows Registry #1 ( path )"
+	$Title.Text = "Windows Registry #1 (path)"
 
 	}
 }
@@ -3555,7 +3553,7 @@ if ($Body.Text = "Using the set-location cmdlet, set the location to HKey Local 
 
 	$New_Row | Add-Content -Path $Game_Score_File
 
-    $New_Row = New-Object PsObject -Property @{Problem = "Windows Registry #1 ( path )" ; Description = "Using the set-location cmdlet, set the location to HKey Local Machine's Software subkey" ; Result = "set-location -path HKLM:SOFTWARE" ; CompletionTime = $Timer ; Date = $Date ; Points = "3"}
+    $New_Row = New-Object PsObject -Property @{Problem = "Windows Registry #1 (path)" ; Description = "Using the set-location cmdlet, set the location to HKey Local Machine's Software subkey" ; Result = "set-location -path HKLM:SOFTWARE" ; CompletionTime = $Timer ; Date = $Date ; Points = "3"}
 
     $New_Results += $New_Row
 

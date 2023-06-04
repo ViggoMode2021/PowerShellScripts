@@ -72,6 +72,14 @@
 
     Get-NetTCPConnection
 
+    # Networking #7 (traceroute)
+
+    Test-NetConnection -ComputerName GitHub.com -TraceRoute
+
+    # Networking #8 (wireless network profiles)
+
+    netsh wlan show profiles
+
 # ------------------------------------------------------------------------------------------------#
 
 # DHCP + DNS #

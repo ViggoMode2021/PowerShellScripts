@@ -187,6 +187,18 @@ $Total_Score_Label.ForeColor = 'Blue'
 
 $Total_Score_Label.Location = New-Object System.Drawing.Point(1600,150)
 
+
+$Score_File_Information = New-Object $Label_Object
+
+$Score_File_Information.Text= ""
+
+$Score_File_Information.AutoSize = $true
+
+$Score_File_Information.Font = 'Verdana,11,style=Bold'
+
+$Score_File_Information.Location = New-Object System.Drawing.Point(1600,650)
+
+
 $Input_Box = New-Object System.Windows.Forms.TextBox
 $Input_Box.Name = "Input_Box"
 $Input_Box.Text = "Enter PowerShell code here"
@@ -349,6 +361,8 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
     $Total_Number_Of_Answers_Label.Text = ""
 
     $Total_Score_Label.Text = ""
+
+    $Score_File_Information.Text= "Score File: $New_Game_Filename_Csv"
 
     }
 
@@ -718,6 +732,8 @@ $global:Game_Score_File = $OpenFileDialog.FileName
 $CSV_Filename = Split-Path $Game_Score_File -Leaf
 
 $Form.Text = "EleetShell - Current score file: $CSV_Filename"
+
+$Score_File_Information.Text= "Score File: $CSV_Filename"
 
 $CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
 

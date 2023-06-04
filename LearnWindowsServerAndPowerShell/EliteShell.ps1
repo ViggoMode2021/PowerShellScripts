@@ -1,4 +1,8 @@
-Import-Module ActiveDirectory
+#Import-Module ActiveDirectory
+
+#netsh wlan show profiles
+
+#netsh wlan show profile name="NETWORK" key=clear
 
 Add-Type -AssemblyName System.Windows.Forms
 
@@ -672,13 +676,13 @@ $Problem_Completed_Windows_Registry = "set-location -path HKLM:SOFTWARE"
 $Problem_Completed_Windows_Registry = Select-String $Game_Score_File -Pattern $Problem_Completed_Windows_Registry
 
 if($Problem_Completed_Windows_Registry -ne $null -and $Game_Score_File -ne $null){
-$Windows_Registry_Strip_Menu_Item_Practice.Text = 'Windows Registry #1 (path)'
+$Windows_Registry_Strip_Menu_Item_Practice.Text = 'Windows Registry #1 ( path )'
 $Windows_Registry_Strip_Menu_Item_Practice.ForeColor = 'Green'
 }
 
 else{
 
-$Windows_Registry_Strip_Menu_Item_Practice.Text = 'Windows Registry #1 (path)'
+$Windows_Registry_Strip_Menu_Item_Practice.Text = 'Windows Registry #1 ( path )'
 $Windows_Registry_Strip_Menu_Item_Practice.ForeColor = 'Blue'
 
 }
@@ -3466,7 +3470,7 @@ $Windows_Registry_Strip_Menu_Item.Text = "Windows Registry"
 
 $Windows_Registry_Strip_Menu_Item_Practice.Name = "Windows_Registry_Strip_Menu_Item_Practice"
 $Windows_Registry_Strip_Menu_Item_Practice.Size = New-Object System.Drawing.Size(35, 20)
-$Windows_Registry_Strip_Menu_Item_Practice.Text = "Windows Registry #1 (path)"
+$Windows_Registry_Strip_Menu_Item_Practice.Text = "Windows Registry #1 ( path )"
 
 $Windows_Registry_Strip_Menu_Item_Practice_2.Name = "Windows_Registry_Strip_Menu_Item_Practice_2"
 $Windows_Registry_Strip_Menu_Item_Practice_2.Size = New-Object System.Drawing.Size(35, 20)
@@ -3530,7 +3534,7 @@ function On_Click_Windows_Registry_Strip_Menu_Item($Sender,$e){
 
 	else {
 
-	$Title.Text = "Windows Registry #1 (path)"
+	$Title.Text = "Windows Registry #1 ( path )"
 
 	}
 }
@@ -3553,7 +3557,7 @@ if ($Body.Text = "Using the set-location cmdlet, set the location to HKey Local 
 
 	$New_Row | Add-Content -Path $Game_Score_File
 
-    $New_Row = New-Object PsObject -Property @{Problem = "Windows Registry #1 (path)" ; Description = "Using the set-location cmdlet, set the location to HKey Local Machine's Software subkey" ; Result = "set-location -path HKLM:SOFTWARE" ; CompletionTime = $Timer ; Date = $Date ; Points = "3"}
+    $New_Row = New-Object PsObject -Property @{Problem = "Windows Registry #1 ( path )" ; Description = "Using the set-location cmdlet, set the location to HKey Local Machine's Software subkey" ; Result = "set-location -path HKLM:SOFTWARE" ; CompletionTime = $Timer ; Date = $Date ; Points = "3"}
 
     $New_Results += $New_Row
 

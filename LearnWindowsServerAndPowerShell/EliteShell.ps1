@@ -10,6 +10,8 @@ $OS = (Get-WMIObject win32_operatingsystem) | Select-Object -expand Name | Out-S
 
 $OS = $OS.Replace("|C:\WINDOWS|\Device\Harddisk0\Partition3", "")
 
+$Screen_Resolution = (Get-WmiObject -Class Win32_VideoController).VideoModeDescription;
+
 $ErrorActionPreference = 'SilentlyContinue'
 
 $Script_Or_Executable_Name = $MyInvocation.InvocationName
@@ -196,7 +198,7 @@ $Score_File_Information.AutoSize = $true
 
 $Score_File_Information.Font = 'Verdana,11,style=Bold'
 
-$Score_File_Information.Location = New-Object System.Drawing.Point(1600,650)
+$Score_File_Information.Location = New-Object System.Drawing.Point(1600,450)
 
 
 $Input_Box = New-Object System.Windows.Forms.TextBox
@@ -312,7 +314,7 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
-	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers total problems solved"
 
     }
 
@@ -361,6 +363,10 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
     $Total_Number_Of_Answers_Label.Text = ""
 
     $Total_Score_Label.Text = ""
+
+    $Created = (Get-ChildItem $Game_Score_File).CreationTime
+
+    Write-Host "Created on: $Created"
 
     $Score_File_Information.Text= "Score File: $New_Game_Filename_Csv"
 
@@ -739,7 +745,7 @@ $CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expa
 
 $global:Number_Of_Correct_Answers = $CSV_Length
 
-$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
+$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers total problems solved"
 
 $CSV_Stuff = Import-CSV -Path $Game_Score_File
 
@@ -749,14 +755,34 @@ $global:Total_Score = $Total_Score
 
 $Total_Score_Label.Text = "$Total_Score total points"
 
+#| Select-Object -expand CompletionTime |
+
+$Average_Time = $CSV_Stuff.CompletionTime | Measure -Average | Select Average | Out-String
+
+Write-Host "Average time is $Average_Time"
+
 $File_Menu_Item.DropDownItems.AddRange(@($New_Game_Strip_Menu_Item, $Load_Game_Strip_Menu_Item, $View_Score_And_Stats_Strip_Menu_Item))
 
 Invoke-Expression Dropdown_Problem_Completed_Check
+
+$Created = (Get-ChildItem $Game_Score_File).CreationTime
+
+Write-Host "Created on: $Created"
 
 }
 }
 
 function On_Click_View_Score_And_Stats_Strip_Menu_Item{
+
+if($Number_Of_Correct_Answers -eq 0){
+
+$MessageBoxTitle = "No score information for $Game_Score_File"
+
+$MessageBoxBody = "There currently are no solved problems for this game file. Please complete some problems and check back!"
+
+$Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+}
 
 $Timer_Start_Time.Stop()
 
@@ -768,7 +794,7 @@ $CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expa
 
 $global:Number_Of_Correct_Answers = $CSV_Length
 
-$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
+$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers total problems solved"
 
 $CSV_Stuff = Import-CSV -Path $Game_Score_File
 
@@ -780,22 +806,19 @@ $Total_Score_Label.Text = "$Total_Score total points"
 
 $global:Total_Score = $Total_Score
 
-<#
 $Average_Time = $CSV_Stuff | Measure-Object CompletionTime -Average | Select-Object -expand CompletionTime | Out-String
 
 Write-Host $Average_Time
 
 $global:Average_Time = $Average_Time
 
-
-#>
 }
 
-function On_Click_View_My_EliteShell_Information_Strip_Menu_Item {
+function On_Click_View_My_EliteShell_Information_Strip_Menu_Item{
 
 $MessageBoxTitle = "My EliteShell Information:"
 
-$MessageBoxBody = "OS: $OS `n Last Run Time: $Last_Accessed_Time"
+$MessageBoxBody = "OS: $OS `nLast Run Time: $Last_Accessed_Time `n`nScreen Resolution: $Screen_Resolution"
 
 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconSuccess)
 
@@ -920,7 +943,7 @@ $Windows_General_Strip_Menu_Item_4, $Windows_General_Strip_Menu_Item_5, $Windows
 
 ## Windows General #1 ##
 
-function On_Click_Boot_Process_Strip_Menu_Item_Learn($Sender,$e){
+function On_Click_Hostname_Strip_Menu_Item_Learn($Sender,$e){
 
     if($Game_Score_File -eq $null){
 
@@ -1012,7 +1035,7 @@ if ($Body.Text = "Find the computer name (hostname) of your Windows machine. Use
 
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
-	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers total problems solved"
 
 	$CSV_Stuff = Import-CSV -Path $Game_Score_File
 
@@ -1150,7 +1173,7 @@ if ($Body.Text = $Description){
 
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
-	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers total problems solved"
 
     Invoke-Expression Dropdown_Problem_Completed_Check
 
@@ -1268,7 +1291,7 @@ if ($Body.Text = "Find the environment variables on this system using a command 
 
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
-	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers total problems solved"
 
 	$CSV_Stuff = Import-CSV -Path $Game_Score_File
 
@@ -1400,7 +1423,7 @@ if ($Body.Text = "Find the processes on this machine where the cpu consumption i
 
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
-	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers total problems solved"
 
 	$CSV_Stuff = Import-CSV -Path $Game_Score_File
 
@@ -1536,7 +1559,7 @@ if ($Body.Text = "Find the disk space of the current machine's C drive"){
 
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
-	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers total problems solved"
 
 	$CSV_Stuff = Import-CSV -Path $Game_Score_File
 
@@ -1672,7 +1695,7 @@ if ($Body.Text = "Find the serial number of this device using the Get-WmiObject 
 
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
-	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers total problems solved"
 
 	$CSV_Stuff = Import-CSV -Path $Game_Score_File
 
@@ -1729,7 +1752,7 @@ if ($Body.Text = "Find the serial number of this device using the Get-WmiObject 
 	$Input_Box.Clear()
 }
 
-$Windows_General_Strip_Menu_Item_Learn.Add_Click( { On_Click_Boot_Process_Strip_Menu_Item_Learn $Windows_General_Strip_Menu_Item_Learn $EventArgs} )
+$Windows_General_Strip_Menu_Item_Learn.Add_Click( { On_Click_Hostname_Strip_Menu_Item_Learn $Windows_General_Strip_Menu_Item_Learn $EventArgs} )
 
 $Windows_General_Strip_Menu_Item_2.Add_Click( { On_Click_Uptime_Strip_Menu_Item $Windows_General_Strip_Menu_Item_2 $EventArgs} )
 
@@ -1854,7 +1877,7 @@ if ($Body.Text = "Create a DHCP server in the Domain controller named dhcp-pract
 
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
-	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers total problems solved"
 
     Invoke-Expression Dropdown_Problem_Completed_Check
 
@@ -1992,7 +2015,7 @@ if ($Body.Text = "Create an active IPv4 DHCP scope named 'test' with a start ran
 
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
-	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers total problems solved"
 
 	$CSV_Stuff = Import-CSV -Path $Game_Score_File
 
@@ -2139,7 +2162,7 @@ if ($Body.Text = "Check if DNS is installed on this system."){
 
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
-	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers total problems solved"
 
 	$CSV_Stuff = Import-CSV -Path $Game_Score_File
 
@@ -2287,7 +2310,7 @@ if ($Body.Text = "Install DNS and management tools on this system"){
 
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
-	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers total problems solved"
 
 	$CSV_Stuff = Import-CSV -Path $Game_Score_File
 
@@ -2434,7 +2457,7 @@ if ($Body.Text = "Add a forward lookup zone with DynamicUpdate for Eliteshell.or
 
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
-	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers total problems solved"
 
 	$CSV_Stuff = Import-CSV -Path $Game_Score_File
 
@@ -2586,7 +2609,7 @@ if ($Body.Text = "Find the IP address of this machine and all corresponding info
 
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
-	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers total problems solved"
 
 	$CSV_Stuff = Import-CSV -Path $Game_Score_File
 
@@ -2722,7 +2745,7 @@ if ($Body.Text = "View the DNS cache on this system"){
 
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
-	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers total problems solved"
 
 	$CSV_Stuff = Import-CSV -Path $Game_Score_File
 
@@ -2858,7 +2881,7 @@ if ($Body.Text = "Flush the DNS cache on this system"){
 
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
-	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers total problems solved"
 
 	$CSV_Stuff = Import-CSV -Path $Game_Score_File
 
@@ -2994,7 +3017,7 @@ if ($Body.Text = "Change the ip address of this machine"){
 
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
-	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers total problems solved"
 
 	$CSV_Stuff = Import-CSV -Path $Game_Score_File
 
@@ -3130,7 +3153,7 @@ if ($Body.Text = "Register (refresh) DHCP leases and DNS names for system networ
 
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
-	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers total problems solved"
 
 	$CSV_Stuff = Import-CSV -Path $Game_Score_File
 
@@ -3260,7 +3283,7 @@ if ($Body.Text = "Find all active listening ports. Hint, don't use the 'netstat'
 
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
-	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers total problems solved"
 
 	$CSV_Stuff = Import-CSV -Path $Game_Score_File
 
@@ -3390,7 +3413,7 @@ if ($Body.Text = "Using the 'Test-NetConnection' cmdlet, find the traceroute to 
 
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
-	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers total problems solved"
 
 	$CSV_Stuff = Import-CSV -Path $Game_Score_File
 
@@ -3544,7 +3567,7 @@ if ($Body.Text = "Using the set-location cmdlet, set the location to HKey Local 
 
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
-	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers total problems solved"
 
 	$CSV_Stuff = Import-CSV -Path $Game_Score_File
 
@@ -3674,7 +3697,7 @@ if ($Body.Text = "List all of the roots available to the Registry PSProvider to 
 
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
-	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers problems solved"
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers total problems solved"
 
 	$CSV_Stuff = Import-CSV -Path $Game_Score_File
 
@@ -3711,7 +3734,6 @@ if ($Body.Text = "List all of the roots available to the Registry PSProvider to 
 	$Input_Box.Clear()
 }
 
-
 $Windows_Registry_Strip_Menu_Item_Practice.Add_Click( { On_Click_Windows_Registry_Strip_Menu_Item $Windows_Registry_Strip_Menu_Item_Practice $EventArgs} )
 
 $Windows_Registry_Strip_Menu_Item_Practice_2.Add_Click( { On_Click_Windows_Registry_Strip_Menu_Item_2 $Windows_Registry_Strip_Menu_Item_Practice_2 $EventArgs} )
@@ -3724,7 +3746,7 @@ $Active_Directory_Strip_Menu_Item.Name = "Active_Directory_Strip_Menu_Item"
 $Active_Directory_Strip_Menu_Item.Size = New-Object System.Drawing.Size(51, 20)
 $Active_Directory_Strip_Menu_Item.Text = "Active Directory"
 
-$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Total_Number_Of_Answers_Label, $Total_Score_Label, $Score_Box, $Completed_In, $Correct_Incorrect))
+$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Total_Number_Of_Answers_Label, $Total_Score_Label, $Score_Box, $Completed_In, $Correct_Incorrect, $Score_File_Information))
 
 ## Form dialogue
 $Form.AutoScale = $true

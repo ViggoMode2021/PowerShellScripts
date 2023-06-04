@@ -1,9 +1,5 @@
 #Import-Module ActiveDirectory
 
-#netsh wlan show profiles
-
-#netsh wlan show profile name="NETWORK" key=clear
-
 Add-Type -AssemblyName System.Windows.Forms
 
 Add-Type -AssemblyName PresentationCore,PresentationFramework
@@ -33,6 +29,19 @@ $Last_Accessed_Time = Get-ChildItem -Path $Script_Or_Executable_Name -Recurse |
 Get-ItemProperty | select lastaccesstime | Select-Object -expand lastaccesstime
 
 }
+
+$DesktopPath = [Environment]::GetFolderPath("Desktop")
+$urlimage = "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/LearnWindowsServerAndPowerShell/EliteShell-Logo-V1.png"
+$pathimage = "$DesktopPath\EliteShell-Logo-V1.png"
+Invoke-WebRequest $urlimage -OutFile $pathimage
+
+
+$EliteShell_Logo = New-Object System.Windows.Forms.PictureBox 
+$EliteShell_Logo.Location = New-Object System.Drawing.Point(30,600) 
+$EliteShell_Logo.Width =  $logo.Size.Width;
+$EliteShell_Logo.Height =  $logo.Size.Height;
+$logo = [System.Drawing.Image]::FromFile("$pathimage")
+$EliteShell_Logo.Image = $logo
 
 <#
 
@@ -3916,7 +3925,7 @@ $Active_Directory_Strip_Menu_Item.Name = "Active_Directory_Strip_Menu_Item"
 $Active_Directory_Strip_Menu_Item.Size = New-Object System.Drawing.Size(51, 20)
 $Active_Directory_Strip_Menu_Item.Text = "Active Directory"
 
-$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $The_Learn_More_Button, $Total_Number_Of_Answers_Label, $Total_Score_Label, $Score_Box, $Completed_In, $Correct_Incorrect, $Score_File_Information))
+$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $EliteShell_Logo, $The_Submit_Button, $The_Learn_More_Button, $Total_Number_Of_Answers_Label, $Total_Score_Label, $Score_Box, $Completed_In, $Correct_Incorrect, $Score_File_Information))
 
 ## Form dialogue
 $Form.AutoScale = $true

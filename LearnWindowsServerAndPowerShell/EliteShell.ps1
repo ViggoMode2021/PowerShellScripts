@@ -93,6 +93,7 @@ $Networking_Strip_Menu_Item_Practice_4 = New-Object System.Windows.Forms.ToolStr
 $Networking_Strip_Menu_Item_Practice_5 = New-Object System.Windows.Forms.ToolStripMenuItem
 $Networking_Strip_Menu_Item_Practice_6 = New-Object System.Windows.Forms.ToolStripMenuItem
 $Networking_Strip_Menu_Item_Practice_7 = New-Object System.Windows.Forms.ToolStripMenuItem
+$Networking_Strip_Menu_Item_Practice_8 = New-Object System.Windows.Forms.ToolStripMenuItem
 
 $Windows_Registry_Strip_Menu_Item_Practice = New-Object System.Windows.Forms.ToolStripMenuItem
 $Windows_Registry_Strip_Menu_Item_Practice_2 = New-Object System.Windows.Forms.ToolStripMenuItem
@@ -671,18 +672,34 @@ $Networking_Strip_Menu_Item_Practice_7.ForeColor = 'Blue'
 
 }
 
+$Problem_Completed_Networking_8 = "netsh wlan show profiles"
+
+$Problem_Completed_Networking_8 = Select-String $Game_Score_File -Pattern $Problem_Completed_Networking_8
+
+if($Problem_Completed_Networking_8 -ne $null -and $Game_Score_File -ne $null){
+$Networking_Strip_Menu_Item_Practice_8.Text = 'Networking #8 (wireless network profiles)'
+$Networking_Strip_Menu_Item_Practice_8.ForeColor = 'Green'
+}
+
+else{
+
+$Networking_Strip_Menu_Item_Practice_8.Text = 'Networking #8 (wireless network profiles)'
+$Networking_Strip_Menu_Item_Practice_8.ForeColor = 'Blue'
+
+}
+
 $Problem_Completed_Windows_Registry = "set-location -path HKLM:SOFTWARE"
 
 $Problem_Completed_Windows_Registry = Select-String $Game_Score_File -Pattern $Problem_Completed_Windows_Registry
 
 if($Problem_Completed_Windows_Registry -ne $null -and $Game_Score_File -ne $null){
-$Windows_Registry_Strip_Menu_Item_Practice.Text = 'Windows Registry #1 ( path )'
+$Windows_Registry_Strip_Menu_Item_Practice.Text = 'Windows Registry #1 (path)'
 $Windows_Registry_Strip_Menu_Item_Practice.ForeColor = 'Green'
 }
 
 else{
 
-$Windows_Registry_Strip_Menu_Item_Practice.Text = 'Windows Registry #1 ( path )'
+$Windows_Registry_Strip_Menu_Item_Practice.Text = 'Windows Registry #1 (path)'
 $Windows_Registry_Strip_Menu_Item_Practice.ForeColor = 'Blue'
 
 }
@@ -692,13 +709,13 @@ $Problem_Completed_Windows_Registry_2 = "Get-PSDrive -PSProvider 'Registry' | Se
 $Problem_Completed_Windows_Registry_2 = Select-String $Game_Score_File -Pattern $Problem_Completed_Windows_Registry_2
 
 if($Problem_Completed_Windows_Registry_2 -ne $null -and $Game_Score_File -ne $null){
-$Windows_Registry_Strip_Menu_Item_Practice_2.Text = 'Windows Registry #2 ( root keys )'
+$Windows_Registry_Strip_Menu_Item_Practice_2.Text = 'Windows Registry #2 (root keys)'
 $Windows_Registry_Strip_Menu_Item_Practice_2.ForeColor = 'Green'
 }
 
 else{
 
-$Windows_Registry_Strip_Menu_Item_Practice_2.Text = 'Windows Registry #2 ( root keys )'
+$Windows_Registry_Strip_Menu_Item_Practice_2.Text = 'Windows Registry #2 (root keys)'
 $Windows_Registry_Strip_Menu_Item_Practice_2.ForeColor = 'Blue'
 
 }
@@ -990,7 +1007,25 @@ function On_Click_Hostname_Strip_Menu_Item_Learn($Sender,$e){
 
 	$The_Submit_Button.Add_Click({Selected_Practice_Problem})
 
-	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
+
+    $The_Learn_More_Button = New-Object System.Windows.Forms.Button
+
+	$The_Learn_More_Button.Name = "The_Learn_More_Button"
+
+	$The_Learn_More_Button.Text = "Learn More"
+
+    $The_Learn_More_Button.AutoSize = $True
+
+	$The_Learn_More_Button.Font = 'Calibri,12,style=Bold'
+
+	$The_Learn_More_Button.ForeColor = 'Blue'
+
+	$The_Learn_More_Button.Location = New-Object System.Drawing.Point(200,200)
+
+	$The_Learn_More_Button.Add_Click({Start-Process "https://www.lifewire.com/what-is-a-hostname-2625906"})
+
+
+	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $The_Learn_More_Button, $Input_Box))
 
 	$Problem_Completed = "hostname"
 
@@ -3344,7 +3379,7 @@ function On_Click_Networking_Strip_Menu_Item_7($Sender,$e){
 
 	$global:Timer_Start_Time = $Timer
 
-    $Title.Text= "Networking #6"
+    $Title.Text= "Networking #7"
 
 	$Title.ForeColor = 'Blue'
 
@@ -3403,7 +3438,7 @@ if ($Body.Text = "Using the 'Test-NetConnection' cmdlet, find the traceroute to 
 
 	$New_Row | Add-Content -Path $Game_Score_File
 
-    $New_Row = New-Object PsObject -Property @{Problem = "Networking #7" ; Description = "Using the 'Test-NetConnection' cmdlet, find the traceroute to GitHub.com." ; Result = "" ; CompletionTime = $Timer ; Date = $Date ; Points = "3"}
+    $New_Row = New-Object PsObject -Property @{Problem = "Networking #7" ; Description = "Using the 'Test-NetConnection' cmdlet, find the traceroute to GitHub.com." ; Result = "Test-NetConnection -ComputerName google.com -TraceRoute" ; CompletionTime = $Timer ; Date = $Date ; Points = "3"}
 
     $New_Results += $New_Row
 
@@ -3446,6 +3481,137 @@ if ($Body.Text = "Using the 'Test-NetConnection' cmdlet, find the traceroute to 
 	$Input_Box.Clear()
 }
 
+## Networking 8 ##
+
+$Networking_Strip_Menu_Item_Practice_8.Name = "Networking_Strip_Menu_Item_Practice_8"
+$Networking_Strip_Menu_Item_Practice_8.Size = New-Object System.Drawing.Size(35, 20)
+$Networking_Strip_Menu_Item_Practice_8.Text = "Networking #8 (wireless network profiles)"
+
+function On_Click_Networking_Strip_Menu_Item_8($Sender,$e){
+
+    if($Game_Score_File -eq $null){
+
+    $MessageBoxTitle = "No score file loaded."
+
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded."
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+    }
+
+    $Completed_In.Text= ""
+
+    $Correct_Incorrect.Text= ""
+
+	$Timer_Start_Time.Stop()
+
+    $Timer = [System.Diagnostics.Stopwatch]::StartNew()
+
+	$global:Timer_Start_Time = $Timer
+
+    $Title.Text= "Networking #8"
+
+	$Title.ForeColor = 'Blue'
+
+	$Body.Text = "Complete the 'netsh' command to show all stored WLAN profiles on this machine"
+
+    $Form.Controls.RemoveByKey("The_Submit_Button")
+
+	$The_Submit_Button = New-Object System.Windows.Forms.Button
+
+	$The_Submit_Button.Name = "The_Submit_Button"
+
+	$The_Submit_Button.Text = "Submit"
+
+	$The_Submit_Button.AutoSize = $True
+
+	$The_Submit_Button.Font = 'Verdana,12,style=Bold'
+
+	$The_Submit_Button.ForeColor = 'Blue'
+
+	$The_Submit_Button.Location = New-Object System.Drawing.Point(30,200)
+
+	$The_Submit_Button.Add_Click({Selected_Networking_Practice_Problem_8})
+
+	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
+
+	$Problem_Completed = "netsh wlan show profiles"
+
+	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
+
+	if($Problem_Completed_Check -ne $null) {
+	$Title.Text = "Networking #8 (COMPLETED)"
+	$Title.ForeColor = 'Green'}
+
+	else {
+
+	$Title.Text = "Networking #8"
+
+	}
+}
+
+function Selected_Networking_Practice_Problem_8{
+
+$Answer = @($Input_Box.Text)
+
+Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb runAs
+
+if ($Body.Text = "Complete the 'netsh' command to show all stored WLAN profiles on this machine"){
+	if($Input_Box.Text -eq "netsh wlan show profiles"){
+
+	$Time_Elapsed = $Timer_Start_Time.Elapsed
+
+	$Timer = $([string]::Format("`{0:d2}:{1:d2}:{2:d2}",
+	$Time_Elapsed.hours,
+	$Time_Elapsed.minutes,
+	$Time_Elapsed.seconds))
+
+	$New_Row | Add-Content -Path $Game_Score_File
+
+    $New_Row = New-Object PsObject -Property @{Problem = "Networking #8" ; Description = "Complete the 'netsh' command to show all stored WLAN profiles on this machine" ; Result = "netsh wlan show profiles" ; CompletionTime = $Timer ; Date = $Date ; Points = "1"}
+
+    $New_Results += $New_Row
+
+    $New_Results | Export-CSV -append $Game_Score_File
+
+	$Timer.Stop
+
+	$CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
+
+	$global:Number_Of_Correct_Answers = $CSV_Length
+
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers total problems solved"
+
+	$CSV_Stuff = Import-CSV -Path $Game_Score_File
+
+	$Total_Score = $CSV_Stuff | Measure-Object Points -Sum | Select-Object -expand Sum | Out-String
+
+	$global:Total_Score = $Total_Score
+
+	$Total_Score_Label.Text = "$Total_Score total points"
+
+    Invoke-Expression Dropdown_Problem_Completed_Check
+
+    $Body.Text = "Complete the 'netsh' command to show all stored WLAN profiles on this machine"
+
+    $Correct_Incorrect.Text = "Correct, your answer was $Answer."
+
+    $Correct_Incorrect.ForeColor = 'Green'
+    $Completed_In.Text = "Completed in $Timer"
+
+    }
+
+	else{
+		$Body.Text = "Complete the 'netsh' command to show all stored WLAN profiles on this machine"
+        $Correct_Incorrect.Text = "Incorrect, your answer was $Answer."
+        $Correct_Incorrect.ForeColor = 'Red'
+        }
+	}
+
+	$Input_Box.Clear()
+}
+
+
 $Networking_Strip_Menu_Item_Practice.Add_Click( { On_Click_Networking_Strip_Menu_Item $Networking_Strip_Menu_Item_Practice $EventArgs} )
 
 $Networking_Strip_Menu_Item_Practice_2.Add_Click( { On_Click_Networking_Strip_Menu_Item_2 $Networking_Strip_Menu_Item_Practice_2 $EventArgs} )
@@ -3460,7 +3626,9 @@ $Networking_Strip_Menu_Item_Practice_6.Add_Click( { On_Click_Networking_Strip_Me
 
 $Networking_Strip_Menu_Item_Practice_7.Add_Click( { On_Click_Networking_Strip_Menu_Item_7 $Networking_Strip_Menu_Item_Practice_7 $EventArgs} )
 
-$Networking_Strip_Menu_Item.DropDownItems.AddRange(@($Networking_Strip_Menu_Item_Practice, $Networking_Strip_Menu_Item_Practice_2, $Networking_Strip_Menu_Item_Practice_3, $Networking_Strip_Menu_Item_Practice_4, $Networking_Strip_Menu_Item_Practice_5, $Networking_Strip_Menu_Item_Practice_6, $Networking_Strip_Menu_Item_Practice_7))
+$Networking_Strip_Menu_Item_Practice_8.Add_Click( { On_Click_Networking_Strip_Menu_Item_8 $Networking_Strip_Menu_Item_Practice_8 $EventArgs} )
+
+$Networking_Strip_Menu_Item.DropDownItems.AddRange(@($Networking_Strip_Menu_Item_Practice, $Networking_Strip_Menu_Item_Practice_2, $Networking_Strip_Menu_Item_Practice_3, $Networking_Strip_Menu_Item_Practice_4, $Networking_Strip_Menu_Item_Practice_5, $Networking_Strip_Menu_Item_Practice_6, $Networking_Strip_Menu_Item_Practice_7, $Networking_Strip_Menu_Item_Practice_8))
 
 ## start Windows General menu item ##
 
@@ -3470,11 +3638,11 @@ $Windows_Registry_Strip_Menu_Item.Text = "Windows Registry"
 
 $Windows_Registry_Strip_Menu_Item_Practice.Name = "Windows_Registry_Strip_Menu_Item_Practice"
 $Windows_Registry_Strip_Menu_Item_Practice.Size = New-Object System.Drawing.Size(35, 20)
-$Windows_Registry_Strip_Menu_Item_Practice.Text = "Windows Registry #1 ( path )"
+$Windows_Registry_Strip_Menu_Item_Practice.Text = "Windows Registry #1 (path)"
 
 $Windows_Registry_Strip_Menu_Item_Practice_2.Name = "Windows_Registry_Strip_Menu_Item_Practice_2"
 $Windows_Registry_Strip_Menu_Item_Practice_2.Size = New-Object System.Drawing.Size(35, 20)
-$Windows_Registry_Strip_Menu_Item_Practice_2.Text = "Windows Registry #2 ( root keys )"
+$Windows_Registry_Strip_Menu_Item_Practice_2.Text = "Windows Registry #2 (root keys)"
 
 function On_Click_Windows_Registry_Strip_Menu_Item($Sender,$e){
 
@@ -3534,7 +3702,7 @@ function On_Click_Windows_Registry_Strip_Menu_Item($Sender,$e){
 
 	else {
 
-	$Title.Text = "Windows Registry #1 ( path )"
+	$Title.Text = "Windows Registry #1 (path)"
 
 	}
 }
@@ -3557,7 +3725,7 @@ if ($Body.Text = "Using the set-location cmdlet, set the location to HKey Local 
 
 	$New_Row | Add-Content -Path $Game_Score_File
 
-    $New_Row = New-Object PsObject -Property @{Problem = "Windows Registry #1 ( path )" ; Description = "Using the set-location cmdlet, set the location to HKey Local Machine's Software subkey" ; Result = "set-location -path HKLM:SOFTWARE" ; CompletionTime = $Timer ; Date = $Date ; Points = "3"}
+    $New_Row = New-Object PsObject -Property @{Problem = "Windows Registry #1 (path)" ; Description = "Using the set-location cmdlet, set the location to HKey Local Machine's Software subkey" ; Result = "set-location -path HKLM:SOFTWARE" ; CompletionTime = $Timer ; Date = $Date ; Points = "3"}
 
     $New_Results += $New_Row
 
@@ -3664,7 +3832,7 @@ function On_Click_Windows_Registry_Strip_Menu_Item_2($Sender,$e){
 
 	else {
 
-	$Title.Text = "Windows Registry #2 ( root keys )"
+	$Title.Text = "Windows Registry #2 (root keys)"
 
 	}
 }
@@ -3687,7 +3855,7 @@ if ($Body.Text = "List all of the roots available to the Registry PSProvider to 
 
 	$New_Row | Add-Content -Path $Game_Score_File
 
-    $New_Row = New-Object PsObject -Property @{Problem = "Windows Registry #2 ( root keys )" ; Description = "List all of the roots available to the Registry PSProvider to see the entry points using the Get-PSDrive cmdlet and a pipe |." ; Result = "Get-PSDrive -PSProvider 'Registry' | Select-Object -Property Name, Root" ; CompletionTime = $Timer ; Date = $Date ; Points = "3"}
+    $New_Row = New-Object PsObject -Property @{Problem = "Windows Registry #2 (root keys)" ; Description = "List all of the roots available to the Registry PSProvider to see the entry points using the Get-PSDrive cmdlet and a pipe |." ; Result = "Get-PSDrive -PSProvider 'Registry' | Select-Object -Property Name, Root" ; CompletionTime = $Timer ; Date = $Date ; Points = "3"}
 
     $New_Results += $New_Row
 
@@ -3748,7 +3916,7 @@ $Active_Directory_Strip_Menu_Item.Name = "Active_Directory_Strip_Menu_Item"
 $Active_Directory_Strip_Menu_Item.Size = New-Object System.Drawing.Size(51, 20)
 $Active_Directory_Strip_Menu_Item.Text = "Active Directory"
 
-$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Total_Number_Of_Answers_Label, $Total_Score_Label, $Score_Box, $Completed_In, $Correct_Incorrect, $Score_File_Information))
+$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $The_Learn_More_Button, $Total_Number_Of_Answers_Label, $Total_Score_Label, $Score_Box, $Completed_In, $Correct_Incorrect, $Score_File_Information))
 
 ## Form dialogue
 $Form.AutoScale = $true

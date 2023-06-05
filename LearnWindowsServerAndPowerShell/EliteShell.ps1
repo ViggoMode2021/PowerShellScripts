@@ -12,6 +12,8 @@ $OS = $OS.Replace("|C:\WINDOWS|\Device\Harddisk0\Partition3", "")
 
 $Screen_Resolution = (Get-WmiObject -Class Win32_VideoController).VideoModeDescription;
 
+$Architecture = $Env:PROCESSOR_ARCHITECTURE
+
 $ErrorActionPreference = 'SilentlyContinue'
 
 $Script_Or_Executable_Name = $MyInvocation.InvocationName
@@ -35,9 +37,8 @@ $urlimage = "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/m
 $pathimage = "$DesktopPath\EliteShell-Logo-V1.png"
 Invoke-WebRequest $urlimage -OutFile $pathimage
 
-
-$EliteShell_Logo = New-Object System.Windows.Forms.PictureBox 
-$EliteShell_Logo.Location = New-Object System.Drawing.Point(30,600) 
+$EliteShell_Logo = New-Object System.Windows.Forms.PictureBox
+$EliteShell_Logo.Location = New-Object System.Drawing.Point(30,650)
 $EliteShell_Logo.Width =  $logo.Size.Width;
 $EliteShell_Logo.Height =  $logo.Size.Height;
 $logo = [System.Drawing.Image]::FromFile("$pathimage")
@@ -846,7 +847,7 @@ function On_Click_View_My_EliteShell_Information_Strip_Menu_Item{
 
 $MessageBoxTitle = "My EliteShell Information:"
 
-$MessageBoxBody = "OS: $OS `nLast Run Time: $Last_Accessed_Time `n`nScreen Resolution: $Screen_Resolution"
+$MessageBoxBody = "OS: $OS `nLast Run Time: $Last_Accessed_Time `n`nScreen Resolution: $Screen_Resolution `n`nArchitecture: $Architecture"
 
 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconSuccess)
 
@@ -1016,6 +1017,7 @@ function On_Click_Hostname_Strip_Menu_Item_Learn($Sender,$e){
 
 	$The_Submit_Button.Add_Click({Selected_Practice_Problem})
 
+    $Form.Controls.RemoveByKey("The_Learn_More_Button")
 
     $The_Learn_More_Button = New-Object System.Windows.Forms.Button
 
@@ -1032,7 +1034,6 @@ function On_Click_Hostname_Strip_Menu_Item_Learn($Sender,$e){
 	$The_Learn_More_Button.Location = New-Object System.Drawing.Point(200,200)
 
 	$The_Learn_More_Button.Add_Click({Start-Process "https://www.lifewire.com/what-is-a-hostname-2625906"})
-
 
 	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $The_Learn_More_Button, $Input_Box))
 
@@ -1172,7 +1173,25 @@ function On_Click_Uptime_Strip_Menu_Item($Sender,$e){
 
 	$The_Submit_Button.Add_Click({Selected_Windows_General_Problem_2})
 
-	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
+	$Form.Controls.RemoveByKey("The_Learn_More_Button")
+
+	$The_Learn_More_Button = New-Object System.Windows.Forms.Button
+
+	$The_Learn_More_Button.Name = "The_Learn_More_Button"
+
+	$The_Learn_More_Button.Text = "Learn More"
+
+    $The_Learn_More_Button.AutoSize = $True
+
+	$The_Learn_More_Button.Font = 'Calibri,12,style=Bold'
+
+	$The_Learn_More_Button.ForeColor = 'Blue'
+
+	$The_Learn_More_Button.Location = New-Object System.Drawing.Point(200,200)
+
+	$The_Learn_More_Button.Add_Click({Start-Process "https://www.atera.com/blog/how-to-check-system-uptime-on-windows/"})
+
+	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $The_Learn_More_Button, $Input_Box))
 
 	$Problem_Completed = "systeminfo | find 'Boot Time'"
 
@@ -1289,7 +1308,25 @@ function On_Click_Env_Strip_Menu_Item($Sender,$e){
 
 	$The_Submit_Button.Add_Click({Selected_Windows_General_Problem_3})
 
-	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
+	$Form.Controls.RemoveByKey("The_Learn_More_Button")
+
+	$The_Learn_More_Button = New-Object System.Windows.Forms.Button
+
+	$The_Learn_More_Button.Name = "The_Learn_More_Button"
+
+	$The_Learn_More_Button.Text = "Learn More"
+
+    $The_Learn_More_Button.AutoSize = $True
+
+	$The_Learn_More_Button.Font = 'Calibri,12,style=Bold'
+
+	$The_Learn_More_Button.ForeColor = 'Blue'
+
+	$The_Learn_More_Button.Location = New-Object System.Drawing.Point(200,200)
+
+	$The_Learn_More_Button.Add_Click({Start-Process "https://www.digitalcitizen.life/simple-questions-what-are-environment-variables/"})
+
+	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $The_Learn_More_Button, $Input_Box))
 
 	$Problem_Completed = "dir env:"
 

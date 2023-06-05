@@ -14,6 +14,8 @@ $Screen_Resolution = (Get-WmiObject -Class Win32_VideoController).VideoModeDescr
 
 $Architecture = $Env:PROCESSOR_ARCHITECTURE
 
+$PowerShell_Version = (Get-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\PowerShell\3\PowerShellEngine -Name 'PowerShellVersion').PowerShellVersion
+
 $ErrorActionPreference = 'SilentlyContinue'
 
 $Script_Or_Executable_Name = $MyInvocation.InvocationName
@@ -847,7 +849,8 @@ function On_Click_View_My_EliteShell_Information_Strip_Menu_Item{
 
 $MessageBoxTitle = "My EliteShell Information:"
 
-$MessageBoxBody = "OS: $OS `nLast Run Time: $Last_Accessed_Time `n`nScreen Resolution: $Screen_Resolution `n`nArchitecture: $Architecture"
+$MessageBoxBody = "OS: $OS `nLast Run Time: $Last_Accessed_Time `n`nScreen Resolution: $Screen_Resolution 
+`n`nArchitecture: $Architecture `n`nPowerShell Version: $PowerShell_Version"
 
 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconSuccess)
 

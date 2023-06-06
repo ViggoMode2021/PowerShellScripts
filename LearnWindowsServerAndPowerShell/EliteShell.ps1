@@ -1459,7 +1459,25 @@ function On_Click_Cpu_Strip_Menu_Item($Sender,$e){
 
 	$The_Submit_Button.Add_Click({Selected_Windows_General_Problem_4})
 
-	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
+	$Form.Controls.RemoveByKey("The_Learn_More_Button")
+
+	$The_Learn_More_Button = New-Object System.Windows.Forms.Button
+
+	$The_Learn_More_Button.Name = "The_Learn_More_Button"
+
+	$The_Learn_More_Button.Text = "Learn More"
+
+    $The_Learn_More_Button.AutoSize = $True
+
+	$The_Learn_More_Button.Font = 'Calibri,12,style=Bold'
+
+	$The_Learn_More_Button.ForeColor = 'Blue'
+
+	$The_Learn_More_Button.Location = New-Object System.Drawing.Point(200,200)
+
+	$The_Learn_More_Button.Add_Click({Start-Process "https://www.howtogeek.com/405806/windows-task-manager-the-complete-guide/"})
+
+	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $The_Learn_More_Button, $Input_Box))
 
 	$Problem_Completed = "Get-Process | Where-Object { $_.CPU -gt 20 }"
 
@@ -1597,7 +1615,25 @@ function On_Click_Disk_Space_Strip_Menu_Item($Sender,$e){
 
 	$The_Submit_Button.Add_Click({Selected_Windows_General_Problem_5})
 
-	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
+	$Form.Controls.RemoveByKey("The_Learn_More_Button")
+
+	$The_Learn_More_Button = New-Object System.Windows.Forms.Button
+
+	$The_Learn_More_Button.Name = "The_Learn_More_Button"
+
+	$The_Learn_More_Button.Text = "Learn More"
+
+    $The_Learn_More_Button.AutoSize = $True
+
+	$The_Learn_More_Button.Font = 'Calibri,12,style=Bold'
+
+	$The_Learn_More_Button.ForeColor = 'Blue'
+
+	$The_Learn_More_Button.Location = New-Object System.Drawing.Point(200,200)
+
+	$The_Learn_More_Button.Add_Click({Start-Process "https://www.computerhope.com/jargon/d/diskcapa.htm"})
+
+	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $The_Learn_More_Button, $Input_Box))
 
 	$Problem_Completed = "Get-PSDrive C"
 
@@ -1733,7 +1769,25 @@ function On_Click_Serial_Number_Strip_Menu_Item($Sender,$e){
 
 	$The_Submit_Button.Add_Click({Selected_Windows_General_Problem_6})
 
-	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
+	$Form.Controls.RemoveByKey("The_Learn_More_Button")
+
+    $The_Learn_More_Button = New-Object System.Windows.Forms.Button
+
+    $The_Learn_More_Button.Name = "The_Learn_More_Button"
+
+    $The_Learn_More_Button.Text = "Learn More"
+
+    $The_Learn_More_Button.AutoSize = $True
+
+    $The_Learn_More_Button.Font = 'Calibri,12,style=Bold'
+
+    $The_Learn_More_Button.ForeColor = 'Blue'
+
+    $The_Learn_More_Button.Location = New-Object System.Drawing.Point(200,200)
+
+    $The_Learn_More_Button.Add_Click({Start-Process "https://myshadow.org/computer-serial-number"})
+
+    $Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $The_Learn_More_Button, $Input_Box))
 
 	$Problem_Completed = "Get-WmiObject win32_bios | Select-Object -ExpandProperty SerialNumber"
 
@@ -1830,8 +1884,6 @@ if ($Body.Text = "Find the serial number of this device using the Get-WmiObject 
 
           Write-Host $Length_Off
 
-          Write-Host "mkehaoksdofasd"
-
             }
 	    }
 
@@ -1916,7 +1968,25 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice($Sender,$e){
 
 	$The_Submit_Button.Add_Click({Selected_DHCP_DNS_Practice_Problem})
 
-	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
+	$Form.Controls.RemoveByKey("The_Learn_More_Button")
+
+    $The_Learn_More_Button = New-Object System.Windows.Forms.Button
+
+    $The_Learn_More_Button.Name = "The_Learn_More_Button"
+
+    $The_Learn_More_Button.Text = "Learn More"
+
+    $The_Learn_More_Button.AutoSize = $True
+
+    $The_Learn_More_Button.Font = 'Calibri,12,style=Bold'
+
+    $The_Learn_More_Button.ForeColor = 'Blue'
+
+    $The_Learn_More_Button.Location = New-Object System.Drawing.Point(200,200)
+
+    $The_Learn_More_Button.Add_Click({Start-Process "https://activedirectorypro.com/configure-dhcp-server/"})
+
+    $Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $The_Learn_More_Button, $Input_Box))
 
 	$Problem_Completed = "Add-DhcpServerInDC -DNSName dhcp-practice -IPAddress 172.16.0.50"
 
@@ -2052,7 +2122,25 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_2($Sender,$e){
 
 	$The_Submit_Button.Add_Click({Selected_DHCP_DNS_Practice_Problem_2})
 
-	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
+	$Form.Controls.RemoveByKey("The_Learn_More_Button")
+
+    $The_Learn_More_Button = New-Object System.Windows.Forms.Button
+
+    $The_Learn_More_Button.Name = "The_Learn_More_Button"
+
+    $The_Learn_More_Button.Text = "Learn More"
+
+    $The_Learn_More_Button.AutoSize = $True
+
+    $The_Learn_More_Button.Font = 'Calibri,12,style=Bold'
+
+    $The_Learn_More_Button.ForeColor = 'Blue'
+
+    $The_Learn_More_Button.Location = New-Object System.Drawing.Point(200,200)
+
+    $The_Learn_More_Button.Add_Click({Start-Process "https://www.serverlab.ca/tutorials/windows/network-services-windows/step-step-creating-windows-server-dhcp-scope/"})
+
+    $Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $The_Learn_More_Button, $Input_Box))
 
 	$Problem_Completed = "Add-DhcpServerV4Scope -name 'test' -StartRange 172.16.0.100 -Endrange 172.16.0.200 -SubnetMask 255.255.255.0 -State Active"
 
@@ -2200,7 +2288,25 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_3($Sender,$e){
 
 	$The_Submit_Button.Add_Click({Selected_DHCP_DNS_Practice_Problem_3})
 
-	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
+	$Form.Controls.RemoveByKey("The_Learn_More_Button")
+
+    $The_Learn_More_Button = New-Object System.Windows.Forms.Button
+
+    $The_Learn_More_Button.Name = "The_Learn_More_Button"
+
+    $The_Learn_More_Button.Text = "Learn More"
+
+    $The_Learn_More_Button.AutoSize = $True
+
+    $The_Learn_More_Button.Font = 'Calibri,12,style=Bold'
+
+    $The_Learn_More_Button.ForeColor = 'Blue'
+
+    $The_Learn_More_Button.Location = New-Object System.Drawing.Point(200,200)
+
+    $The_Learn_More_Button.Add_Click({Start-Process "https://www.hostwinds.com/tutorials/setup-configure-dns-windows-server"})
+
+    $Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $The_Learn_More_Button, $Input_Box))
 
 	$Problem_Completed = "Get-WindowsFeature -Name *DNS*"
 
@@ -2347,7 +2453,25 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_4($Sender,$e){
 
 	$The_Submit_Button.Add_Click({Selected_DHCP_DNS_Practice_Problem_4})
 
-	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
+	$Form.Controls.RemoveByKey("The_Learn_More_Button")
+
+    $The_Learn_More_Button = New-Object System.Windows.Forms.Button
+
+    $The_Learn_More_Button.Name = "The_Learn_More_Button"
+
+    $The_Learn_More_Button.Text = "Learn More"
+
+    $The_Learn_More_Button.AutoSize = $True
+
+    $The_Learn_More_Button.Font = 'Calibri,12,style=Bold'
+
+    $The_Learn_More_Button.ForeColor = 'Blue'
+
+    $The_Learn_More_Button.Location = New-Object System.Drawing.Point(200,200)
+
+    $The_Learn_More_Button.Add_Click({Start-Process "https://learn.microsoft.com/en-us/iis/web-hosting/installing-infrastructure-components/dns-server"})
+
+    $Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $The_Learn_More_Button, $Input_Box))
 
 	$Problem_Completed = "Install-WindowsFeature -Name DNS -IncludeManagementTools"
 
@@ -2495,7 +2619,25 @@ function On_Click_DHCP_DNS_Strip_Menu_Item_Practice_5($Sender,$e){
 
 	$The_Submit_Button.Add_Click({Selected_DHCP_DNS_Practice_Problem_5})
 
-	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
+	$Form.Controls.RemoveByKey("The_Learn_More_Button")
+
+    $The_Learn_More_Button = New-Object System.Windows.Forms.Button
+
+    $The_Learn_More_Button.Name = "The_Learn_More_Button"
+
+    $The_Learn_More_Button.Text = "Learn More"
+
+    $The_Learn_More_Button.AutoSize = $True
+
+    $The_Learn_More_Button.Font = 'Calibri,12,style=Bold'
+
+    $The_Learn_More_Button.ForeColor = 'Blue'
+
+    $The_Learn_More_Button.Location = New-Object System.Drawing.Point(200,200)
+
+    $The_Learn_More_Button.Add_Click({Start-Process "https://www.sciencedirect.com/topics/computer-science/forward-lookup-zone"})
+
+    $Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $The_Learn_More_Button, $Input_Box))
 
 	$Problem_Completed = "Add-DnsServerPrimaryZone -Name Eliteshell.org -Zonefile Eliteshell.org.DNS -DynamicUpdate NonsecureAndSecure"
 
@@ -2648,7 +2790,25 @@ function On_Click_Networking_Strip_Menu_Item($Sender,$e){
 
 	$The_Submit_Button.Add_Click({Selected_Networking_Practice_Problem})
 
-	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
+	$Form.Controls.RemoveByKey("The_Learn_More_Button")
+
+    $The_Learn_More_Button = New-Object System.Windows.Forms.Button
+
+    $The_Learn_More_Button.Name = "The_Learn_More_Button"
+
+    $The_Learn_More_Button.Text = "Learn More"
+
+    $The_Learn_More_Button.AutoSize = $True
+
+    $The_Learn_More_Button.Font = 'Calibri,12,style=Bold'
+
+    $The_Learn_More_Button.ForeColor = 'Blue'
+
+    $The_Learn_More_Button.Location = New-Object System.Drawing.Point(200,200)
+
+    $The_Learn_More_Button.Add_Click({Start-Process "https://usa.kaspersky.com/resource-center/definitions/what-is-an-ip-address"})
+
+    $Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $The_Learn_More_Button, $Input_Box))
 
 	$Problem_Completed = "ipconfig /all"
 
@@ -2784,7 +2944,25 @@ function On_Click_Networking_Strip_Menu_Item_2($Sender,$e){
 
 	$The_Submit_Button.Add_Click({Selected_Networking_Practice_Problem_2})
 
-	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
+	$Form.Controls.RemoveByKey("The_Learn_More_Button")
+
+    $The_Learn_More_Button = New-Object System.Windows.Forms.Button
+
+    $The_Learn_More_Button.Name = "The_Learn_More_Button"
+
+    $The_Learn_More_Button.Text = "Learn More"
+
+    $The_Learn_More_Button.AutoSize = $True
+
+    $The_Learn_More_Button.Font = 'Calibri,12,style=Bold'
+
+    $The_Learn_More_Button.ForeColor = 'Blue'
+
+    $The_Learn_More_Button.Location = New-Object System.Drawing.Point(200,200)
+
+    $The_Learn_More_Button.Add_Click({Start-Process "https://www.cloudns.net/blog/dns-cache-explained/"})
+
+    $Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $The_Learn_More_Button, $Input_Box))
 
 	$Problem_Completed = "ipconfig /displaydns"
 
@@ -2920,7 +3098,25 @@ function On_Click_Networking_Strip_Menu_Item_3($Sender,$e){
 
 	$The_Submit_Button.Add_Click({Selected_Networking_Practice_Problem_3})
 
-	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
+	$Form.Controls.RemoveByKey("The_Learn_More_Button")
+
+    $The_Learn_More_Button = New-Object System.Windows.Forms.Button
+
+    $The_Learn_More_Button.Name = "The_Learn_More_Button"
+
+    $The_Learn_More_Button.Text = "Learn More"
+
+    $The_Learn_More_Button.AutoSize = $True
+
+    $The_Learn_More_Button.Font = 'Calibri,12,style=Bold'
+
+    $The_Learn_More_Button.ForeColor = 'Blue'
+
+    $The_Learn_More_Button.Location = New-Object System.Drawing.Point(200,200)
+
+    $The_Learn_More_Button.Add_Click({Start-Process "https://blog.hubspot.com/website/flush-dns"})
+
+    $Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $The_Learn_More_Button, $Input_Box))
 
 	$Problem_Completed = "ipconfig /flushdns"
 
@@ -3056,7 +3252,25 @@ function On_Click_Networking_Strip_Menu_Item_4($Sender,$e){
 
 	$The_Submit_Button.Add_Click({Selected_Networking_Practice_Problem_4})
 
-	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
+	$Form.Controls.RemoveByKey("The_Learn_More_Button")
+
+    $The_Learn_More_Button = New-Object System.Windows.Forms.Button
+
+    $The_Learn_More_Button.Name = "The_Learn_More_Button"
+
+    $The_Learn_More_Button.Text = "Learn More"
+
+    $The_Learn_More_Button.AutoSize = $True
+
+    $The_Learn_More_Button.Font = 'Calibri,12,style=Bold'
+
+    $The_Learn_More_Button.ForeColor = 'Blue'
+
+    $The_Learn_More_Button.Location = New-Object System.Drawing.Point(200,200)
+
+    $The_Learn_More_Button.Add_Click({Start-Process "https://www.tp-link.com/us/support/faq/840/"})
+
+    $Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $The_Learn_More_Button, $Input_Box))
 
 	$Problem_Completed = "ipconfig /renew"
 
@@ -3192,7 +3406,25 @@ function On_Click_Networking_Strip_Menu_Item_5($Sender,$e){
 
 	$The_Submit_Button.Add_Click({Selected_Networking_Practice_Problem_5})
 
-	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
+	$Form.Controls.RemoveByKey("The_Learn_More_Button")
+
+    $The_Learn_More_Button = New-Object System.Windows.Forms.Button
+
+    $The_Learn_More_Button.Name = "The_Learn_More_Button"
+
+    $The_Learn_More_Button.Text = "Learn More"
+
+    $The_Learn_More_Button.AutoSize = $True
+
+    $The_Learn_More_Button.Font = 'Calibri,12,style=Bold'
+
+    $The_Learn_More_Button.ForeColor = 'Blue'
+
+    $The_Learn_More_Button.Location = New-Object System.Drawing.Point(200,200)
+
+    $The_Learn_More_Button.Add_Click({Start-Process "https://social.technet.microsoft.com/Forums/windowsserver/en-US/ad80ec4b-af7a-4d99-b06b-6c7a4013aa39/what-does-quotipconfig-registerdnsquot-actually-do?forum=winserverDS"})
+
+    $Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $The_Learn_More_Button, $Input_Box))
 
 	$Problem_Completed = "ipconfig /registerdns"
 
@@ -3322,7 +3554,25 @@ function On_Click_Networking_Strip_Menu_Item_6($Sender,$e){
 
 	$The_Submit_Button.Add_Click({Selected_Networking_Practice_Problem_6})
 
-	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
+	$Form.Controls.RemoveByKey("The_Learn_More_Button")
+
+    $The_Learn_More_Button = New-Object System.Windows.Forms.Button
+
+    $The_Learn_More_Button.Name = "The_Learn_More_Button"
+
+    $The_Learn_More_Button.Text = "Learn More"
+
+    $The_Learn_More_Button.AutoSize = $True
+
+    $The_Learn_More_Button.Font = 'Calibri,12,style=Bold'
+
+    $The_Learn_More_Button.ForeColor = 'Blue'
+
+    $The_Learn_More_Button.Location = New-Object System.Drawing.Point(200,200)
+
+    $The_Learn_More_Button.Add_Click({Start-Process "https://www.upguard.com/blog/open-port"})
+
+    $Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $The_Learn_More_Button, $Input_Box))
 
 	$Problem_Completed = "Get-NetTCPConnection"
 
@@ -3452,7 +3702,25 @@ function On_Click_Networking_Strip_Menu_Item_7($Sender,$e){
 
 	$The_Submit_Button.Add_Click({Selected_Networking_Practice_Problem_7})
 
-	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
+	$Form.Controls.RemoveByKey("The_Learn_More_Button")
+
+    $The_Learn_More_Button = New-Object System.Windows.Forms.Button
+
+    $The_Learn_More_Button.Name = "The_Learn_More_Button"
+
+    $The_Learn_More_Button.Text = "Learn More"
+
+    $The_Learn_More_Button.AutoSize = $True
+
+    $The_Learn_More_Button.Font = 'Calibri,12,style=Bold'
+
+    $The_Learn_More_Button.ForeColor = 'Blue'
+
+    $The_Learn_More_Button.Location = New-Object System.Drawing.Point(200,200)
+
+    $The_Learn_More_Button.Add_Click({Start-Process "https://www.hostinger.com/tutorials/traceroute-command"})
+
+    $Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $The_Learn_More_Button, $Input_Box))
 
 	$Problem_Completed = "Test-NetConnection -ComputerName google.com -TraceRoute"
 
@@ -3582,7 +3850,25 @@ function On_Click_Networking_Strip_Menu_Item_8($Sender,$e){
 
 	$The_Submit_Button.Add_Click({Selected_Networking_Practice_Problem_8})
 
-	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
+	$Form.Controls.RemoveByKey("The_Learn_More_Button")
+
+    $The_Learn_More_Button = New-Object System.Windows.Forms.Button
+
+    $The_Learn_More_Button.Name = "The_Learn_More_Button"
+
+    $The_Learn_More_Button.Text = "Learn More"
+
+    $The_Learn_More_Button.AutoSize = $True
+
+    $The_Learn_More_Button.Font = 'Calibri,12,style=Bold'
+
+    $The_Learn_More_Button.ForeColor = 'Blue'
+
+    $The_Learn_More_Button.Location = New-Object System.Drawing.Point(200,200)
+
+    $The_Learn_More_Button.Add_Click({Start-Process "https://www.serverwatch.com/guides/netsh-commands/"})
+
+    $Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $The_Learn_More_Button, $Input_Box))
 
 	$Problem_Completed = "netsh wlan show profiles"
 
@@ -3739,7 +4025,25 @@ function On_Click_Windows_Registry_Strip_Menu_Item($Sender,$e){
 
 	$The_Submit_Button.Add_Click({Selected_Windows_Registry_Practice_Problem})
 
-	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
+	$Form.Controls.RemoveByKey("The_Learn_More_Button")
+
+    $The_Learn_More_Button = New-Object System.Windows.Forms.Button
+
+    $The_Learn_More_Button.Name = "The_Learn_More_Button"
+
+    $The_Learn_More_Button.Text = "Learn More"
+
+    $The_Learn_More_Button.AutoSize = $True
+
+    $The_Learn_More_Button.Font = 'Calibri,12,style=Bold'
+
+    $The_Learn_More_Button.ForeColor = 'Blue'
+
+    $The_Learn_More_Button.Location = New-Object System.Drawing.Point(200,200)
+
+    $The_Learn_More_Button.Add_Click({Start-Process "https://www.digitalcitizen.life/simple-questions-what-are-environment-variables/"})
+
+    $Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $The_Learn_More_Button, $Input_Box))
 
 	$Problem_Completed = "set-location -path HKLM:SOFTWARE"
 
@@ -3869,7 +4173,25 @@ function On_Click_Windows_Registry_Strip_Menu_Item_2($Sender,$e){
 
 	$The_Submit_Button.Add_Click({Selected_Windows_Registry_Practice_Problem_2})
 
-	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $Input_Box))
+	$Form.Controls.RemoveByKey("The_Learn_More_Button")
+
+    $The_Learn_More_Button = New-Object System.Windows.Forms.Button
+
+    $The_Learn_More_Button.Name = "The_Learn_More_Button"
+
+    $The_Learn_More_Button.Text = "Learn More"
+
+    $The_Learn_More_Button.AutoSize = $True
+
+    $The_Learn_More_Button.Font = 'Calibri,12,style=Bold'
+
+    $The_Learn_More_Button.ForeColor = 'Blue'
+
+    $The_Learn_More_Button.Location = New-Object System.Drawing.Point(200,200)
+
+    $The_Learn_More_Button.Add_Click({Start-Process "https://www.digitalcitizen.life/simple-questions-what-are-environment-variables/"})
+
+    $Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $The_Learn_More_Button, $Input_Box))
 
 	$Problem_Completed = "Get-PSDrive -PSProvider 'Registry' | Select-Object -Property Name, Root"
 

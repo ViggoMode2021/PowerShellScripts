@@ -125,6 +125,12 @@ $Score_Box.Location = New-Object System.Drawing.Size(1550,50)
 $Score_Box.Size = New-Object System.Drawing.Size(400,400)
 $Score_Box.Text = "Current Stats:"
 
+$Store_Box = New-Object System.Windows.Forms.GroupBox
+$Store_Box.Location = New-Object System.Drawing.Size(25,700)
+$Store_Box.Size = New-Object System.Drawing.Size(900,900)
+$Store_Box.Text = "Buy Scripts:"
+$Store_Box.Font = "Calibri, 12"
+
 $ButtonTypeOk = [System.Windows.MessageBoxButton]::Ok
 
 $ButtonTypeYesNoCancel = [System.Windows.MessageBoxButton]::YesNoCancel
@@ -4292,7 +4298,7 @@ $Active_Directory_Strip_Menu_Item.Name = "Active_Directory_Strip_Menu_Item"
 $Active_Directory_Strip_Menu_Item.Size = New-Object System.Drawing.Size(51, 20)
 $Active_Directory_Strip_Menu_Item.Text = "Active Directory"
 
-$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $EliteShell_Logo, $The_Submit_Button, $The_Learn_More_Button, $Total_Number_Of_Answers_Label, $Total_Score_Label, $Score_Box, $Completed_In, $Correct_Incorrect, $Score_File_Information))
+$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $EliteShell_Logo, $The_Submit_Button, $The_Learn_More_Button, $Total_Number_Of_Answers_Label, $Total_Score_Label, $Score_Box, $Store_Box, $Completed_In, $Correct_Incorrect, $Score_File_Information))
 
 ## Form dialogue
 $Form.AutoScale = $true

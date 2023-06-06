@@ -149,15 +149,6 @@ $Body.Font = 'Verdana,11,style=Bold'
 
 $Body.Location = New-Object System.Drawing.Point(30,80)
 
-<#
-$EliteShell_Logo = New-Object System.Windows.Forms.PictureBox
-$EliteShell_Logo.Location = New-Object System.Drawing.Size(455,380)
-$EliteShell_Logo.Width =  $image.Size.Width;
-$EliteShell_Logo.Height =  $image.Size.Height;
-$Image = (get-item 'C:\Users\ryans\Desktop\EliteShell.png')
-$EliteShell_Logo = [System.Drawing.Image]::FromFile((Get-Item $Image))
-$EliteShell_Logo.Image = $Image
-#>
 
 $Correct_Incorrect = New-Object $Label_Object
 
@@ -788,9 +779,9 @@ $Total_Score_Label.Text = "$Total_Score total points"
 
 #| Select-Object -expand CompletionTime |
 
-$Average_Time = $CSV_Stuff.CompletionTime | Measure -Average | Select Average | Out-String
+$Average_Time = $CSV_Stuff | Measure-Object CompletionTime -Sum | Select-Object -expand CompletionTime | Out-Host
 
-Write-Host "Average time is $Average_Time"
+Write-Host "Here $Average_Time"
 
 $File_Menu_Item.DropDownItems.AddRange(@($New_Game_Strip_Menu_Item, $Load_Game_Strip_Menu_Item, $View_Score_And_Stats_Strip_Menu_Item))
 
@@ -837,7 +828,7 @@ $Total_Score_Label.Text = "$Total_Score total points"
 
 $global:Total_Score = $Total_Score
 
-$Average_Time = $CSV_Stuff | Measure-Object CompletionTime -Average | Select-Object -expand CompletionTime | Out-String
+$Average_Time = $CSV_Stuff | Measure-Object CompletionTime -Sum | Select-Object -expand CompletionTime | Out-String
 
 Write-Host $Average_Time
 
@@ -849,7 +840,7 @@ function On_Click_View_My_EliteShell_Information_Strip_Menu_Item{
 
 $MessageBoxTitle = "My EliteShell Information:"
 
-$MessageBoxBody = "OS: $OS `nLast Run Time: $Last_Accessed_Time `n`nScreen Resolution: $Screen_Resolution 
+$MessageBoxBody = "OS: $OS `nLast Run Time: $Last_Accessed_Time `n`nScreen Resolution: $Screen_Resolution
 `n`nArchitecture: $Architecture `n`nPowerShell Version: $PowerShell_Version"
 
 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconSuccess)

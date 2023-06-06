@@ -12,6 +12,8 @@ $OS = $OS.Replace("|C:\WINDOWS|\Device\Harddisk0\Partition3", "")
 
 $Screen_Resolution = (Get-WmiObject -Class Win32_VideoController).VideoModeDescription;
 
+Write-Host $Screen_Resolution
+
 $Architecture = $Env:PROCESSOR_ARCHITECTURE
 
 $PowerShell_Version = (Get-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\PowerShell\3\PowerShellEngine -Name 'PowerShellVersion').PowerShellVersion
@@ -19,6 +21,14 @@ $PowerShell_Version = (Get-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\PowerShel
 $ErrorActionPreference = 'SilentlyContinue'
 
 $Script_Or_Executable_Name = $MyInvocation.InvocationName
+
+if($Screen_Resolution -ne "1925 x 1080 x 4294967296 colors"){
+
+$Screen_Resolution = (Get-WmiObject -Class Win32_VideoController).VideoModeDescription;
+
+
+
+}
 
 if($Script_Or_Executable_Name -notmatch ".ps1"){
 

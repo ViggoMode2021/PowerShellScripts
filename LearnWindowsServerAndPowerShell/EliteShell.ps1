@@ -40,7 +40,7 @@ $pathimage = "$DesktopPath\EliteShell-Logo-V1.png"
 Invoke-WebRequest $urlimage -OutFile $pathimage
 
 $EliteShell_Logo = New-Object System.Windows.Forms.PictureBox
-$EliteShell_Logo.Location = New-Object System.Drawing.Point(30,650)
+$EliteShell_Logo.Location = New-Object System.Drawing.Point(1700,750)
 $EliteShell_Logo.Width =  $logo.Size.Width;
 $EliteShell_Logo.Height =  $logo.Size.Height;
 $logo = [System.Drawing.Image]::FromFile("$pathimage")
@@ -1061,6 +1061,10 @@ if ($Body.Text = "Find the computer name (hostname) of your Windows machine. Use
 	$Time_Elapsed.hours,
 	$Time_Elapsed.minutes,
 	$Time_Elapsed.seconds))
+
+	$Timer_New = [int]$Timer
+
+	Write-Host $Timer_New.GetType()
 
 	$New_Row | Add-Content -Path $Game_Score_File
 

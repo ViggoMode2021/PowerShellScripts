@@ -3,6 +3,8 @@
 Add-Type -AssemblyName System.Windows.Forms
 
 Add-Type -AssemblyName PresentationCore,PresentationFramework
+
+Get-ADOrganizationalUnit -Properties CanonicalName -Filter * | Where-Object DistinguishedName -notlike "*Domain Controllers*" |Sort-Object CanonicalName | ForEach-Object {$Disable_Users_Dropdown.Items.Add($_.Name)}
 `
 $Date = Get-Date -format "MM-dd-yy"
 
@@ -119,6 +121,31 @@ $Store_Box.Location = New-Object System.Drawing.Size(25,700)
 $Store_Box.Size = New-Object System.Drawing.Size(900,900)
 $Store_Box.Text = "Buy Scripts:"
 $Store_Box.Font = "Calibri, 12"
+
+$Script_Dropdown = New-Object System.Windows.Forms.ComboBox
+$Script_Dropdown.Text = “Select a script”
+$Script_Dropdown.Autosize = $True
+$Script_Dropdown.Width = "300"
+$Script_Dropdown.Location = New-Object System.Drawing.Point(30,725)
+$Script_Dropdown.Font = ‘Microsoft Sans Serif,12’
+@(‘AD Password Generator’,’Update Windows’,’Disable and Enable AD Users’) | ForEach-Object {[void] $Script_Dropdown.Items.Add($_)}
+
+$Buy_Script_Button = New-Object System.Windows.Forms.Button
+
+$Buy_Script_Button.Name = "Buy_Script_Button"
+
+$Buy_Script_Button.Text = "Buy Script"
+
+$Buy_Script_Button.AutoSize = $True
+
+$Buy_Script_Button.Font = ‘Microsoft Sans Serif,12,style=Bold’
+
+$Buy_Script_Button.ForeColor = 'Blue'
+
+$Buy_Script_Button.Location = New-Object System.Drawing.Point(40,825)
+
+$Buy_Script_Button.Add_Click({})
+
 
 $ButtonTypeOk = [System.Windows.MessageBoxButton]::Ok
 
@@ -4274,9 +4301,13 @@ $Active_Directory_Strip_Menu_Item.Name = "Active_Directory_Strip_Menu_Item"
 $Active_Directory_Strip_Menu_Item.Size = New-Object System.Drawing.Size(51, 20)
 $Active_Directory_Strip_Menu_Item.Text = "Active Directory"
 
-$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $EliteShell_Logo, $The_Submit_Button, $The_Learn_More_Button, $Total_Number_Of_Answers_Label, $Total_Score_Label, $Total_Unique_Problems_Label, $Score_Box, $Store_Box, $Completed_In, $Correct_Incorrect, $Score_File_Information))
+$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $Script_Dropdown, $Buy_Script_Button, $EliteShell_Logo, $The_Submit_Button, $The_Learn_More_Button, $Total_Number_Of_Answers_Label, $Total_Score_Label, $Total_Unique_Problems_Label, $Score_Box, $Store_Box, $Completed_In, $Correct_Incorrect, $Score_File_Information))
 
 ## Form dialogue
 $Form.AutoScale = $true
 $Form.AutoScaleMode = "Font"
 $Form.ShowDialog()
+
+#https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/AD-Password-Generator.ps1
+
+#https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/War_Room_Scripts/Update-Windows-Version.ps1

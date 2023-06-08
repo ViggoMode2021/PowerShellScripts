@@ -12,8 +12,6 @@ $OS = $OS.Replace("|C:\WINDOWS|\Device\Harddisk0\Partition3", "")
 
 $Screen_Resolution = (Get-WmiObject -Class Win32_VideoController).VideoModeDescription;
 
-Write-Host $Screen_Resolution
-
 $Architecture = $Env:PROCESSOR_ARCHITECTURE
 
 $PowerShell_Version = (Get-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\PowerShell\3\PowerShellEngine -Name 'PowerShellVersion').PowerShellVersion
@@ -25,8 +23,6 @@ $Script_Or_Executable_Name = $MyInvocation.InvocationName
 if($Screen_Resolution -ne "1925 x 1080 x 4294967296 colors"){
 
 $Screen_Resolution = (Get-WmiObject -Class Win32_VideoController).VideoModeDescription;
-
-
 
 }
 
@@ -44,6 +40,10 @@ Get-ItemProperty | select lastaccesstime | Select-Object -expand lastaccesstime
 
 }
 
+if($Unique_Problems_Count -gt 5){
+
+Write-Host "You are more than halfway!"}
+
 $DesktopPath = [Environment]::GetFolderPath("Desktop")
 $urlimage = "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/LearnWindowsServerAndPowerShell/EliteShell-Logo-V1.png"
 $pathimage = "$DesktopPath\EliteShell-Logo-V1.png"
@@ -55,17 +55,6 @@ $EliteShell_Logo.Width =  $logo.Size.Width;
 $EliteShell_Logo.Height =  $logo.Size.Height;
 $logo = [System.Drawing.Image]::FromFile("$pathimage")
 $EliteShell_Logo.Image = $logo
-
-<#
-
-$Forest = Get-ADDomain -Current LocalComputer | Select-Object -expand Forest
-
-$Logged_In_User = whoami /upn
-
-$Logged_In_User = $Logged_In_User.Replace($Forest, '')
-
-$Logged_In_User = $Logged_In_User.Replace("@", '')
-#>
 
 $Desktop_Path = [Environment]::GetFolderPath("Desktop")
 
@@ -214,6 +203,19 @@ $Total_Score_Label.ForeColor = 'Blue'
 $Total_Score_Label.Location = New-Object System.Drawing.Point(1600,150)
 
 
+$Total_Unique_Problems_Label = New-Object $Label_Object
+
+$Total_Unique_Problems_Label.Text = ""
+
+$Total_Unique_Problems_Label.AutoSize = $true
+
+$Total_Unique_Problems_Label.Font = 'Calibri,12,style=Bold'
+
+$Total_Unique_Problems_Label.ForeColor = 'Blue'
+
+$Total_Unique_Problems_Label.Location = New-Object System.Drawing.Point(1600,210)
+
+
 $Score_File_Information = New-Object $Label_Object
 
 $Score_File_Information.Text= ""
@@ -339,6 +341,10 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 	$global:Number_Of_Correct_Answers = $CSV_Length
 
 	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers total problems solved"
+
+	$global:Unique_Problems_Count = $Unique_Problems_Count
+
+    $Total_Unique_Problems_Label.Text = "$Unique_Problems_Count total unique problems completed"
 
     }
 
@@ -793,11 +799,13 @@ $global:Total_Score = $Total_Score
 
 $Total_Score_Label.Text = "$Total_Score total points"
 
-#| Select-Object -expand CompletionTime |
+$Unique_Problems = $CSV_Stuff | Select-Object -ExpandProperty Problem -Unique
 
-$Average_Time = $CSV_Stuff | Measure-Object CompletionTime -Sum | Select-Object -expand CompletionTime | Out-Host
+$Unique_Problems_Count = $Unique_Problems.Count
 
-Write-Host "Here $Average_Time"
+$global:Unique_Problems_Count = $Unique_Problems_Count
+
+$Total_Unique_Problems_Label.Text = "$Unique_Problems_Count total unique problems completed"
 
 $File_Menu_Item.DropDownItems.AddRange(@($New_Game_Strip_Menu_Item, $Load_Game_Strip_Menu_Item, $View_Score_And_Stats_Strip_Menu_Item))
 
@@ -844,11 +852,13 @@ $Total_Score_Label.Text = "$Total_Score total points"
 
 $global:Total_Score = $Total_Score
 
-$Average_Time = $CSV_Stuff | Measure-Object CompletionTime -Sum | Select-Object -expand CompletionTime | Out-String
+$Unique_Problems = $CSV_Stuff | Select-Object -ExpandProperty Problem -Unique
 
-Write-Host $Average_Time
+$Unique_Problems_Count = $Unique_Problems.Count
 
-$global:Average_Time = $Average_Time
+$global:Unique_Problems_Count = $Unique_Problems_Count
+
+$Total_Unique_Problems_Label.Text = "$Unique_Problems_Count total unique problems completed"
 
 }
 
@@ -873,8 +883,6 @@ $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTit
 
 if($Confirmation -eq 'Yes'){
 
-try {
-
 $Test_Connection = Test-Connection -ComputerName www.github.com -Count 1 -ErrorAction "SilentlyContinue"
 
 if ($Test_Connection -eq $null){
@@ -885,52 +893,12 @@ $MessageBoxBody = "Your device currently does not have internet connection. Elit
 
 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
 
-Exit
-
-}
-
-else{
-
 Start-Process "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/LearnWindowsServerAndPowerShell/Answers-EliteShell.ps1"
 
 }
 
 }
 
-catch {
-
-$MessageBoxTitle = "No internet connection"
-
-$MessageBoxBody = "Your device currently does not have internet connection. EliteShell answers are available on www.GitHub.com."
-
-$Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
-
-Exit
-
-}
-
-}
-
-<#
-$Test_Connection = Test-Connection -ComputerName www.github.com -Quiet;
-
-if ($null -eq $Test_Connection)
-{
-  $MessageBoxTitle = "No internet connection"
-
-  $MessageBoxBody = "Your device currently does not have internet connection. EliteShell answers are available on www.GitHub.com."
-
-  $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
-
-  Exit
-}
-
-else{
-
-Start-Process "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/LearnWindowsServerAndPowerShell/Answers-EliteShell.ps1"
-
-}
-#>
 }
 
 $New_Game_Strip_Menu_Item.Add_Click( { On_Click_New_Game_Strip_Menu_Item $New_Game_Strip_Menu_Item $EventArgs} )
@@ -1105,6 +1073,14 @@ if ($Body.Text = "Find the computer name (hostname) of your Windows machine. Use
 	$global:Total_Score = $Total_Score
 
 	$Total_Score_Label.Text = "$Total_Score total points"
+
+	$Unique_Problems = $CSV_Stuff | Select-Object -ExpandProperty Problem -Unique
+
+    $Unique_Problems_Count = $Unique_Problems.Count
+
+    $global:Unique_Problems_Count = $Unique_Problems_Count
+
+    $Total_Unique_Problems_Label.Text = "$Unique_Problems_Count total unique problems completed"
 
 	if($Game_Score_File -eq $null){
 
@@ -4298,7 +4274,7 @@ $Active_Directory_Strip_Menu_Item.Name = "Active_Directory_Strip_Menu_Item"
 $Active_Directory_Strip_Menu_Item.Size = New-Object System.Drawing.Size(51, 20)
 $Active_Directory_Strip_Menu_Item.Text = "Active Directory"
 
-$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $EliteShell_Logo, $The_Submit_Button, $The_Learn_More_Button, $Total_Number_Of_Answers_Label, $Total_Score_Label, $Score_Box, $Store_Box, $Completed_In, $Correct_Incorrect, $Score_File_Information))
+$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $EliteShell_Logo, $The_Submit_Button, $The_Learn_More_Button, $Total_Number_Of_Answers_Label, $Total_Score_Label, $Total_Unique_Problems_Label, $Score_Box, $Store_Box, $Completed_In, $Correct_Incorrect, $Score_File_Information))
 
 ## Form dialogue
 $Form.AutoScale = $true

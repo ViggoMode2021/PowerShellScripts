@@ -4,7 +4,7 @@ Add-Type -AssemblyName System.Windows.Forms
 
 Add-Type -AssemblyName PresentationCore,PresentationFramework
 
-Get-ADOrganizationalUnit -Properties CanonicalName -Filter * | Where-Object DistinguishedName -notlike "*Domain Controllers*" |Sort-Object CanonicalName | ForEach-Object {$Disable_Users_Dropdown.Items.Add($_.Name)}
+#Get-ADOrganizationalUnit -Properties CanonicalName -Filter * | Where-Object DistinguishedName -notlike "*Domain Controllers*" |Sort-Object CanonicalName | ForEach-Object {$Disable_Users_Dropdown.Items.Add($_.Name)}
 `
 $Date = Get-Date -format "MM-dd-yy"
 
@@ -128,7 +128,7 @@ $Script_Dropdown.Autosize = $True
 $Script_Dropdown.Width = "300"
 $Script_Dropdown.Location = New-Object System.Drawing.Point(30,725)
 $Script_Dropdown.Font = ‘Microsoft Sans Serif,12’
-@(‘AD Password Generator’,’Update Windows’,’Disable and Enable AD Users’) | ForEach-Object {[void] $Script_Dropdown.Items.Add($_)}
+@(‘AD Password Generator (50)’,’Update Windows (10)’,’Disable and Enable AD Users (25)’) | ForEach-Object {[void] $Script_Dropdown.Items.Add($_)}
 
 $Buy_Script_Button = New-Object System.Windows.Forms.Button
 
@@ -144,7 +144,27 @@ $Buy_Script_Button.ForeColor = 'Blue'
 
 $Buy_Script_Button.Location = New-Object System.Drawing.Point(40,825)
 
-$Buy_Script_Button.Add_Click({})
+$Buy_Script_Button.Add_Click({Buy_Scripts})
+
+function Buy_Scripts{
+
+$Script_Name=$Script_Dropdown.SelectedItem
+
+$Price = $Script_Name.Substring($Script_Name.Length-4)
+
+$Price = $Price.Replace("(", "")
+
+$Price = $Price.Replace(")", "")
+
+$Price = [int]$Price
+
+$Separator = "()"
+
+$Selected_Script = $Script_Name.split($Separator)
+
+Write-Host $Selected_Script[0]
+
+}
 
 
 $ButtonTypeOk = [System.Windows.MessageBoxButton]::Ok

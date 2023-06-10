@@ -128,7 +128,7 @@ $Script_Dropdown.Autosize = $True
 $Script_Dropdown.Width = "300"
 $Script_Dropdown.Location = New-Object System.Drawing.Point(30,725)
 $Script_Dropdown.Font = ‘Microsoft Sans Serif,12’
-@(‘AD Password Generator (50)’,’Update Windows (10)’,’Disable and Enable AD Users (25)’) | ForEach-Object {[void] $Script_Dropdown.Items.Add($_)}
+@(‘AD-Password-Generator(50)’,’Update Windows(10)’,’Disable and Enable AD Users (25)’) | ForEach-Object {[void] $Script_Dropdown.Items.Add($_)}
 
 $Buy_Script_Button = New-Object System.Windows.Forms.Button
 
@@ -150,11 +150,20 @@ function Buy_Scripts{
 
 $Script_Name=$Script_Dropdown.SelectedItem
 
+if($Script_Name -eq "Select a script"){
+
+$MessageBoxTitle = "Please name your script to buy."
+
+$MessageBoxBody = "Please select a script to buy from the dropdown. Make sure you have enough points!"
+
+$Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconWarning)
+
+}
 $Price = $Script_Name.Substring($Script_Name.Length-4)
 
-$Price = $Price.Replace("(", "")
+$Price = $Price.Replace("(","")
 
-$Price = $Price.Replace(")", "")
+$Price = $Price.Replace(")","")
 
 $Price = [int]$Price
 
@@ -162,7 +171,17 @@ $Separator = "()"
 
 $Selected_Script = $Script_Name.split($Separator)
 
-Write-Host $Selected_Script[0]
+$Selected_Script = $Selected_Script.Replace("$Price","")
+
+$PS1 = ".ps1"
+
+$Selected_Script = "$Selected_Script$PS1"
+
+$Selected_Script =  $Selected_Script -Replace "\s", ""
+
+Write-Host $Selected_Script
+
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/$Selected_Script" -OutFile "$DesktopPath\$Selected_Script"
 
 }
 

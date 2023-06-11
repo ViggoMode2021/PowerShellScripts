@@ -179,9 +179,44 @@ $Selected_Script = "$Selected_Script$PS1"
 
 $Selected_Script =  $Selected_Script -Replace "\s", ""
 
-Write-Host $Selected_Script
+if (Test-Path "$DesktopPath\EliteShell-Prize-Scripts") {
+   
+	if (Test-Path "$DesktopPath\EliteShell-Prize-Scripts\$Selected_Script"){
+	
+	$MessageBoxTitle = "$Selected_Script already purchased."
 
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/$Selected_Script" -OutFile "$DesktopPath\$Selected_Script"
+	$MessageBoxBody = "$Selected_Script already has been purchased and is located in the 'EliteShell-Prize-Scripts' directory."
+
+	$Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconWarning)
+
+	}
+
+	else{
+
+	$MessageBoxTitle = "$Selected_Script successfully purchased."
+
+	$MessageBoxBody = "$Selected_Script has been purchased and is located in the 'EliteShell-Prize-Scripts' directory."
+
+	$Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconWarning)
+
+	Invoke-WebRequest -Uri "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/$Selected_Script" -OutFile "$DesktopPath\EliteShell-Prize-Scripts\$Selected_Script"
+	
+	}
+}
+
+else {
+
+	$MessageBoxTitle = "$Selected_Script successfully purchased."
+
+	$MessageBoxBody = "$Selected_Script has been purchased and is located in the 'EliteShell-Prize-Scripts' directory."
+
+	$Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconWarning)
+    
+	New-Item -Path "$DesktopPath\EliteShell-Prize-Scripts" -ItemType Directory
+
+	Invoke-WebRequest -Uri "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/$Selected_Script" -OutFile "$DesktopPath\EliteShell-Prize-Scripts\$Selected_Script"
+    
+}
 
 }
 

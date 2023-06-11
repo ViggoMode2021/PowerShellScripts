@@ -118,49 +118,22 @@ $Score_Box.Text = "Current Stats:"
 
 $Store_Box = New-Object System.Windows.Forms.GroupBox
 $Store_Box.Location = New-Object System.Drawing.Size(25,700)
-$Store_Box.Size = New-Object System.Drawing.Size(900,900)
+$Store_Box.Size = New-Object System.Drawing.Size(350,900)
 $Store_Box.Text = "Buy Scripts:"
-$Store_Box.Font = "Calibri, 12"
+$Store_Box.ForeColor = 'Blue'
+$Store_Box.Font = "Times,12,style=Bold"
 
 $Script_Dropdown = New-Object System.Windows.Forms.ComboBox
-$Script_Dropdown.Text = “Select a script”
+$Script_Dropdown.Text = “Update-Windows-Version(10)”
 $Script_Dropdown.Autosize = $True
 $Script_Dropdown.Width = "300"
 $Script_Dropdown.Location = New-Object System.Drawing.Point(30,725)
 $Script_Dropdown.Font = ‘Microsoft Sans Serif,12’
-@(‘AD-Password-Generator(10)’,’Update Windows(10)’,’Disable and Enable AD Users (25)’) | ForEach-Object {[void] $Script_Dropdown.Items.Add($_)}
-
-$Buy_Script_Button = New-Object System.Windows.Forms.Button
-
-$Buy_Script_Button.Name = "Buy_Script_Button"
-
-$Buy_Script_Button.Text = "Buy Script"
-
-$Buy_Script_Button.AutoSize = $True
-
-$Buy_Script_Button.Font = ‘Microsoft Sans Serif,12,style=Bold’
-
-$Buy_Script_Button.ForeColor = 'Blue'
-
-$Buy_Script_Button.Location = New-Object System.Drawing.Point(40,825)
-
-$Buy_Script_Button.Add_Click({Buy_Scripts})
+@(‘AD-Password-Generator(10)’,’Update-Windows-Version(10)’,’Disable-and-Enable-AD-Users(25)’) | ForEach-Object {[void] $Script_Dropdown.Items.Add($_)}
 
 function Buy_Scripts{
 
 $Script_Name=$Script_Dropdown.SelectedItem
-
-if($Script_Name -eq "Select a script"){
-
-$MessageBoxTitle = "Please name your script to buy."
-
-$MessageBoxBody = "Please select a script to buy from the dropdown. Make sure you have enough points!"
-
-$Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
-
-exit
-
-}
 
 $Price = $Script_Name.Substring($Script_Name.Length-4)
 
@@ -192,6 +165,8 @@ $MessageBoxBody = "You currently have $Total_Score and the script costs $Price."
 
 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
 
+return 
+
 }
 
 if (Test-Path "$DesktopPath\EliteShell-Prize-Scripts") {
@@ -203,6 +178,8 @@ if (Test-Path "$DesktopPath\EliteShell-Prize-Scripts") {
 	$MessageBoxBody = "$Selected_Script already has been purchased and is located in the 'EliteShell-Prize-Scripts' directory."
 
 	$Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconWarning)
+
+	return
 
 	}
 
@@ -339,8 +316,7 @@ $Score_File_Information.AutoSize = $true
 
 $Score_File_Information.Font = 'Verdana,11,style=Bold'
 
-$Score_File_Information.Location = New-Object System.Drawing.Point(1600,450)
-
+$Score_File_Information.Location = New-Object System.Drawing.Point(1550,450)
 
 $Input_Box = New-Object System.Windows.Forms.TextBox
 $Input_Box.Name = "Input_Box"
@@ -512,6 +488,24 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
     $Created = (Get-ChildItem $Game_Score_File).CreationTime
 
     $Score_File_Information.Text= "Score File: $New_Game_Filename_Csv `nCreated on: $Created"
+
+	$Buy_Script_Button = New-Object System.Windows.Forms.Button
+
+	$Buy_Script_Button.Name = "Buy_Script_Button"
+
+	$Buy_Script_Button.Text = "Buy Script"
+
+	$Buy_Script_Button.AutoSize = $True
+
+	$Buy_Script_Button.Font = ‘Microsoft Sans Serif,12,style=Bold’
+
+	$Buy_Script_Button.ForeColor = 'Blue'
+
+	$Buy_Script_Button.Location = New-Object System.Drawing.Point(40,825)
+
+	$Buy_Script_Button.Add_Click({Buy_Scripts})
+
+	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $Script_Dropdown, $Buy_Script_Button, $EliteShell_Logo, $The_Submit_Button, $The_Learn_More_Button, $Total_Number_Of_Answers_Label, $Total_Score_Label, $Total_Unique_Problems_Label, $Score_Box, $Store_Box, $Completed_In, $Correct_Incorrect, $Score_File_Information))
 
     }
 
@@ -929,6 +923,24 @@ Invoke-Expression Dropdown_Problem_Completed_Check
 $Created = (Get-ChildItem $Game_Score_File).CreationTime
 
 $Score_File_Information.Text= "Score File: $CSV_Filename `nCreated on: $Created"
+
+$Buy_Script_Button = New-Object System.Windows.Forms.Button
+
+$Buy_Script_Button.Name = "Buy_Script_Button"
+
+$Buy_Script_Button.Text = "Buy Script"
+
+$Buy_Script_Button.AutoSize = $True
+
+$Buy_Script_Button.Font = ‘Microsoft Sans Serif,12,style=Bold’
+
+$Buy_Script_Button.ForeColor = 'Blue'
+
+$Buy_Script_Button.Location = New-Object System.Drawing.Point(40,825)
+
+$Buy_Script_Button.Add_Click({Buy_Scripts})
+
+$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $Script_Dropdown, $Buy_Script_Button, $EliteShell_Logo, $The_Submit_Button, $The_Learn_More_Button, $Total_Number_Of_Answers_Label, $Total_Score_Label, $Total_Unique_Problems_Label, $Score_Box, $Store_Box, $Completed_In, $Correct_Incorrect, $Score_File_Information))
 
 }
 }
@@ -4389,7 +4401,7 @@ $Active_Directory_Strip_Menu_Item.Name = "Active_Directory_Strip_Menu_Item"
 $Active_Directory_Strip_Menu_Item.Size = New-Object System.Drawing.Size(51, 20)
 $Active_Directory_Strip_Menu_Item.Text = "Active Directory"
 
-$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $Script_Dropdown, $Buy_Script_Button, $EliteShell_Logo, $The_Submit_Button, $The_Learn_More_Button, $Total_Number_Of_Answers_Label, $Total_Score_Label, $Total_Unique_Problems_Label, $Score_Box, $Store_Box, $Completed_In, $Correct_Incorrect, $Score_File_Information))
+$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $EliteShell_Logo, $The_Submit_Button, $The_Learn_More_Button, $Total_Number_Of_Answers_Label, $Total_Score_Label, $Total_Unique_Problems_Label, $Score_Box, $Completed_In, $Correct_Incorrect, $Score_File_Information))
 
 ## Form dialogue
 $Form.AutoScale = $true

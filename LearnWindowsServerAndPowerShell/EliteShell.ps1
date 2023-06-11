@@ -128,7 +128,7 @@ $Script_Dropdown.Autosize = $True
 $Script_Dropdown.Width = "300"
 $Script_Dropdown.Location = New-Object System.Drawing.Point(30,725)
 $Script_Dropdown.Font = ‘Microsoft Sans Serif,12’
-@(‘AD-Password-Generator(50)’,’Update Windows(10)’,’Disable and Enable AD Users (25)’) | ForEach-Object {[void] $Script_Dropdown.Items.Add($_)}
+@(‘AD-Password-Generator(10)’,’Update Windows(10)’,’Disable and Enable AD Users (25)’) | ForEach-Object {[void] $Script_Dropdown.Items.Add($_)}
 
 $Buy_Script_Button = New-Object System.Windows.Forms.Button
 
@@ -156,9 +156,12 @@ $MessageBoxTitle = "Please name your script to buy."
 
 $MessageBoxBody = "Please select a script to buy from the dropdown. Make sure you have enough points!"
 
-$Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconWarning)
+$Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+exit
 
 }
+
 $Price = $Script_Name.Substring($Script_Name.Length-4)
 
 $Price = $Price.Replace("(","")
@@ -178,6 +181,18 @@ $PS1 = ".ps1"
 $Selected_Script = "$Selected_Script$PS1"
 
 $Selected_Script =  $Selected_Script -Replace "\s", ""
+
+$Total_Score = [int]$Total_Score
+
+if($Total_Score -lt $Price){
+
+$MessageBoxTitle = "Not enough points to purchase script."
+
+$MessageBoxBody = "You currently have $Total_Score and the script costs $Price."
+
+$Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+}
 
 if (Test-Path "$DesktopPath\EliteShell-Prize-Scripts") {
    
@@ -219,7 +234,6 @@ else {
 }
 
 }
-
 
 $ButtonTypeOk = [System.Windows.MessageBoxButton]::Ok
 

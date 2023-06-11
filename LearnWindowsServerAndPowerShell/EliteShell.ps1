@@ -1012,6 +1012,8 @@ if($Confirmation -eq 'Yes'){
 
 $Test_Connection = Test-Connection -ComputerName www.github.com -Count 1 -ErrorAction "SilentlyContinue"
 
+Start-Process "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/LearnWindowsServerAndPowerShell/Answers-EliteShell.ps1"
+
 if ($Test_Connection -eq $null){
 
 $MessageBoxTitle = "No internet connection"
@@ -1019,8 +1021,6 @@ $MessageBoxTitle = "No internet connection"
 $MessageBoxBody = "Your device currently does not have internet connection. EliteShell answers are available on www.GitHub.com."
 
 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
-
-Start-Process "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/LearnWindowsServerAndPowerShell/Answers-EliteShell.ps1"
 
 }
 

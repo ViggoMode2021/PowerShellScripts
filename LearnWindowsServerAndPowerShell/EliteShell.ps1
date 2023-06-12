@@ -155,6 +155,17 @@ $Selected_Script = "$Selected_Script$PS1"
 
 $Selected_Script =  $Selected_Script -Replace "\s", ""
 
+if($Selected_Script -eq ".ps1" -and $Script_Dropdown.Text -eq “Update-Windows-Version(10)”){
+
+$MessageBoxTitle = "Please select a script."
+
+$MessageBoxBody = "Please select a script from the dropdown."
+
+$Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+return
+
+}
+
 $Total_Score = [int]$Total_Score
 
 if($Total_Score -lt $Price){
@@ -4407,7 +4418,3 @@ $Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $EliteShell_Logo, $The_Submi
 $Form.AutoScale = $true
 $Form.AutoScaleMode = "Font"
 $Form.ShowDialog()
-
-#https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/AD-Password-Generator.ps1
-
-#https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/War_Room_Scripts/Update-Windows-Version.ps1

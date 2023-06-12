@@ -4,8 +4,6 @@ Add-Type -AssemblyName System.Windows.Forms
 
 Add-Type -AssemblyName PresentationCore,PresentationFramework
 
-#Get-ADOrganizationalUnit -Properties CanonicalName -Filter * | Where-Object DistinguishedName -notlike "*Domain Controllers*" |Sort-Object CanonicalName | ForEach-Object {$Disable_Users_Dropdown.Items.Add($_.Name)}
-`
 $Date = Get-Date -format "MM-dd-yy"
 
 $OS = (Get-WMIObject win32_operatingsystem) | Select-Object -expand Name | Out-String
@@ -84,7 +82,7 @@ $Load_Game_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $View_Score_And_Stats_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $View_My_EliteShell_Information_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $View_EliteShell_Answers_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
-$Buy_Scripts_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
+$Read_Me_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $Windows_General_Strip_Menu_Item_Learn = New-Object System.Windows.Forms.ToolStripMenuItem
 
 $Windows_General_Strip_Menu_Item_2 = New-Object System.Windows.Forms.ToolStripMenuItem
@@ -371,11 +369,11 @@ $View_EliteShell_Answers_Strip_Menu_Item.Name= "View_EliteShell_Answers_Strip_Me
 $View_EliteShell_Answers_Strip_Menu_Item.Size = New-Object System.Drawing.Size(152, 22)
 $View_EliteShell_Answers_Strip_Menu_Item.Text = "View EliteShell Answers"
 
-$Buy_Scripts_Strip_Menu_Item.Name= "Buy_Scripts_Strip_Menu_Item"
-$Buy_Scripts_Strip_Menu_Item.Size = New-Object System.Drawing.Size(152, 22)
-$Buy_Scripts_Strip_Menu_Item.Text = "Buy PowerShell Scripts"
+$Read_Me_Strip_Menu_Item.Name= "Read_Me_Strip_Menu_Item"
+$Read_Me_Strip_Menu_Item.Size = New-Object System.Drawing.Size(152, 22)
+$Read_Me_Strip_Menu_Item.Text = "Read Me"
 
-$File_Menu_Item.DropDownItems.AddRange(@($New_Game_Strip_Menu_Item, $Load_Game_Strip_Menu_Item, $View_My_EliteShell_Information_Strip_Menu_Item, $View_EliteShell_Answers_Strip_Menu_Item, $Buy_Scripts_Strip_Menu_Item))
+$File_Menu_Item.DropDownItems.AddRange(@($New_Game_Strip_Menu_Item, $Load_Game_Strip_Menu_Item, $View_My_EliteShell_Information_Strip_Menu_Item, $View_EliteShell_Answers_Strip_Menu_Item, $Read_Me_Strip_Menu_Item))
 
 function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 
@@ -4398,7 +4396,7 @@ if ($Body.Text = "List all of the roots available to the Registry PSProvider to 
 	}
 
 	$Input_Box.Clear()
-}
+} 
 
 $Windows_Registry_Strip_Menu_Item_Practice.Add_Click( { On_Click_Windows_Registry_Strip_Menu_Item $Windows_Registry_Strip_Menu_Item_Practice $EventArgs} )
 

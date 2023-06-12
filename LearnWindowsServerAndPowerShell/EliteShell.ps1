@@ -40,10 +40,6 @@ Get-ItemProperty | select lastaccesstime | Select-Object -expand lastaccesstime
 
 }
 
-if($Unique_Problems_Count -gt 5){
-
-Write-Host "You are more than halfway!"}
-
 $DesktopPath = [Environment]::GetFolderPath("Desktop")
 $urlimage = "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/LearnWindowsServerAndPowerShell/EliteShell-Logo-V1.png"
 $pathimage = "$DesktopPath\EliteShell-Logo-V1.png"
@@ -950,6 +946,16 @@ $Buy_Script_Button.Location = New-Object System.Drawing.Point(40,825)
 $Buy_Script_Button.Add_Click({Buy_Scripts})
 
 $Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $Script_Dropdown, $Buy_Script_Button, $EliteShell_Logo, $The_Submit_Button, $The_Learn_More_Button, $Total_Number_Of_Answers_Label, $Total_Score_Label, $Total_Unique_Problems_Label, $Score_Box, $Store_Box, $Completed_In, $Correct_Incorrect, $Score_File_Information))
+
+if($Unique_Problems_Count -gt 5){
+
+$MessageBoxTitle = "You are halfway there!"
+
+$MessageBoxBody = "You have completed $Unique_Problems_Count out of xx!"
+
+$Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconSuccess)
+
+}
 
 }
 }
@@ -4412,7 +4418,7 @@ $Active_Directory_Strip_Menu_Item.Text = "Active Directory"
 
 $Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $EliteShell_Logo, $The_Submit_Button, $The_Learn_More_Button, $Total_Number_Of_Answers_Label, $Total_Score_Label, $Total_Unique_Problems_Label, $Score_Box, $Completed_In, $Correct_Incorrect, $Score_File_Information))
 
-## Form dialogue
+## Form dialog
 $Form.AutoScale = $true
 $Form.AutoScaleMode = "Font"
 $Form.ShowDialog()

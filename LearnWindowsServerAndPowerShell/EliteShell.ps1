@@ -197,8 +197,10 @@ if (Test-Path "$DesktopPath\EliteShell-Prize-Scripts") {
 	$Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconWarning)
 
 	Invoke-WebRequest -Uri "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/$Selected_Script" -OutFile "$DesktopPath\EliteShell-Prize-Scripts\$Selected_Script"
+	    
+    Invoke-Expression Check_Bought_Scripts
 	
-	}
+}
 }
 
 else {
@@ -213,6 +215,7 @@ else {
 
 	Invoke-WebRequest -Uri "https://raw.githubusercontent.com/ViggoMode2021/PowerShellScripts/main/$Selected_Script" -OutFile "$DesktopPath\EliteShell-Prize-Scripts\$Selected_Script"
     
+    Invoke-Expression Check_Bought_Scripts
 }
 
 }
@@ -313,6 +316,19 @@ $Total_Unique_Problems_Label.ForeColor = 'Blue'
 $Total_Unique_Problems_Label.Location = New-Object System.Drawing.Point(1600,210)
 
 
+$Scripts_Purchased_Label = New-Object $Label_Object
+
+$Scripts_Purchased_Label.Text= ""
+
+$Scripts_Purchased_Label.AutoSize = $true
+
+$Scripts_Purchased_Label.Font = 'Times,12'
+
+$Scripts_Purchased_Label.ForeColor = 'Green'
+
+$Scripts_Purchased_Label.Location = New-Object System.Drawing.Point(400,700)
+
+
 $Score_File_Information = New-Object $Label_Object
 
 $Score_File_Information.Text= ""
@@ -338,6 +354,31 @@ $Active_Directory_Strip_Menu_Item,
 $Networking_Strip_Menu_Item,
 $DHCP_DNS_Strip_Menu_Item,
 $Windows_General_Strip_Menu_Item_Learn))
+
+function Check_Bought_Scripts{
+
+if (Test-Path "$DesktopPath\EliteShell-Prize-Scripts\Update-Windows-Version.ps1"){
+
+$Update_Windows_Version = "Update-Windows-Version.ps1"
+
+}
+
+if (Test-Path "$DesktopPath\EliteShell-Prize-Scripts\AD-Password-Generator.ps1"){
+
+$AD_Password_Generator = "AD-Password-Generator.ps1"
+
+}
+
+if (Test-Path "$DesktopPath\EliteShell-Prize-Scripts\Disable-and-Enable-AD-Users.ps1"){
+
+$Disable_and_Enable_AD_Users = "Disable-and-Enable-AD-Users.ps1"
+
+}
+
+$Scripts_Purchased_Label.Text = "Scripts Purchased: `n`n$Update_Windows_Version `n$AD_Password_Generator `n$Disable_and_Enable_AD_Users"
+
+}
+
 
 ## start File menu item ##
 
@@ -511,6 +552,8 @@ function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 	$Buy_Script_Button.Add_Click({Buy_Scripts})
 
 	$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $Script_Dropdown, $Buy_Script_Button, $EliteShell_Logo, $The_Submit_Button, $The_Learn_More_Button, $Total_Number_Of_Answers_Label, $Total_Score_Label, $Total_Unique_Problems_Label, $Score_Box, $Store_Box, $Completed_In, $Correct_Incorrect, $Score_File_Information))
+    
+    Invoke-Expression Check_Bought_Scripts
 
     }
 
@@ -674,6 +717,7 @@ $Problem_Completed_DNS_2 = Select-String $Game_Score_File -Pattern $Problem_Comp
 if($Problem_Completed_DNS_2 -ne $null -and $Game_Score_File -ne $null){
 $DHCP_DNS_Strip_Menu_Item_Practice_4.Text = 'DNS #2 (install DNS)'
 $DHCP_DNS_Strip_Menu_Item_Practice_4.ForeColor = 'Green'
+
 }
 
 else{
@@ -944,6 +988,8 @@ $Buy_Script_Button.ForeColor = 'Blue'
 $Buy_Script_Button.Location = New-Object System.Drawing.Point(40,825)
 
 $Buy_Script_Button.Add_Click({Buy_Scripts})
+
+Invoke-Expression Check_Bought_Scripts
 
 $Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $Script_Dropdown, $Buy_Script_Button, $EliteShell_Logo, $The_Submit_Button, $The_Learn_More_Button, $Total_Number_Of_Answers_Label, $Total_Score_Label, $Total_Unique_Problems_Label, $Score_Box, $Store_Box, $Completed_In, $Correct_Incorrect, $Score_File_Information))
 
@@ -4416,7 +4462,7 @@ $Active_Directory_Strip_Menu_Item.Name = "Active_Directory_Strip_Menu_Item"
 $Active_Directory_Strip_Menu_Item.Size = New-Object System.Drawing.Size(51, 20)
 $Active_Directory_Strip_Menu_Item.Text = "Active Directory"
 
-$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $EliteShell_Logo, $The_Submit_Button, $The_Learn_More_Button, $Total_Number_Of_Answers_Label, $Total_Score_Label, $Total_Unique_Problems_Label, $Score_Box, $Completed_In, $Correct_Incorrect, $Score_File_Information))
+$Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $EliteShell_Logo, $The_Submit_Button, $The_Learn_More_Button, $Total_Number_Of_Answers_Label, $Total_Score_Label, $Scripts_Purchased_Label, $Total_Unique_Problems_Label, $Score_Box, $Completed_In, $Correct_Incorrect, $Score_File_Information))
 
 ## Form dialog
 $Form.AutoScale = $true

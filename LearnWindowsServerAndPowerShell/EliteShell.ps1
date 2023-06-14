@@ -1,3 +1,7 @@
+#https://quizlet.com/4307055/the-osi-model-flash-cards/ 
+
+#OSI_Questions = "", "", "", "", "" | Get-Random
+
 #Import-Module ActiveDirectory
 
 Add-Type -AssemblyName System.Windows.Forms
@@ -59,7 +63,7 @@ $global:Game_Score_File = $null
 $Form = New-Object System.Windows.Forms.Form
 $Form.StartPosition = 'CenterScreen'
 
-$Form.Text = "EleetShell - Practice Active Directory and PowerShell! | No game score file currently selected"
+$Form.Text = "EleetShell - Practice Windows, Windows Server, PowerShell! and more! | No game score file currently selected"
 
 $Form.BackColor = "White"
 
@@ -76,7 +80,7 @@ $Menu_Bar = New-Object System.Windows.Forms.MenuStrip
 $New_Game_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $Load_Game_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $View_Score_And_Stats_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
-$View_My_EliteShell_Information_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
+$View_My_System_Information_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $View_EliteShell_Answers_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $Read_Me_Strip_Menu_Item = New-Object System.Windows.Forms.ToolStripMenuItem
 $Windows_General_Strip_Menu_Item_Learn = New-Object System.Windows.Forms.ToolStripMenuItem
@@ -398,9 +402,9 @@ $View_Score_And_Stats_Strip_Menu_Item.Name= "View_Score_And_Stats_Strip_Menu_Ite
 $View_Score_And_Stats_Strip_Menu_Item.Size = New-Object System.Drawing.Size(152, 22)
 $View_Score_And_Stats_Strip_Menu_Item.Text = "View Score + Stats"
 
-$View_My_EliteShell_Information_Strip_Menu_Item.Name= "View_My_EliteShell_Information_Strip_Menu_Item"
-$View_My_EliteShell_Information_Strip_Menu_Item.Size = New-Object System.Drawing.Size(152, 22)
-$View_My_EliteShell_Information_Strip_Menu_Item.Text = "View My EliteShell Information"
+$View_My_System_Information_Strip_Menu_Item.Name= "View_My_System_Information_Strip_Menu_Item"
+$View_My_System_Information_Strip_Menu_Item.Size = New-Object System.Drawing.Size(152, 22)
+$View_My_System_Information_Strip_Menu_Item.Text = "View My System Information"
 
 $View_EliteShell_Answers_Strip_Menu_Item.Name= "View_EliteShell_Answers_Strip_Menu_Item"
 $View_EliteShell_Answers_Strip_Menu_Item.Size = New-Object System.Drawing.Size(152, 22)
@@ -410,7 +414,7 @@ $Read_Me_Strip_Menu_Item.Name= "Read_Me_Strip_Menu_Item"
 $Read_Me_Strip_Menu_Item.Size = New-Object System.Drawing.Size(152, 22)
 $Read_Me_Strip_Menu_Item.Text = "Read Me"
 
-$File_Menu_Item.DropDownItems.AddRange(@($New_Game_Strip_Menu_Item, $Load_Game_Strip_Menu_Item, $View_My_EliteShell_Information_Strip_Menu_Item, $View_EliteShell_Answers_Strip_Menu_Item, $Read_Me_Strip_Menu_Item))
+$File_Menu_Item.DropDownItems.AddRange(@($New_Game_Strip_Menu_Item, $Load_Game_Strip_Menu_Item, $View_My_System_Information_Strip_Menu_Item, $View_EliteShell_Answers_Strip_Menu_Item, $Read_Me_Strip_Menu_Item))
 
 function On_Click_New_Game_Strip_Menu_Item($Sender,$e){
 
@@ -1050,12 +1054,12 @@ $Total_Unique_Problems_Label.Text = "$Unique_Problems_Count total unique problem
 
 }
 
-function On_Click_View_My_EliteShell_Information_Strip_Menu_Item{
+function On_Click_View_My_System_Information_Strip_Menu_Item{
 
-$MessageBoxTitle = "My EliteShell Information:"
+$MessageBoxTitle = "My System Information:"
 
 $MessageBoxBody = "OS: $OS `nLast Run Time: $Last_Accessed_Time `n`nScreen Resolution: $Screen_Resolution
-`n`nArchitecture: $Architecture `n`nPowerShell Version: $PowerShell_Version"
+`nArchitecture: $Architecture `n`nPowerShell Version: $PowerShell_Version"
 
 $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconSuccess)
 
@@ -1095,7 +1099,7 @@ $Load_Game_Strip_Menu_Item.Add_Click( { On_Click_Load_Game_Strip_Menu_Item $Load
 
 $View_Score_And_Stats_Strip_Menu_Item.Add_Click( { On_Click_View_Score_And_Stats_Strip_Menu_Item $View_Score_And_Stats_Strip_Menu_Item $EventArgs} )
 
-$View_My_EliteShell_Information_Strip_Menu_Item.Add_Click( { On_Click_View_My_EliteShell_Information_Strip_Menu_Item $View_My_EliteShell_Information_Strip_Menu_Item $EventArgs} )
+$View_My_System_Information_Strip_Menu_Item.Add_Click( { On_Click_View_My_System_Information_Strip_Menu_Item $View_My_System_Information_Strip_Menu_Item $EventArgs} )
 
 $View_EliteShell_Answers_Strip_Menu_Item.Add_Click( { On_Click_View_EliteShell_Answers_Strip_Menu_Item $View_My_EliteShell_Answers_Strip_Menu_Item $EventArgs} )
 

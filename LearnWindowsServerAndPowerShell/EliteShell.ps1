@@ -1,6 +1,56 @@
 #https://quizlet.com/4307055/the-osi-model-flash-cards/ 
 
-#OSI_Questions = "", "", "", "", "" | Get-Random
+<#
+
+$OSI_Questions = "What is layer 1?", "What is layer 2?", "What is layer 3?", "What is layer 4?", "What is layer 5?", "What is layer 6?", "What is layer 7?"
+
+$Random_OSI_Question = $OSI_Questions | Get-Random
+
+Write-Host $Random_OSI_Question
+
+if($Random_OSI_Question -eq "What is layer 1?"){
+
+Write-Host "Physical"
+
+}
+
+if($Random_OSI_Question -eq "What is layer 2?"){
+
+Write-Host "Data Link"
+
+}
+
+if($Random_OSI_Question -eq "What is layer 3?"){
+
+Write-Host "Network"
+
+}
+
+if($Random_OSI_Question -eq "What is layer 4?"){
+
+Write-Host "Transport"
+
+}
+
+if($Random_OSI_Question -eq "What is layer 5?"){
+
+Write-Host "Session"
+
+}
+
+if($Random_OSI_Question -eq "What is layer 6?"){
+
+Write-Host "Presentation"
+
+}
+
+if($Random_OSI_Question -eq "What is layer 7?"){
+
+Write-Host "Application"
+
+}
+
+#>
 
 #Import-Module ActiveDirectory
 
@@ -105,6 +155,7 @@ $Networking_Strip_Menu_Item_Practice_5 = New-Object System.Windows.Forms.ToolStr
 $Networking_Strip_Menu_Item_Practice_6 = New-Object System.Windows.Forms.ToolStripMenuItem
 $Networking_Strip_Menu_Item_Practice_7 = New-Object System.Windows.Forms.ToolStripMenuItem
 $Networking_Strip_Menu_Item_Practice_8 = New-Object System.Windows.Forms.ToolStripMenuItem
+$Networking_Strip_Menu_Item_Practice_9 = New-Object System.Windows.Forms.ToolStripMenuItem
 
 $Windows_Registry_Strip_Menu_Item_Practice = New-Object System.Windows.Forms.ToolStripMenuItem
 $Windows_Registry_Strip_Menu_Item_Practice_2 = New-Object System.Windows.Forms.ToolStripMenuItem
@@ -4125,6 +4176,203 @@ if ($Body.Text = "Complete the 'netsh' command to show all stored WLAN profiles 
 	$Input_Box.Clear()
 }
 
+## Networking 9 ##
+
+$Networking_Strip_Menu_Item_Practice_9.Name = "Networking_Strip_Menu_Item_Practice_9"
+$Networking_Strip_Menu_Item_Practice_9.Size = New-Object System.Drawing.Size(35, 20)
+$Networking_Strip_Menu_Item_Practice_9.Text = "Networking #9 (OSI Model - No PowerShell)"
+
+
+function On_Click_Networking_Strip_Menu_Item_9($Sender,$e){
+
+    if($Game_Score_File -eq $null){
+
+    $MessageBoxTitle = "No score file loaded."
+
+    $MessageBoxBody = "No game is loaded. Your results will not be recorded."
+
+    $Confirmation = [System.Windows.MessageBox]::Show($MessageBoxBody,$MessageBoxTitle,$ButtonTypeOk,$MessageIconError)
+
+    }
+
+    $Completed_In.Text= ""
+
+    $Correct_Incorrect.Text= ""
+
+	$Timer_Start_Time.Stop()
+
+    $Timer = [System.Diagnostics.Stopwatch]::StartNew()
+
+	$global:Timer_Start_Time = $Timer
+
+    $Title.Text= "Networking #9"
+
+	$Title.ForeColor = 'Blue'
+
+	$OSI_Questions = "What is layer 1?", "What is layer 2?", "What is layer 3?", "What is layer 4?", "What is layer 5?", "What is layer 6?", "What is layer 7?"
+
+    $Random_OSI_Question = $OSI_Questions | Get-Random
+
+    $global:Random_OSI_Question = $Random_OSI_Question
+
+	$Body.Text = $Random_OSI_Question
+	
+    if($Random_OSI_Question -eq "What is layer 1?"){
+    
+    $Answer "Physical"
+    
+    }
+    
+    if($Random_OSI_Question -eq "What is layer 2?"){
+    
+    Write-Host "Data Link"
+    
+    }
+    
+    if($Random_OSI_Question -eq "What is layer 3?"){
+    
+    Write-Host "Network"
+    
+    }
+    
+    if($Random_OSI_Question -eq "What is layer 4?"){
+    
+    Write-Host "Transport"
+    
+    }
+    
+    if($Random_OSI_Question -eq "What is layer 5?"){
+    
+    Write-Host "Session"
+    
+    }
+    
+    if($Random_OSI_Question -eq "What is layer 6?"){
+    
+    Write-Host "Presentation"
+    
+    }
+    
+    if($Random_OSI_Question -eq "What is layer 7?"){
+    
+    Write-Host "Application"
+    
+    }
+
+    $Form.Controls.RemoveByKey("The_Submit_Button")
+
+	$The_Submit_Button = New-Object System.Windows.Forms.Button
+
+	$The_Submit_Button.Name = "The_Submit_Button"
+
+	$The_Submit_Button.Text = "Submit"
+
+	$The_Submit_Button.AutoSize = $True
+
+	$The_Submit_Button.Font = 'Verdana,12,style=Bold'
+
+	$The_Submit_Button.ForeColor = 'Blue'
+
+	$The_Submit_Button.Location = New-Object System.Drawing.Point(30,200)
+
+	$The_Submit_Button.Add_Click({Selected_Networking_Practice_Problem_8})
+
+	$Form.Controls.RemoveByKey("The_Learn_More_Button")
+
+    $The_Learn_More_Button = New-Object System.Windows.Forms.Button
+
+    $The_Learn_More_Button.Name = "The_Learn_More_Button"
+
+    $The_Learn_More_Button.Text = "Learn More"
+
+    $The_Learn_More_Button.AutoSize = $True
+
+    $The_Learn_More_Button.Font = 'Calibri,12,style=Bold'
+
+    $The_Learn_More_Button.ForeColor = 'Blue'
+
+    $The_Learn_More_Button.Location = New-Object System.Drawing.Point(200,200)
+
+    $The_Learn_More_Button.Add_Click({Start-Process ""})
+
+    $Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $The_Learn_More_Button, $Input_Box))
+
+	$Problem_Completed = "netsh wlan show profiles"
+
+	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
+
+	if($Problem_Completed_Check -ne $null) {
+	$Title.Text = "Networking #8 (COMPLETED)"
+	$Title.ForeColor = 'Green'}
+
+	else {
+
+	$Title.Text = "Networking #8"
+
+	}
+}
+
+function Selected_Networking_Practice_Problem_8{
+
+$Answer = @($Input_Box.Text)
+
+Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb runAs
+
+if ($Body.Text = "Complete the 'netsh' command to show all stored WLAN profiles on this machine"){
+	if($Input_Box.Text -eq "netsh wlan show profiles"){
+
+	$Time_Elapsed = $Timer_Start_Time.Elapsed
+
+	$Timer = $([string]::Format("`{0:d2}:{1:d2}:{2:d2}",
+	$Time_Elapsed.hours,
+	$Time_Elapsed.minutes,
+	$Time_Elapsed.seconds))
+
+	$New_Row | Add-Content -Path $Game_Score_File
+
+    $New_Row = New-Object PsObject -Property @{Problem = "Networking #8" ; Description = "Complete the 'netsh' command to show all stored WLAN profiles on this machine" ; Result = "netsh wlan show profiles" ; CompletionTime = $Timer ; Date = $Date ; Points = "1"}
+
+    $New_Results += $New_Row
+
+    $New_Results | Export-CSV -append $Game_Score_File
+
+	$Timer.Stop
+
+	$CSV_Length = Import-CSV $Game_Score_File | Measure-Object | Select-Object -expand Count
+
+	$global:Number_Of_Correct_Answers = $CSV_Length
+
+	$Total_Number_Of_Answers_Label.Text = "$Number_Of_Correct_Answers total problems solved"
+
+	$CSV_Stuff = Import-CSV -Path $Game_Score_File
+
+	$Total_Score = $CSV_Stuff | Measure-Object Points -Sum | Select-Object -expand Sum | Out-String
+
+	$global:Total_Score = $Total_Score
+
+	$Total_Score_Label.Text = "$Total_Score total points"
+
+    Invoke-Expression Dropdown_Problem_Completed_Check
+
+    $Body.Text = "Complete the 'netsh' command to show all stored WLAN profiles on this machine"
+
+    $Correct_Incorrect.Text = "Correct, your answer was $Answer."
+
+    $Correct_Incorrect.ForeColor = 'Green'
+    $Completed_In.Text = "Completed in $Timer"
+
+    }
+
+	else{
+		$Body.Text = "Complete the 'netsh' command to show all stored WLAN profiles on this machine"
+        $Correct_Incorrect.Text = "Incorrect, your answer was $Answer."
+        $Correct_Incorrect.ForeColor = 'Red'
+        }
+	}
+
+	$Input_Box.Clear()
+}
+
 
 $Networking_Strip_Menu_Item_Practice.Add_Click( { On_Click_Networking_Strip_Menu_Item $Networking_Strip_Menu_Item_Practice $EventArgs} )
 
@@ -4142,7 +4390,9 @@ $Networking_Strip_Menu_Item_Practice_7.Add_Click( { On_Click_Networking_Strip_Me
 
 $Networking_Strip_Menu_Item_Practice_8.Add_Click( { On_Click_Networking_Strip_Menu_Item_8 $Networking_Strip_Menu_Item_Practice_8 $EventArgs} )
 
-$Networking_Strip_Menu_Item.DropDownItems.AddRange(@($Networking_Strip_Menu_Item_Practice, $Networking_Strip_Menu_Item_Practice_2, $Networking_Strip_Menu_Item_Practice_3, $Networking_Strip_Menu_Item_Practice_4, $Networking_Strip_Menu_Item_Practice_5, $Networking_Strip_Menu_Item_Practice_6, $Networking_Strip_Menu_Item_Practice_7, $Networking_Strip_Menu_Item_Practice_8))
+$Networking_Strip_Menu_Item_Practice_9.Add_Click( { On_Click_Networking_Strip_Menu_Item_9 $Networking_Strip_Menu_Item_Practice_9 $EventArgs} )
+
+$Networking_Strip_Menu_Item.DropDownItems.AddRange(@($Networking_Strip_Menu_Item_Practice, $Networking_Strip_Menu_Item_Practice_2, $Networking_Strip_Menu_Item_Practice_3, $Networking_Strip_Menu_Item_Practice_4, $Networking_Strip_Menu_Item_Practice_5, $Networking_Strip_Menu_Item_Practice_6, $Networking_Strip_Menu_Item_Practice_7, $Networking_Strip_Menu_Item_Practice_8, $Networking_Strip_Menu_Item_Practice_9))
 
 ## start Windows General menu item ##
 

@@ -1,58 +1,4 @@
-#https://quizlet.com/4307055/the-osi-model-flash-cards/ 
-
-<#
-
-$OSI_Questions = "What is layer 1?", "What is layer 2?", "What is layer 3?", "What is layer 4?", "What is layer 5?", "What is layer 6?", "What is layer 7?"
-
-$Random_OSI_Question = $OSI_Questions | Get-Random
-
-Write-Host $Random_OSI_Question
-
-if($Random_OSI_Question -eq "What is layer 1?"){
-
-Write-Host "Physical"
-
-}
-
-if($Random_OSI_Question -eq "What is layer 2?"){
-
-Write-Host "Data Link"
-
-}
-
-if($Random_OSI_Question -eq "What is layer 3?"){
-
-Write-Host "Network"
-
-}
-
-if($Random_OSI_Question -eq "What is layer 4?"){
-
-Write-Host "Transport"
-
-}
-
-if($Random_OSI_Question -eq "What is layer 5?"){
-
-Write-Host "Session"
-
-}
-
-if($Random_OSI_Question -eq "What is layer 6?"){
-
-Write-Host "Presentation"
-
-}
-
-if($Random_OSI_Question -eq "What is layer 7?"){
-
-Write-Host "Application"
-
-}
-
-#>
-
-#Import-Module ActiveDirectory
+ #Import-Module ActiveDirectory
 
 Add-Type -AssemblyName System.Windows.Forms
 
@@ -4182,7 +4128,6 @@ $Networking_Strip_Menu_Item_Practice_9.Name = "Networking_Strip_Menu_Item_Practi
 $Networking_Strip_Menu_Item_Practice_9.Size = New-Object System.Drawing.Size(35, 20)
 $Networking_Strip_Menu_Item_Practice_9.Text = "Networking #9 (OSI Model - No PowerShell)"
 
-
 function On_Click_Networking_Strip_Menu_Item_9($Sender,$e){
 
     if($Game_Score_File -eq $null){
@@ -4209,7 +4154,7 @@ function On_Click_Networking_Strip_Menu_Item_9($Sender,$e){
 
 	$Title.ForeColor = 'Blue'
 
-	$OSI_Questions = "What is layer 1?", "What is layer 2?", "What is layer 3?", "What is layer 4?", "What is layer 5?", "What is layer 6?", "What is layer 7?"
+	$OSI_Questions = "What is layer 1 of the OSI Model?", "What is layer 2 of the OSI Model?", "What is layer 3 of the OSI Model?", "What is layer 4 of the OSI Model?", "What is layer 5 of the OSI Model?", "What is layer 6 of the OSI Model?", "What is layer 7 of the OSI Model?"
 
     $Random_OSI_Question = $OSI_Questions | Get-Random
 
@@ -4217,45 +4162,59 @@ function On_Click_Networking_Strip_Menu_Item_9($Sender,$e){
 
 	$Body.Text = $Random_OSI_Question
 	
-    if($Random_OSI_Question -eq "What is layer 1?"){
+    if($Random_OSI_Question -eq "What is layer 1 of the OSI Model?"){
     
-    $Answer "Physical"
-    
-    }
-    
-    if($Random_OSI_Question -eq "What is layer 2?"){
-    
-    Write-Host "Data Link"
+    $Correct_Answer = "Physical"
+
+	$global:Correct_Answer = $Correct_Answer
     
     }
     
-    if($Random_OSI_Question -eq "What is layer 3?"){
-    
-    Write-Host "Network"
-    
-    }
-    
-    if($Random_OSI_Question -eq "What is layer 4?"){
-    
-    Write-Host "Transport"
+    if($Random_OSI_Question -eq "What is layer 2 of the OSI Model?"){
+  
+	$Correct_Answer = "Data Link"
+
+	$global:Correct_Answer = $Correct_Answer
     
     }
     
-    if($Random_OSI_Question -eq "What is layer 5?"){
+    if($Random_OSI_Question -eq "What is layer 3 of the OSI Model?"){
     
-    Write-Host "Session"
-    
-    }
-    
-    if($Random_OSI_Question -eq "What is layer 6?"){
-    
-    Write-Host "Presentation"
+    $Correct_Answer = "Network"
+
+	$global:Correct_Answer = $Correct_Answer
     
     }
     
-    if($Random_OSI_Question -eq "What is layer 7?"){
+    if($Random_OSI_Question -eq "What is layer 4 of the OSI Model?"){
     
-    Write-Host "Application"
+    $Correct_Answer = "Transport"
+
+	$global:Correct_Answer = $Correct_Answer
+    
+    }
+    
+    if($Random_OSI_Question -eq "What is layer 5 of the OSI Model?"){
+
+	$Correct_Answer = "Session"
+
+	$global:Correct_Answer = $Correct_Answer
+    
+    }
+    
+    if($Random_OSI_Question -eq "What is layer 6 of the OSI Model?"){
+
+	$Correct_Answer = "Presentation"
+
+	$global:Correct_Answer = $Correct_Answer
+    
+    }
+    
+    if($Random_OSI_Question -eq "What is layer 7 of the OSI Model?"){
+
+	$Correct_Answer = "Application"
+
+	$global:Correct_Answer = $Correct_Answer
     
     }
 
@@ -4275,7 +4234,7 @@ function On_Click_Networking_Strip_Menu_Item_9($Sender,$e){
 
 	$The_Submit_Button.Location = New-Object System.Drawing.Point(30,200)
 
-	$The_Submit_Button.Add_Click({Selected_Networking_Practice_Problem_8})
+	$The_Submit_Button.Add_Click({Selected_Networking_Practice_Problem_9})
 
 	$Form.Controls.RemoveByKey("The_Learn_More_Button")
 
@@ -4293,33 +4252,63 @@ function On_Click_Networking_Strip_Menu_Item_9($Sender,$e){
 
     $The_Learn_More_Button.Location = New-Object System.Drawing.Point(200,200)
 
-    $The_Learn_More_Button.Add_Click({Start-Process ""})
+    $The_Learn_More_Button.Add_Click({Start-Process "https://www.imperva.com/learn/application-security/osi-model/"})
 
     $Form.Controls.AddRange(@($Menu_Bar, $Title, $Body, $The_Submit_Button, $The_Learn_More_Button, $Input_Box))
 
-	$Problem_Completed = "netsh wlan show profiles"
+	$Problem_Completed_Physical = "Physical"
 
-	$Problem_Completed_Check = Select-String $Game_Score_File -Pattern $Problem_Completed
+	$Problem_Completed_Physical_Check = Select-String $Game_Score_File -Pattern $Problem_Completed_Physical
 
-	if($Problem_Completed_Check -ne $null) {
-	$Title.Text = "Networking #8 (COMPLETED)"
-	$Title.ForeColor = 'Green'}
+	$Problem_Completed_Data_Link = "Data Link"
+
+	$Problem_Completed_Data_Link_Check = Select-String $Game_Score_File -Pattern $Problem_Completed_Data_Link
+
+	$Problem_Completed_Network = "Network"
+
+	$Problem_Completed_Network_Check = Select-String $Game_Score_File -Pattern $Problem_Completed_Network
+
+	$Problem_Completed_Transport = "Transport"
+
+	$Problem_Completed_Transport_Check = Select-String $Game_Score_File -Pattern $Problem_Completed_Transport
+
+	$Problem_Completed_Session = "Session"
+
+	$Problem_Completed_Session_Check = Select-String $Game_Score_File -Pattern $Problem_Completed_Session
+
+	$Problem_Completed_Presentation = "Presentation"
+
+	$Problem_Completed_Presentation_Check = Select-String $Game_Score_File -Pattern $Problem_Completed_Presentation
+
+	$Problem_Completed_Application = "Application"
+
+	$Problem_Completed_Application_Check = Select-String $Game_Score_File -Pattern $Problem_Completed_Application
+
+	if($Problem_Completed_Physical_Check -and $Problem_Completed_Data_Link_Check -and $Problem_Completed_Network_Check -and $Problem_Completed_Transport_Check -and 
+	$Problem_Completed_Transport_Check -and $Problem_Completed_Session_Check -and $Problem_Completed_Presentation_Check -and $Problem_Completed_Application_Check -ne $null) {
+
+	$Title.Text = "Networking #9 (COMPLETED)"
+	$Title.ForeColor = 'Green'
+	
+	$Networking_Strip_Menu_Item_Practice_9.Text = 'Networking #9 (OSI Model - No PowerShell)'
+	$Networking_Strip_Menu_Item_Practice_9.ForeColor = 'Green'
+
+}
+	
+	}
 
 	else {
 
-	$Title.Text = "Networking #8"
+	$Title.Text = "Networking #9"
 
 	}
-}
 
-function Selected_Networking_Practice_Problem_8{
+function Selected_Networking_Practice_Problem_9{
 
 $Answer = @($Input_Box.Text)
 
-Start-Process Powershell -ArgumentList "-NoExit -command ""& $Answer""" -Verb runAs
-
-if ($Body.Text = "Complete the 'netsh' command to show all stored WLAN profiles on this machine"){
-	if($Input_Box.Text -eq "netsh wlan show profiles"){
+if ($Body.Text = $Random_OSI_Question){
+	if($Input_Box.Text -eq $Correct_Answer){
 
 	$Time_Elapsed = $Timer_Start_Time.Elapsed
 
@@ -4330,7 +4319,7 @@ if ($Body.Text = "Complete the 'netsh' command to show all stored WLAN profiles 
 
 	$New_Row | Add-Content -Path $Game_Score_File
 
-    $New_Row = New-Object PsObject -Property @{Problem = "Networking #8" ; Description = "Complete the 'netsh' command to show all stored WLAN profiles on this machine" ; Result = "netsh wlan show profiles" ; CompletionTime = $Timer ; Date = $Date ; Points = "1"}
+    $New_Row = New-Object PsObject -Property @{Problem = "Networking #9" ; Description = $Random_OSI_Question ; Result = $Correct_Answer ; CompletionTime = $Timer ; Date = $Date ; Points = "1"}
 
     $New_Results += $New_Row
 
@@ -4354,7 +4343,7 @@ if ($Body.Text = "Complete the 'netsh' command to show all stored WLAN profiles 
 
     Invoke-Expression Dropdown_Problem_Completed_Check
 
-    $Body.Text = "Complete the 'netsh' command to show all stored WLAN profiles on this machine"
+    $Body.Text = $Random_OSI_Question
 
     $Correct_Incorrect.Text = "Correct, your answer was $Answer."
 
@@ -4364,7 +4353,7 @@ if ($Body.Text = "Complete the 'netsh' command to show all stored WLAN profiles 
     }
 
 	else{
-		$Body.Text = "Complete the 'netsh' command to show all stored WLAN profiles on this machine"
+		$Body.Text = $Random_OSI_Question
         $Correct_Incorrect.Text = "Incorrect, your answer was $Answer."
         $Correct_Incorrect.ForeColor = 'Red'
         }

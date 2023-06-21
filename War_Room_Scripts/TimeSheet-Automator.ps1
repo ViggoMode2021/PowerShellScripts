@@ -11,7 +11,9 @@ $Day_Of_Week = (Get-Date).DayOfWeek # Get day of the week
 
 $Current_Time = (Get-Date).ToString('T') # Get current time
 
-$Current_Month = (Get-Culture).DateTimeFormat.GetMonthName((Get-Date).Month) # Get current month$Test_Path = Test-Path -Path "$Desktop_Path\TimeSheets\$Current_Month" # Check to see if TimeSheet folder with current month subdirectory is on desktop and if
+$Current_Month = (Get-Culture).DateTimeFormat.GetMonthName((Get-Date).Month) # Get current month
+
+$Test_Path = Test-Path -Path "$Desktop_Path\TimeSheets\$Current_Month" # Check to see if TimeSheet folder with current month subdirectory is on desktop and if
 
 if($Test_Path -eq $True){
 
@@ -41,9 +43,11 @@ $Find_Monday_Total = "Monday-Total" # Find 'Monday-Total' in current timesheet
 
 $Clock_Out_Time = [DateTime]"5:00 PM" # Convert clock out time to datetime format
 
+$Clock_Out_Time_With_Lunch = [DateTime]"4:30 PM" # Subtract 30 minutes from total time worked in order to account for lunch break
+
 $Current_Time = [DateTime]$Current_Time # Convert current time to datetime format
 
-$Total_Time_Worked = New-TimeSpan -Start $Current_Time -End $Clock_Out_Time # Create timespan from current time to clock out time
+$Total_Time_Worked = New-TimeSpan -Start $Current_Time -End $Clock_Out_Time_With_Lunch # Create timespan from current time to clock out time
 
 $Total_Time_Worked = [String]$Total_Time_Worked # Convert to string
 
@@ -80,7 +84,7 @@ $Object_Selection.Find.Execute($Find_Monday_Total, $MatchCase,
 
 }
 
-if($Day_Of_Week -eq "Tuesday"){ # Same similar as above but for Tuesday
+if($Day_Of_Week -eq "Tuesday"){ # Similar as above but for Tuesday
 
 $Today_Date = $Date.ToString('MM-dd-yy')
 
@@ -102,9 +106,11 @@ $Find_Tuesday_Total = "Tuesday-Total"
 
 $Clock_Out_Time = [DateTime]"5:00 PM"
 
+$Clock_Out_Time_With_Lunch = [DateTime]"4:30 PM"
+
 $Current_Time = [DateTime]$Current_Time
 
-$Total_Time_Worked = New-TimeSpan -Start $Current_Time -End $Clock_Out_Time
+$Total_Time_Worked = New-TimeSpan -Start $Current_Time -End $Clock_Out_Time_With_Lunch 
 
 $Total_Time_Worked = [String]$Total_Time_Worked
 
@@ -163,12 +169,16 @@ $Find_Wednesday_Total = "Wednesday-Total"
 
 $Clock_Out_Time = [DateTime]"5:00 PM"
 
+$Clock_Out_Time_With_Lunch = [DateTime]"4:30 PM"
+
 $Current_Time = [DateTime]$Current_Time
 
-$Total_Time_Worked = New-TimeSpan -Start $Current_Time -End $Clock_Out_Time
+$Total_Time_Worked = New-TimeSpan -Start $Current_Time -End $Clock_Out_Time_With_Lunch 
 $Total_Time_Worked = [String]$Total_Time_Worked
 
-$Total_Time_Worked_Wednesday = "Wed-Total:" + "`n`n`n$Total_Time_Worked"$Document_Object = $Word_Object.Documents.Open(“$Desktop_Path\TimeSheets\$Current_Month\Time-Sheet-Week-Of-Monday-$Monday.doc”)
+$Total_Time_Worked_Wednesday = "Wed-Total:" + "`n`n`n$Total_Time_Worked"
+
+$Document_Object = $Word_Object.Documents.Open(“$Desktop_Path\TimeSheets\$Current_Month\Time-Sheet-Week-Of-Monday-$Monday.doc”)
 $Object_Selection = $Word_Object.Selection
 
 $ReplaceAll = 2
@@ -221,9 +231,11 @@ $Find_Thursday_Total = "Thursday-Total"
 
 $Clock_Out_Time = [DateTime]"5:00 PM"
 
+$Clock_Out_Time_With_Lunch = [DateTime]"4:30 PM"
+
 $Current_Time = [DateTime]$Current_Time
 
-$Total_Time_Worked = New-TimeSpan -Start $Current_Time -End $Clock_Out_Time
+$Total_Time_Worked = New-TimeSpan -Start $Current_Time -End $Clock_Out_Time_With_Lunch
 $Total_Time_Worked = [String]$Total_Time_Worked
 
 $Total_Time_Worked_Thursday = "Thurs-Total:" + "`n`n`n$Total_Time_Worked"
@@ -281,9 +293,11 @@ $Find_Friday_Total = "Friday-Total"
 
 $Clock_Out_Time = [DateTime]"5:00 PM"
 
+$Clock_Out_Time_With_Lunch = [DateTime]"4:30 PM"
+
 $Current_Time = [DateTime]$Current_Time
 
-$Total_Time_Worked = New-TimeSpan -Start $Current_Time -End $Clock_Out_Time
+$Total_Time_Worked = New-TimeSpan -Start $Current_Time -End $Clock_Out_Time_With_Lunch
 $Total_Time_Worked = [String]$Total_Time_Worked
 
 $Total_Time_Worked_Friday = "Fri-Total:" + "`n`n`n$Total_Time_Worked"
@@ -495,7 +509,7 @@ $Object_Selection.Find.Execute($Find_Total_Hours, $MatchCase,
   $MatchAllWordForms,$Forward,$Wrap,$Format,$Replace_Total_Hours,
   $ReplaceAll)
 
-Start-Process -FilePath “$Desktop_Path\TimeSheets\$Current_Month\Time-Sheet-Week-Of-Monday-$Monday.doc” -Verb print
+Start-Process -FilePath “$Desktop_Path\TimeSheets\$Current_Month\Time-Sheet-Week-Of-Monday-$Monday.doc” -Verb Print
 
 }
 

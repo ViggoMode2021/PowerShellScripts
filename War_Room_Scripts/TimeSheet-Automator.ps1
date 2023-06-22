@@ -199,7 +199,7 @@ $Object_Selection.Find.Execute($Find_Wednesday_Date, $MatchCase,
 
 $Object_Selection.Find.Execute($Find_Wednesday_Time_In, $MatchCase,
   $MatchWholeWord,$MatchWildcards,$MatchSoundsLike,
-  $MatchAllWordForms,$Forward,$Wrap,$Format, $Replace_Wednesday_Time_In,
+  $MatchAllWordForms,$Forward,$Wrap,$Format,$Replace_Wednesday_Time_In,
   $ReplaceAll)
 
 $Object_Selection.Find.Execute($Find_Wednesday_Total, $MatchCase,
@@ -221,7 +221,7 @@ $Monday = $Monday.ToString('MM-dd-yy')
 
 $Find_Thursday_Date = “Thursday-Date”
 
-$Find_Wednesday_Date = $Today_Date
+$Replace_Thursday_Date = $Today_Date
 
 $Find_Thursday_Time_In = "Thursday-Time-In"
 

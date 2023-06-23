@@ -345,6 +345,8 @@ $Total_Monday_Time_Worked = $Total_Monday_Time_Worked -replace '\s',''
 
 $Total_Monday_Time_Worked_Hours = $Total_Monday_Time_Worked.Substring(0,2)
 
+Write-Host "Total Monday hours: $Total_Monday_Time_Worked_Hours"
+
 $Total_Monday_Time_Worked_Hours = [int]$Total_Monday_Time_Worked_Hours
 
 $Total_Monday_Time_Worked_Minutes = $Total_Monday_Time_Worked.Substring(3,3)
@@ -361,11 +363,13 @@ $Tuesday_Time = $Document_Object.Tables[1].Cell(3,3).range.text
 
 $Tuesday_Time_Worked = $Tuesday_Time.IndexOf("Tues-Total:")
 
-$Total_Tuesday_Time_Worked = $Tuesday_Time.Substring($Tuesday_Time_Worked+10)
+$Total_Tuesday_Time_Worked = $Tuesday_Time.Substring($Tuesday_Time_Worked+11)
 
 $Total_Tuesday_Time_Worked = $Total_Tuesday_Time_Worked -replace '\s',''
 
 $Total_Tuesday_Time_Worked_Hours = $Total_Tuesday_Time_Worked.Substring(0,2)
+
+Write-Host "Total Tuesday hours: $Total_Tuesday_Time_Worked_Hours"
 
 $Total_Tuesday_Time_Worked_Hours = [int]$Total_Tuesday_Time_Worked_Hours
 
@@ -389,6 +393,8 @@ $Total_Wednesday_Time_Worked = $Total_Wednesday_Time_Worked -replace '\s',''
 
 $Total_Wednesday_Time_Worked_Hours = $Total_Wednesday_Time_Worked.Substring(0,2)
 
+Write-Host "Total Wednesday hours: $Total_Wednesday_Time_Worked_Hours"
+
 $Total_Wednesday_Time_Worked_Hours = [int]$Total_Wednesday_Time_Worked_Hours
 
 $Total_Wednesday_Time_Worked_Minutes = $Total_Wednesday_Time_Worked.Substring(3,3)
@@ -405,11 +411,13 @@ $Thursday_Time = $Document_Object.Tables[1].Cell(3,5).range.text
 
 $Thursday_Time_Worked = $Thursday_Time.IndexOf("Thurs-Total:")
 
-$Total_Thursday_Time_Worked = $Thursday_Time.Substring($Thursday_Time_Worked+10)
+$Total_Thursday_Time_Worked = $Thursday_Time.Substring($Thursday_Time_Worked+12)
 
 $Total_Thursday_Time_Worked = $Total_Thursday_Time_Worked -replace '\s',''
 
 $Total_Thursday_Time_Worked_Hours = $Total_Thursday_Time_Worked.Substring(0,2)
+
+Write-Host "Total Thursday hours: $Total_Thursday_Time_Worked_Hours"
 
 $Total_Thursday_Time_Worked_Hours = [int]$Total_Thursday_Time_Worked_Hours
 
@@ -432,6 +440,8 @@ $Total_Friday_Time_Worked = $Friday_Time.Substring($Friday_Time_Worked+10)
 $Total_Friday_Time_Worked = $Total_Friday_Time_Worked -replace '\s',''
 
 $Total_Friday_Time_Worked_Hours = $Total_Friday_Time_Worked.Substring(0,2)
+
+Write-Host "Total Friday hours: $Total_Friday_Time_Worked_Hours"
 
 $Total_Friday_Time_Worked_Hours = [int]$Total_Friday_Time_Worked_Hours
 
@@ -509,7 +519,49 @@ $Object_Selection.Find.Execute($Find_Total_Hours, $MatchCase,
   $MatchAllWordForms,$Forward,$Wrap,$Format,$Replace_Total_Hours,
   $ReplaceAll)
 
-Start-Process -FilePath “$Desktop_Path\TimeSheets\$Current_Month\Time-Sheet-Week-Of-Monday-$Monday.doc” -Verb Print
+
+$Find_Week_Ending_Hours = "Week-Ending"
+
+$Replace_Week_Ending = $Today_Date
+
+$ReplaceAll = 2
+$FindContinue = 1
+$MatchCase = $False
+$MatchWholeWord = $True
+$MatchWildcards = $False
+$MatchSoundsLike = $False
+$MatchAllWordForms = $False
+$Forward = $True
+$Wrap = $FindContinue
+$Format = $False
+
+$Object_Selection.Find.Execute($Find_Week_Ending_Hours, $MatchCase,
+  $MatchWholeWord,$MatchWildcards,$MatchSoundsLike,
+  $MatchAllWordForms,$Forward,$Wrap,$Format,$Replace_Week_Ending,
+  $ReplaceAll)
+
+
+$Find_Employee_Date = "Week-Ending"
+
+$Replace_Week_Ending = $Today_Date
+
+$ReplaceAll = 2
+$FindContinue = 1
+$MatchCase = $False
+$MatchWholeWord = $True
+$MatchWildcards = $False
+$MatchSoundsLike = $False
+$MatchAllWordForms = $False
+$Forward = $True
+$Wrap = $FindContinue
+$Format = $False
+
+$Object_Selection.Find.Execute($Find_Week_Ending_Hours, $MatchCase,
+  $MatchWholeWord,$MatchWildcards,$MatchSoundsLike,
+  $MatchAllWordForms,$Forward,$Wrap,$Format,$Replace_Week_Ending,
+  $ReplaceAll)
+
+#Start-Process -FilePath “$Desktop_Path\TimeSheets\$Current_Month\Time-Sheet-Week-Of-Monday-$Monday.doc” -Verb Print
 
 }
 

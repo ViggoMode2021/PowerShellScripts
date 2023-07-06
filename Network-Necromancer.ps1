@@ -30,13 +30,50 @@ $Network_Count = (netsh wlan show profiles) | Select-String "\:(.+)$" | %{$name=
 %{(netsh wlan show profile name="$name" key=clear)} | Select-String "Key Content\W+\:(.+)$" | %{$pass=$_.Matches.Groups[1].Value.Trim(); $_} |
 %{[PSCustomObject]@{ Network = $name;Password = $pass }} | Measure-Object | Select-Object -expandproperty Count | Out-String
 
-Write-Host "You currently have $Network_Count networks on your device." 
+Write-Host "You currently have $Network_Count `nnetworks on your device." -ForegroundColor "Yellow"
 
 $Introduction_1_Second__Prompt = Read-Host "What would you like to do?
 
 1. View a network's password
 2. Remove a network 
 3. Go back"
+
+if($Introduction_1_Second__Prompt -eq "1"){
+
+$Network_Password_Viewer = Read-Host "Which network's password would you like to view?"
+
+if($Network_Password_Viewer -notmatch $All_Networks){
+
+Write-Host "$Network_Password_Viewer is not located on the device, please try again."
+
+Introduction
+
+}
+
+netsh wlan show profile name=$Network_Password_Viewer key=clear | Select-String "Key Content\W+\:(.+)$" | %{$pass=$_.Matches.Groups[1].Value.Trim(); $_} | 
+%{[PSCustomObject]@{ Network = $Network_Password_Viewer;Password = $pass }} | Format-Table -AutoSize 
+
+Introduction
+
+}
+
+if($Introduction_1_Second__Prompt -eq "2"){
+
+$Network_Remover = Read-Host "Which network would you like to remove?"
+
+if($Network_Remover -notmatch $All_Networks){
+
+Write-Host "$Network_Remover is not located on the device, please try again."
+
+Introduction
+
+}
+
+netsh wlan delete profile name=$Network_Remover
+
+Write-Host "$Network_Remover has been removed from your computer" -ForegroundColor "Yellow"
+
+}
 
 if($Introduction_1_Second__Prompt -eq "3"){
 
@@ -58,7 +95,7 @@ $Network_Count = (netsh wlan show profiles) | Select-String "\:(.+)$" | %{$name=
 %{(netsh wlan show profile name="$name" key=clear)} | Select-String "Key Content\W+\:(.+)$" | %{$pass=$_.Matches.Groups[1].Value.Trim(); $_} |
 %{[PSCustomObject]@{ Network = $name;Password = $pass }} | Measure-Object | Select-Object -expandproperty Count | Out-String
 
-Write-Host "You currently have $Network_Count networks on your device." -ForegroundColor "Yellow"
+Write-Host "You currently have $Network_Count `nnetworks on your device." -ForegroundColor "Yellow"
 
 Sleep 2 
 
@@ -166,19 +203,37 @@ Introduction
 
 }
 
+####################################################### Fifth main option ###############################################################
+
+if($Introduction -eq "5"){
+
+$Selected_Network_XML_File = Read-Host "Please specify full path to network XML file."
+
+netsh wlan add profile filename=$Selected_Network_XML_File user=current
+
+$Network_Name =  Split-Path $Selected_Network_XML_File -Leaf
+
+$Connect_Question = Read-Host "Would you like to connect now to $Network_Name? Please type yes or no."
+
+if($Connect_Question -eq "yes"){
+
+$Connect_Name = $Network_Name.replace("Wi-Fi-", "")
+
+$Connect_Name = $Connect_Name.replace(".xml", "")
+
+netsh wlan connect name=$Connect_Name
+
+}
+
+if($Connect_Question -eq "no"){
+
+Introduction
+}
+
+#Write-Host "$Selected_Network_XML_File is incompatible. Please try again."
+
+}
+
 }
 
 Introduction 
-
-# All wifi networks and passwords
-
-$All_Networks_And_Passwords = (netsh wlan show profiles) | Select-String "\:(.+)$" | %{$name=$_.Matches.Groups[1].Value.Trim(); $_} | 
-%{(netsh wlan show profile name="$name" key=clear)} | Select-String "Key Content\W+\:(.+)$" | %{$pass=$_.Matches.Groups[1].Value.Trim(); $_} | 
-%{[PSCustomObject]@{ Network = $name;Password = $pass }} | Format-Table -AutoSize 
-
-# All single networks and passwords 
-
-#$Wifi_Network = Read-Host "Type the wifi network you wish to delete."
-
-netsh wlan show profile name="$Wifi_Network" key=clear | Select-String "Key Content\W+\:(.+)$" | %{$pass=$_.Matches.Groups[1].Value.Trim(); $_} | 
-%{[PSCustomObject]@{ Network = $name;Password = $pass }} | Format-Table -AutoSize 

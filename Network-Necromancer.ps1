@@ -12,8 +12,10 @@ in the event that you may have forgotten it. What would you like to do?
 1. View all networks
 2. View all networks and passwords
 3. Backup all networks to XML files
-4. Backup a certain network to XML file
+4. Backup a specific network to XML file
 5. Add network with XML file
+6. Remove a network
+7. Remove multiple networks
 
 Please type the corresponding number here" 
 
@@ -100,7 +102,7 @@ Write-Host "You currently have $Network_Count `nnetworks on your device." -Foreg
 Sleep 2 
 
 Introduction
-#foodenvy
+
 }
 
 #netsh wlan delete profile name=LinkTest
@@ -117,7 +119,7 @@ $Network_Search = Read-Host "All networks will be exported to the 'XML-Network-I
 
 netsh wlan export profile key=clear folder='XML-Network-Info'
 
-$Total_XML_Files = ( Get-ChildItem XML-Network-Info | Measure-Object ).Count;
+$Total_XML_Files = (Get-ChildItem XML-Network-Info | Measure-Object ).Count;
 
 Write-Host "$Total_XML_Files network XML files exported to the 'XML-Network-Info' directory."
 
@@ -211,7 +213,7 @@ $Selected_Network_XML_File = Read-Host "Please specify full path to network XML 
 
 netsh wlan add profile filename=$Selected_Network_XML_File user=current
 
-$Network_Name =  Split-Path $Selected_Network_XML_File -Leaf
+$Network_Name = Split-Path $Selected_Network_XML_File -Leaf
 
 $Connect_Question = Read-Host "Would you like to connect now to $Network_Name? Please type yes or no."
 
@@ -221,6 +223,8 @@ $Connect_Name = $Network_Name.replace("Wi-Fi-", "")
 
 $Connect_Name = $Connect_Name.replace(".xml", "")
 
+Write-Host $Connect_Name
+
 netsh wlan connect name=$Connect_Name
 
 }
@@ -228,9 +232,58 @@ netsh wlan connect name=$Connect_Name
 if($Connect_Question -eq "no"){
 
 Introduction
+
 }
 
 #Write-Host "$Selected_Network_XML_File is incompatible. Please try again."
+
+}
+
+####################################################### Sixth main option ###############################################################
+
+if($Introduction -eq "6"){
+
+$Selected_Network_XML_File = Read-Host "Write the name of the network you wish to remove."
+
+netsh wlan delete profile name = $Selected_Network_XML_File
+
+Introduction
+
+}
+
+if($Introduction -eq "7"){
+
+$Number_Of_Networks_To_Remove = Read-Host "How many networks do you wish to remove?" 
+
+if($Number_Of_Networks_To_Remove -match "^\d+$"){
+
+$Network_Remove_Count = $Number_Of_Networks_To_Remove
+
+$Number_Of_Networks_To_Remove = [int]$Number_Of_Networks_To_Remove
+
+}
+
+else{
+
+$Network_Remove_Count = 2 
+
+Write-Host "You did not input a numerical value. Defaulting to 2." -ForegroundColor "Red"
+
+}
+
+$Network_Remove_Count = $Number_Of_Networks_To_Remove
+
+$Networks = @()
+
+1..$Network_Remove_Count | ForEach-Object {
+
+$Selected_Network_XML_File = Read-Host "Write the names of the networks you wish to remove."
+
+netsh wlan delete profile name = $Selected_Network_XML_File
+
+} -ErrorAction SilentlyContinue
+
+$Networks
 
 }
 

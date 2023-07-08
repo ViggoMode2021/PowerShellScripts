@@ -105,10 +105,6 @@ Introduction
 
 }
 
-#netsh wlan delete profile name=LinkTest
-#netsh wlan add profile filename="LinkTest.xml" user=current
-#netsh wlan connect name=Uplink
-
 ####################################################### Third main option ###############################################################
 
 if($Introduction -eq "3"){

@@ -4,10 +4,32 @@ $Current_Date = Get-Date -Format "MM/dd/yyyy" # Get today's date
 
 $DesktopPath = [Environment]::GetFolderPath("Desktop")
 
+$Current_Network = Get-NetConnectionProfile | Select-Object -expand Name
+
+if($Current_Network -eq $null){
+
+$Current_Network = "None"
+
+}
+
+if($Current_Network -notmatch "NordLynx"){
+
+$VPN = "You are not connected to Nord VPN." -ForegroundColor "Red"
+
+}
+
 function Introduction{
 
+Write-Host "#######################################################################################################################################################################################" -ForegroundColor "Green"
+
 $Introduction = Read-Host "Welcome to the Network Necromancer! With this program, you can view, delete, and backup stored networks on your computer. You can also easily connect to a network or view the password
-in the event that you may have forgotten it. What would you like to do?
+in the event that you may have forgotten it. 
+
+Current Network(s): $Current_Network
+
+$VPN
+
+What would you like to do?
 
 1. View all networks
 2. View all networks and passwords
@@ -97,7 +119,7 @@ $Network_Count = (netsh wlan show profiles) | Select-String "\:(.+)$" | %{$name=
 %{(netsh wlan show profile name="$name" key=clear)} | Select-String "Key Content\W+\:(.+)$" | %{$pass=$_.Matches.Groups[1].Value.Trim(); $_} |
 %{[PSCustomObject]@{ Network = $name;Password = $pass }} | Measure-Object | Select-Object -expandproperty Count | Out-String
 
-Write-Host "You currently have $Network_Count `nnetworks on your device." -ForegroundColor "Yellow"
+Write-Host "You currently have $Network_Count networks on your device." -ForegroundColor "Yellow"
 
 Sleep 2 
 
@@ -111,7 +133,7 @@ if($Introduction -eq "3"){
 
 if (Test-Path "XML-Network-Info"){
 
-$Network_Search = Read-Host "All networks will be exported to the 'XML-Network-Info' directory in the same directory as this script. Press any key to continue."
+$Network_Search = Write-Host "All networks will be exported to the 'XML-Network-Info' directory in the same directory as this script." -ForegroundColor "Green"
 
 netsh wlan export profile key=clear folder='XML-Network-Info'
 
@@ -133,7 +155,7 @@ Write-Host "All networks will be exported to the 'XML-Network-Info' directory in
 
 netsh wlan export profile key=clear folder='XML-Network-Info'
 
-$Total_XML_Files = ( Get-ChildItem XML-Network-Info | Measure-Object ).Count;
+$Total_XML_Files = (Get-ChildItem XML-Network-Info | Measure-Object ).Count;
 
 Write-Host "$Total_XML_Files network XML files exported to the 'XML-Network-Info' directory."
 
@@ -159,7 +181,7 @@ $Network_To_XML = Read-Host "Which network would you like to backup to an XML fi
 
 if($Network_To_XML -notmatch $All_Networks){
 
-Write-Host "$Network_To_XML is not located on the device, please try again."
+Write-Host "$Network_To_XML is not located on the device, please try again." -ForegroundColor "Red"
 
 Introduction
 
@@ -171,7 +193,7 @@ $Network_Search = Read-Host "$Network_To_XML will be exported to the 'XML-Networ
 
 netsh wlan export profile name=$Network_To_XML key=clear folder='XML-Network-Info'
 
-$Total_XML_Files = ( Get-ChildItem XML-Network-Info | Measure-Object ).Count;
+$Total_XML_Files = (Get-ChildItem XML-Network-Info | Measure-Object ).Count;
 
 Write-Host "$Network_To_XML exported to the 'XML-Network-Info' directory."
 
@@ -189,7 +211,7 @@ Write-Host "All networks will be exported to the 'XML-Network-Info' directory in
 
 netsh wlan export profile key=clear folder='XML-Network-Info'
 
-$Total_XML_Files = ( Get-ChildItem XML-Network-Info | Measure-Object ).Count;
+$Total_XML_Files = (Get-ChildItem XML-Network-Info | Measure-Object ).Count;
 
 Write-Host "$Total_XML_Files network XML files exported to the 'XML-Network-Info' directory."
 
@@ -205,11 +227,29 @@ Introduction
 
 if($Introduction -eq "5"){
 
+if (Test-Path "XML-Network-Info"){
+
+Set-Location -Path XML-Network-Info
+
+ls 
+
+$Selected_Network_XML_File = Read-Host "Please specify full name of network XML file." 
+
+}
+
+else{ 
+
 $Selected_Network_XML_File = Read-Host "Please specify full path to network XML file."
+
+}
 
 netsh wlan add profile filename=$Selected_Network_XML_File user=current
 
 $Network_Name = Split-Path $Selected_Network_XML_File -Leaf
+
+Write-Host $Network_Name
+
+cd ..
 
 $Connect_Question = Read-Host "Would you like to connect now to $Network_Name? Please type yes or no."
 
@@ -231,7 +271,7 @@ Introduction
 
 }
 
-#Write-Host "$Selected_Network_XML_File is incompatible. Please try again."
+cd .. 
 
 }
 
@@ -239,15 +279,32 @@ Introduction
 
 if($Introduction -eq "6"){
 
+(netsh wlan show profiles) | Select-String "\:(.+)$" | %{$name=$_.Matches.Groups[1].Value.Trim(); $_} | 
+%{(netsh wlan show profile name="$name" key=clear)} | Select-String "Key Content\W+\:(.+)$" | %{$pass=$_.Matches.Groups[1].Value.Trim(); $_} | 
+%{[PSCustomObject]@{ Network = $name;Password = $pass }} | Format-Table -AutoSize 
+
 $Selected_Network_XML_File = Read-Host "Write the name of the network you wish to remove."
 
 netsh wlan delete profile name = $Selected_Network_XML_File
+
+$Network_Count = (netsh wlan show profiles) | Select-String "\:(.+)$" | %{$name=$_.Matches.Groups[1].Value.Trim(); $_} |
+%{(netsh wlan show profile name="$name" key=clear)} | Select-String "Key Content\W+\:(.+)$" | %{$pass=$_.Matches.Groups[1].Value.Trim(); $_} |
+%{[PSCustomObject]@{ Network = $name;Password = $pass }} | Measure-Object | Select-Object -expandproperty Count | Out-String
+
+Write-Host "You currently have $Network_Count networks on your device." -ForegroundColor "Yellow"
 
 Introduction
 
 }
 
+####################################################### Seventh main option ###############################################################
+
 if($Introduction -eq "7"){
+
+(netsh wlan show profiles) | Select-String "\:(.+)$" | %{$name=$_.Matches.Groups[1].Value.Trim(); $_} | 
+%{(netsh wlan show profile name="$name" key=clear)} | Select-String "Key Content\W+\:(.+)$" | %{$pass=$_.Matches.Groups[1].Value.Trim(); $_} | 
+%{[PSCustomObject]@{ Network = $name;Password = $pass }} | Format-Table -AutoSize 
+
 
 $Number_Of_Networks_To_Remove = Read-Host "How many networks do you wish to remove?" 
 
@@ -273,13 +330,19 @@ $Networks = @()
 
 1..$Network_Remove_Count | ForEach-Object {
 
-$Selected_Network_XML_File = Read-Host "Write the names of the networks you wish to remove."
+$Selected_Network_XML_File = Read-Host "Write a name of one of the $Network_Remove_Count networks you wish to remove."
 
 netsh wlan delete profile name = $Selected_Network_XML_File
 
-} -ErrorAction SilentlyContinue
+}
 
 $Networks
+
+$Network_Count = (netsh wlan show profiles) | Select-String "\:(.+)$" | %{$name=$_.Matches.Groups[1].Value.Trim(); $_} |
+%{(netsh wlan show profile name="$name" key=clear)} | Select-String "Key Content\W+\:(.+)$" | %{$pass=$_.Matches.Groups[1].Value.Trim(); $_} |
+%{[PSCustomObject]@{ Network = $name;Password = $pass }} | Measure-Object | Select-Object -expandproperty Count | Out-String
+
+Write-Host "You currently have $Network_Count networks on your device." -ForegroundColor "Yellow"
 
 }
 

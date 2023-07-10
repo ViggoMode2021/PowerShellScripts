@@ -55,7 +55,7 @@ Get-Disk -Number 1
 
 do{
 
-$Partition_1_Name = Read-Host "What would you like to name the first partition?"
+$Partition_1_Name = Read-Host "`n`n`nWhat would you like to name the first partition?"
 
 }
 
@@ -88,6 +88,8 @@ $Partition_1_Space = Read-Host "How much space (in MB) do you want to allocate t
 $Partition_1_Space = $Partition_1_Space
 
 $Partition_1_Space = (($Partition_1_Space / 1) * 1MB)
+
+Write-Host "$Partition_1_Space MB has been set as the size for Partition 2." -ForeGroundColor "Green"
 
 Resize-Partition -DiskNumber 1 -PartitionNumber 1 -Size ($Partition_1_Space)
 
@@ -127,6 +129,8 @@ $Partition_2_Space = (($Partition_2_Space / 1) * 1MB)
 
 Resize-Partition -DiskNumber 1 -PartitionNumber 2 -Size ($Partition_2_Space)
 
+Write-Host "$Partition_2_Space MB has been set as the size for Partition 2." -ForeGroundColor "Green"
+
 $Partition_1_Destination = "$Partition_1_Letter" + ":\"
 
 $Partition_2_Destination = "$Partition_2_Letter" + ":\"
@@ -138,8 +142,8 @@ Copy-Item -Path C:\Users\rviglione\Desktop\Scripts -Filter *.ps1 -Destination $P
 #$driveEject = New-Object -comObject Shell.Application
 #$driveEject.Namespace(17).ParseName($Partition_1_Destination).InvokeVerb("Eject")
 
-Write-Host "Success! You have successfully created $Partition_1_Name with the letter $Partition_1_Destination and size of $Partition_1_SpaceMB and $Partition_2_Name with the letter $Partition_2_Destination and size of
-$Partition_2_SpaceMB" -ForegroundColor "Green"
+Write-Host "Success! You have successfully created $Partition_1_Name with the letter $Partition_1_Destination and size of $Partition_1_Space in MB and $Partition_2_Name with the letter $Partition_2_Destination and size of
+$Partition_2_Space in MB" -ForegroundColor "Green"
 
 }
 

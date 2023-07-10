@@ -3,11 +3,9 @@
 # 1 mb (megabyte) = 1000 kb (kilobyte)
 # 1 gb (gigabyte) = 1000 mb (megabyte)
 
-<#
-$Dir = Get-ChildItem C:\Users\ryans\LMS_WITH_LOGIN #-Recurse
-
-$List = $Dir | where {$_.extension -eq ".py"}
-#>
+# To add:
+    
+    # Allow user to designate Photos, Music, Scripts, Code etc.
 
 $Drives = [System.IO.DriveInfo]::GetDrives()
 $Removable_Drives = $Drives | Where-Object { $_.DriveType -eq 'Removable' -and $_.IsReady }
@@ -93,6 +91,14 @@ Write-Host "$Partition_1_Space MB has been set as the size for Partition 2." -Fo
 
 Resize-Partition -DiskNumber 1 -PartitionNumber 1 -Size ($Partition_1_Space)
 
+do{
+
+$Partition_1_File_Type = Read-Host "What file type would you like to move?"
+
+}
+
+until($Partition_1_File_Type -match "^\.[^.]+$")
+
 # Name 2nd partition
 
 do{
@@ -131,13 +137,19 @@ Resize-Partition -DiskNumber 1 -PartitionNumber 2 -Size ($Partition_2_Space)
 
 Write-Host "$Partition_2_Space MB has been set as the size for Partition 2." -ForeGroundColor "Green"
 
+$Partition_2_File_Type = Read-Host "What file type would you like to move?"
+
+}
+
+until($Partition_2_File_Type -match "^\.[^.]+$")
+
 $Partition_1_Destination = "$Partition_1_Letter" + ":\"
 
 $Partition_2_Destination = "$Partition_2_Letter" + ":\"
 
-Copy-Item -Path C:\Users\rviglione\Desktop\Python -Filter *.py -Destination $Partition_1_Destination -Recurse
+Copy-Item -Path C:\Users\rviglione\Desktop\Python -Filter $Partition_1_File_Type -Destination $Partition_1_Destination -Recurse
 
-Copy-Item -Path C:\Users\rviglione\Desktop\Scripts -Filter *.ps1 -Destination $Partition_2_Destination -Recurse
+Copy-Item -Path C:\Users\rviglione\Desktop\Scripts -Filter $Partition_2_File_Type -Destination $Partition_2_Destination -Recurse
 
 #$driveEject = New-Object -comObject Shell.Application
 #$driveEject.Namespace(17).ParseName($Partition_1_Destination).InvokeVerb("Eject")

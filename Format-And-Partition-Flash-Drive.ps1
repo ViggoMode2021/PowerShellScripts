@@ -9,17 +9,26 @@ $Dir = Get-ChildItem C:\Users\ryans\LMS_WITH_LOGIN #-Recurse
 $List = $Dir | where {$_.extension -eq ".py"}
 #>
 
-<#
 $Drives = [System.IO.DriveInfo]::GetDrives()
 $Removable_Drives = $Drives | Where-Object { $_.DriveType -eq 'Removable' -and $_.IsReady }
 if($Removable_Drives){
-    Write-Host $Removable_Drives
-    $Continue_Prompt = Read-Host "Would you like to continue with the script? Press 1 for yes and 2 for no."
+    Write-Host "Current removable drives are: $Removable_Drives" -ForegroundColor "Green"
+    $Continue_Prompt = Read-Host "Would you like to continue with the script? Press 1 for reformatting, 2 for no, and 3 to see what files are on the removable drive(s)."
     if($Continue_Prompt -eq "1"){
+    Write-Host "WARNING!! - FOLLOWING THROUGH WITH THE PROMPTS WILL OVERRIDE YOUR CURRENT SETTINGS AND FILES IN YOUR REMOVABLE DRIVE!" -ForeGroundColor "Red"
     Setup_Flash_Drive
     }
+    if($Continue_Prompt -eq "2"){
+    return
+    }
+    if($Continue_Prompt -eq "3"){
+    Get-ChildItem -Path $Removable_Drives
+    return
+    }
 }
-throw "No removable drives found."
+else{
+ Write-Host "No removable drives found." -ForegroundColor "Red"
+ }
 #>
 
 diskmgmt.msc
@@ -34,8 +43,8 @@ $Partition_1_Name = Read-Host "What would you like to name the first partition?"
 
 }
 
-until($Partition_1_Name.Length -gt 1 -and -not $Partition_1_Name.StartsWith("\d"))
- 
+until($Partition_1_Name.Length -gt 1 -and -not $Partition_1_Name.StartsWith("\d") -and -not $Partition_1_Name.StartsWith("C"))
+
 New-Partition -DiskNumber 1 -UseMaximumSize | Format-Volume -Filesystem NTFS -NewFileSystemLabel $Partition_1_Name
 
 Write-Host "$Partition_1_Name has been set as the name for Partition 1." -ForeGroundColor "Green"
@@ -98,8 +107,8 @@ Copy-Item -Path C:\Users\rviglione\Desktop\Python -Filter *.py -Destination $Par
 
 Copy-Item -Path C:\Users\rviglione\Desktop\Scripts -Filter *.ps1 -Destination $Partition_2_Destination -Recurse
 
-$driveEject = New-Object -comObject Shell.Application
-$driveEject.Namespace(17).ParseName($Partition_1_Destination).InvokeVerb("Eject")
+#$driveEject = New-Object -comObject Shell.Application
+#$driveEject.Namespace(17).ParseName($Partition_1_Destination).InvokeVerb("Eject")
 
 }
 

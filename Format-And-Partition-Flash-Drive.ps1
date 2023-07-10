@@ -13,7 +13,11 @@ $List = $Dir | where {$_.extension -eq ".py"}
 $Drives = [System.IO.DriveInfo]::GetDrives()
 $Removable_Drives = $Drives | Where-Object { $_.DriveType -eq 'Removable' -and $_.IsReady }
 if($Removable_Drives){
-    return @($Removable_Drives)
+    Write-Host $Removable_Drives
+    $Continue_Prompt = Read-Host "Would you like to continue with the script? Press 1 for yes and 2 for no."
+    if($Continue_Prompt -eq "1"){
+    Setup_Flash_Drive
+    }
 }
 throw "No removable drives found."
 #>
@@ -21,6 +25,8 @@ throw "No removable drives found."
 diskmgmt.msc
 
 # Name 1st partition
+
+function Setup_Flash_Drive{
 
 do{
 
@@ -64,7 +70,7 @@ $Partition_2_Name = Read-Host "What would you like to name the second partition?
 
 until($Partition_2_Name.Length -gt 1 -and -not $Partition_2_Name.StartsWith("\d"))
 
-Write-Host "$Partition_2_Name has been set as the name for Partition 2." -ForeGroundColor "Green"
+Write-Host "$Partition_2_Name has been set as the name for Partition 1." -ForeGroundColor "Green"
 
 # Allocate 2nd partition letter
 
@@ -91,3 +97,10 @@ $Partition_2_Destination = "$Partition_2_Letter" + ":\"
 Copy-Item -Path C:\Users\rviglione\Desktop\Python -Filter *.py -Destination $Partition_1_Destination -Recurse
 
 Copy-Item -Path C:\Users\rviglione\Desktop\Scripts -Filter *.ps1 -Destination $Partition_2_Destination -Recurse
+
+$driveEject = New-Object -comObject Shell.Application
+$driveEject.Namespace(17).ParseName($Partition_1_Destination).InvokeVerb("Eject")
+
+}
+
+Setup_Flash_Drive

@@ -23,16 +23,26 @@ $Site = Invoke-WebRequest $URL
 
 $GitHub_Profile_Name_With_Slashes = '/' + $GitHub_Profile_Name + '/'
 
-$Links = $Site.Links | Select href | Out-String
+$Links = $Site.Links | Select href | Export-CSV .\GitHub-Links.csv
 
-Write-Host $Links -join ""
+$GitHub_Links = Import-CSV -Path .\GitHub-Links.csv
 
-#$Position = $Yes.IndexOf("/")
+foreach ($Link in $GitHub_Links) {
 
-#$Before = $Yes.Substring($GitHub_Profile_Name_Length , $Position)
+$Link = $Link.href
 
-#Write-Host $Before
+$Link_Count = $Link | Measure-Object | Select -expand Count
 
-#$After = $Yes.Substring($Position+1)
+Write-Host "Downloading $Link_Count repositories....." -ForeGroundColor "Pink"
 
+if($Link -match $GitHub_Profile_Name_With_Slashes) {
 
+$Base_URL = "https://github.com/"
+
+$Full_Url = $Base_URL + $Link
+
+Write-Host = $Full_Url -ForeGroundColor "Green"
+
+}
+
+}

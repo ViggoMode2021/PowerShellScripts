@@ -1,0 +1,7 @@
+#https://woshub.com/manage-windows-firewall-powershell/
+
+#https://www.thewindowsclub.com/block-ip-or-a-website-using-powershell-in-windows
+
+$Facebook_IP = Resolve-DnsName "facebook.com" | Select -Expand IPAddress -last 1
+
+#New-NetFirewallRule -DisplayName "Block Facebook" -Direction Outbound -LocalPort 80 -Protocol TCP -Action Block -RemoteAddress 146.185.220.0/23

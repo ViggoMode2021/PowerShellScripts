@@ -2,7 +2,7 @@ $videoId = 'WUQoh_1pFzE'
 
 $channelId = 'UCWNxa-_nWe_w9SFfgFF1LoQ'
 
-$GoogleApiKey = 'AIzaSyAuVuGWqJY6506FG7_Gb203nG36d9zrP14' #Rotate biweekly maybe?
+$GoogleApiKey = '' #Rotate biweekly maybe?
 
 $video_analytics = 'C:\Users\ryans\Desktop\Daily-Knight-Analytics\Announcements.csv' #Edit with updated PATH for whatever computer is housing this script
 

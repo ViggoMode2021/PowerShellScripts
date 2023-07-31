@@ -56,17 +56,13 @@ Setup_Windows_Firewall_Custom_Rules
 
 ## Part two
 
-function Install_Chocolatey_And_Packages {
+function Install_Chocolatey {
 
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 
-choco upgrade chocolatey
-
-choco install awscli
-
 }
 
-Install_Chocolatey_And_Packages
+Install_Chocolatey
 
 # Part three 
 
